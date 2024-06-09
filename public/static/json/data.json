@@ -1,0 +1,74 @@
+[
+    {
+        "nombre": "Marta",
+        "fecha": "25/09/2017"
+    },
+    {
+        "nombre": "Mateo",
+        "fecha": "28/08/2018"
+    },
+    {
+        "nombre": "Lucas",
+        "fecha": "10/10/2018"
+    },
+    {
+        "nombre": "Clara",
+        "fecha": "18/05/2019"
+    },
+    {
+        "nombre": "Juan",
+        "fecha": "10/12/2019"
+    },
+    {
+        "nombre": "Catalina",
+        "fecha": "14/12/2019"
+    },
+    {
+        "nombre": "Javier",
+        "fecha": "18/12/2020"
+    },
+    {
+        "nombre": "Raquel",
+        "fecha": "19/05/2021"
+    },
+    {
+        "nombre": "Sofía",
+        "fecha": "28/06/2021"
+    },
+    {
+        "nombre": "Tomás",
+        "fecha": "09/07/2021"
+    },
+    {
+        "nombre": "Carlos",
+        "fecha": "10/07/2022"
+    },
+    {
+        "nombre": "Paula",
+        "fecha": "17/09/2022"
+    },
+    {
+        "nombre": "Rodrigo",
+        "fecha": "29/10/2022"
+    },
+    {
+        "nombre": "Bruno",
+        "fecha": "01/08/2023"
+    },
+    {
+        "nombre": "Marc",
+        "fecha": "13/08/2023"
+    },
+    {
+        "nombre": "Blanca",
+        "fecha": "12/01/2024"
+    },
+    {
+        "nombre": "Míriam",
+        "fecha": "14/04/2024"
+    },
+    {
+        "nombre": "Andreu",
+        "fecha": "31/05/2024"
+    }
+]
