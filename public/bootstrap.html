@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html class="dark">
 <head>
   <meta charset="UTF-8">
+  <title> Family Expansion</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Family Expansion</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython.min.js"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython_stdlib.js"></script>
@@ -52,45 +52,47 @@
         background-color: rgb(100, 5, 134) !important;
     }
 
-    @keyframes stripesAnimation {
-      0% { background-position: 100% 0; }
-      100% { background-position: 0 0; }
-    }
-
-    .striped-progress-bar {
-      background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-      background-size: 20px 20px;
-      animation: stripesAnimation 10s linear infinite;
-    }
-
 </style>
 
 </head>
-<body class="bg-gray-100" onload="brython()">
+<body onload="brython()">
 
-  <section class="container mx-auto p-6">
-    <h2 class="text-4xl font-bold text-center mb-8">Family Expansion</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="contenedor">
-      
-      <!-- Team Member 1 -->
-      <div hidden class="bg-white p-6 rounded-lg shadow-md" id="kid">
-        <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="" alt="">
-        <h3 class="text-xl font-semibold text-center card-title">Nombre</h3>
-        <p class="text-gray-600 text-center card-subtitle">Cumple</p>
-        <span hidden class="hidden-number"></span>
-        <div class="text-center mt-4">
-          
-            <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
-                <div class="auxbar"></div>
+<h1 class="text-5xl font-extrabold dark:text-white" style="text-align: center;">Family Expansion</h1>
+
+<section class="bg-white dark:bg-gray-900">
+    <div class="container px-6 py-10 mx-auto" id="contenedor">
+
+
+        <!-- KID -->
+
+
+        <div hidden class="grid grid-cols-1 gap-8 mt-8 xl:mt-16 md:grid-cols-2 xl:grid-cols-3" id="kid">
+
+            <div class="flex flex-col items-center">
+                <img class="object-cover w-full rounded-xl aspect-square card-img-top" src="" alt="">
+
+                <h1 class="mt-4 text-2xl font-semibold text-gray-700 capitalize dark:text-white card-title">Nombre</h1>
+
+                <p class="mt-2 text-gray-500 capitalize dark:text-gray-300 card-subtitle">Cumple</p>
+
+                <span hidden class="hidden-number"></span>
+
+                <div class="flex mt-3 -mx-2">
+                    
+                    <div class="progress" style="margin: 5px;">
+                        <div class="auxbar" role="progressbar" style="width: 10%"></div>
+                    </div>
+                    
+                </div>
             </div>
-
         </div>
-      </div>
+
+
 
     </div>
-  </section>
+</section>
 
-  <script type="text/python">
+<script type="text/python">
     
     import browser
     import json
@@ -181,32 +183,31 @@
 
         
         if kid.progreso < 10:
-            progress_div.class_name = 'progress-pink h-5 rounded-full striped-progress-bar'
+            progress_div.class_name = 'progress-bar progress-bar-striped progress-bar-animated progress-pink'
         elif kid.progreso < 20:
-            progress_div.class_name = 'bg-red-500 h-5 rounded-full striped-progress-bar'
+            progress_div.class_name = 'progress-bar progress-bar-striped progress-bar-animated bg-danger'
         elif kid.progreso < 30:
-            progress_div.class_name = 'progress-orange h-5 rounded-full striped-progress-bar'
+            progress_div.class_name = 'progress-bar progress-bar-striped progress-bar-animated progress-orange'
         elif kid.progreso < 40:
-            progress_div.class_name = 'progress-yellow h-5 rounded-full striped-progress-bar'
+            progress_div.class_name = 'progress-bar progress-bar-striped progress-bar-animated progress-yellow'
         elif kid.progreso < 50:
-            progress_div.class_name = 'progress-green h-5 rounded-full striped-progress-bar'
+            progress_div.class_name = 'progress-bar progress-bar-striped progress-bar-animated progress-green'
         elif kid.progreso < 60:
-            progress_div.class_name = 'progress-aquamarine h-5 rounded-full striped-progress-bar'
+            progress_div.class_name = 'progress-bar progress-bar-striped progress-bar-animated progress-aquamarine'
         elif kid.progreso < 70:
-            progress_div.class_name = 'progress-cyan h-5 rounded-full striped-progress-bar'
+            progress_div.class_name = 'progress-bar progress-bar-striped progress-bar-animated progress-cyan'
         elif kid.progreso < 80:
-            progress_div.class_name = 'progress-river h-5 rounded-full striped-progress-bar'
+            progress_div.class_name = 'progress-bar progress-bar-striped progress-bar-animated progress-river'
         elif kid.progreso < 90:
-            progress_div.class_name = 'progress-blue h-5 rounded-full striped-progress-bar'
+            progress_div.class_name = 'progress-bar progress-bar-striped progress-bar-animated progress-blue'
         else:
-            progress_div.class_name = 'progress-purple h-5 rounded-full striped-progress-bar'
+            progress_div.class_name = 'progress-bar progress-bar-striped progress-bar-animated progress-purple'
         
         contenedor.appendChild(new_div_kid)
 
 
        
 </script>
-
 
 </body>
 </html>
