@@ -1,0 +1,78 @@
+.header {
+    text-align: center;
+    position: relative;
+    padding: 20px 0;
+}
+
+.progress-rojo-intenso {
+    background-color: rgb(255, 0, 0) !important;
+}
+.progress-rojo-anaranjado {
+    background-color: rgb(255, 64, 0) !important;
+}
+.progress-naranja-oscuro {
+    background-color: rgb(255, 128, 0) !important;
+}
+.progress-naranja-claro {
+    background-color: rgb(255, 191, 0) !important;
+}
+.progress-amarillo-dorado {
+    background-color: rgb(255, 255, 0) !important;
+}
+.progress-amarillo-verdoso {
+    background-color: rgb(191, 255, 0) !important;
+}
+.progress-verde-claro {
+    background-color: rgb(128, 255, 0) !important;
+}
+.progress-verde-lima {
+    background-color: rgb(64, 255, 0) !important;
+}
+.progress-verde-intenso {
+    background-color: rgb(0, 255, 0) !important;
+}
+.progress-verde-azulado {
+    background-color: rgb(0, 255, 64) !important;
+}
+.progress-turquesa {
+    background-color: rgb(0, 255, 128) !important;
+}
+.progress-cian {
+    background-color: rgb(0, 255, 191) !important;
+}
+.progress-azul-claro {
+    background-color: rgb(0, 255, 255) !important;
+}
+.progress-azul-cielo {
+    background-color: rgb(0, 191, 255) !important;
+}
+.progress-azul-medio {
+    background-color: rgb(0, 128, 255) !important;
+}
+.progress-azul-intenso {
+    background-color: rgb(0, 64, 255) !important;
+}
+.progress-azul-oscuro {
+    background-color: rgb(0, 0, 255) !important;
+}
+.progress-indigo {
+    background-color: rgb(64, 0, 255) !important;
+}
+.progress-violeta {
+    background-color: rgb(128, 0, 255) !important;
+}
+.progress-purpura {
+    background-color: rgb(191, 0, 255) !important;
+}
+
+
+@keyframes stripesAnimation {
+  0% { background-position: 100% 0; }
+  100% { background-position: 0 0; }
+}
+
+.striped-progress-bar {
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-size: 20px 20px;
+  animation: stripesAnimation 10s linear infinite;
+}
