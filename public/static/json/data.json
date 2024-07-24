@@ -70,5 +70,10 @@
     {
         "nombre": "Andreu",
         "fecha": "31/05/2024"
+    },
+    {
+        "nombre": "Martín Codina",
+        "fecha": "01/02/2025",
+        "embarazo": true
     }
 ]
