@@ -22,7 +22,9 @@ class Kid:
             today = datetime.today().date()
             if today == self.cumple_date.date():
                 self.nombre = f"¡Felicidades a {self.nombre}!"
-                return f"Hoy cumple {str(self.edad+1)}"
+                if self.edad+1 == 1:
+                    return f"Hoy cumple {str(self.edad+1)} año"
+                return f"Hoy cumple {str(self.edad+1)} años"
 
         return f"Cumple {str(self.edad)}  el {self.cumple_date.strftime('%d/%m/%Y')}"
     
