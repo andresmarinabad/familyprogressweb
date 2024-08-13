@@ -1,4 +1,3 @@
-import browser
 import json
 from browser import document
 from datetime import date, datetime
@@ -85,6 +84,10 @@ for kid in kids:
     hidden_span = new_div_kid.querySelector(".hidden-number")
     hidden_span.text = kid.progreso
 
+    if kid.progreso == 100:
+        name_header.text = f"¡Felicidades a {kid.nombre}!"
+        cumple_header.text = f"Hoy cumple {kid.edad} años"
+
     if kid.progreso < 5:
         progress_div.class_name = 'progress-rojo-intenso h-5 rounded-full striped-progress-bar'
     elif kid.progreso < 10:
@@ -123,7 +126,9 @@ for kid in kids:
         progress_div.class_name = 'progress-indigo h-5 rounded-full striped-progress-bar'
     elif kid.progreso < 95:
         progress_div.class_name = 'progress-violeta h-5 rounded-full striped-progress-bar'
-    else:
+    elif kid.progreso < 100:
         progress_div.class_name = 'progress-purpura h-5 rounded-full striped-progress-bar'
+    else:
+        progress_div.class_name = 'progress-gold h-5 rounded-full striped-progress-bar'
 
     contenedor.appendChild(new_div_kid)

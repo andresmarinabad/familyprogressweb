@@ -64,7 +64,16 @@
 .progress-purpura {
     background-color: rgb(191, 0, 255) !important;
 }
+.progress-gold {
+    background-color: rgb(255, 215, 0) !important;
+    animation: goldAnimation 5s linear infinite;
+}
 
+@keyframes goldAnimation {
+    0% { background-color: rgb(255, 215, 0); }
+    50% { background-color: rgb(255, 223, 0); }
+    100% { background-color: rgb(255, 215, 0); }
+}
 
 @keyframes stripesAnimation {
   0% { background-position: 100% 0; }
