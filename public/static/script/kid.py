@@ -73,20 +73,22 @@ for kid in kids:
     foto_link.attrs['src'] = kid.foto
 
     name_header = new_div_kid.querySelector(".card-title")
-    name_header.text = kid.nombre
+    if kid.progreso == 100:
+        name_header.text = f"¡Felicidades a {kid.nombre}!"
+    else:
+        name_header.text = kid.nombre
 
     cumple_header = new_div_kid.querySelector(".card-subtitle")
-    cumple_header.text = f"{kid}"
+    if kid.progreso == 100:
+        cumple_header.text = f"Hoy cumple {kid.edad} años"
+    else:
+        cumple_header.text = f"{kid}"
 
     progress_div = new_div_kid.querySelector(".auxbar")
     progress_div.style.width = f"{str(kid.progreso)}%"
 
     hidden_span = new_div_kid.querySelector(".hidden-number")
     hidden_span.text = kid.progreso
-
-    if kid.progreso == 100:
-        name_header.text = f"¡Felicidades a {kid.nombre}!"
-        cumple_header.text = f"Hoy cumple {kid.edad} años"
 
     if kid.progreso < 5:
         progress_div.class_name = 'progress-rojo-intenso h-5 rounded-full striped-progress-bar'
