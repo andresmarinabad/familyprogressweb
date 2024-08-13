@@ -108,3 +108,27 @@
   background-size: 20px 20px;
   animation: stripesAnimation 10s linear infinite;
 }
+
+.image-container {
+    position: relative; /* Contenedor para controlar el posicionamiento del canvas */
+    width: 100%; /* Asegura que el contenedor ocupe el 100% del ancho disponible */
+}
+
+.image-container img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: inherit; /* Bordes redondeados que se heredan del contenedor */
+}
+
+.image-container canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    pointer-events: none; /* Permite clics a través del canvas */
+    opacity: 0; /* El canvas es inicialmente invisible */
+}
+

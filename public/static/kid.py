@@ -13,6 +13,7 @@ class Kid:
         self.fecha = fecha
         self.foto = f'static/images/{nombre.lower()}.jpeg'
         self.embarazo = embarazo
+        self.nacimiento = False
         self.edad, self.cumple_date, self.progreso = self.progress()
     
     def __str__(self):
@@ -22,8 +23,10 @@ class Kid:
             today = datetime.today().date()
             if today == self.cumple_date.date():
                 self.nombre = f"¡Felicidades a {self.nombre}!"
-                if self.edad+1 == 1:
-                    return f"Hoy cumple {str(self.edad+1)} año"
+                if self.edad == 0:
+                    if self.nacimiento:
+                        return f"Hoy has nacido"
+                    return f"Hoy cumple 1 año"
                 return f"Hoy cumple {str(self.edad+1)} años"
 
         return f"Cumple {str(self.edad)}  el {self.cumple_date.strftime('%d/%m/%Y')}"
@@ -33,8 +36,15 @@ class Kid:
 
         if self.embarazo:
             fecha_parto = datetime.strptime(self.fecha, '%d/%m/%Y')
-            dif_dates = (fecha_parto - today).days
+            if fecha_parto.date() < today.date():
+                dif_dates = 0
+            else:
+                dif_dates = (fecha_parto - today).days
             return 0, fecha_parto, int(((270 - dif_dates)/270) * 100)
+        
+        fecha_nac = datetime.strptime(self.fecha, '%d/%m/%Y')
+        self.nacimiento = fecha_nac.date() == today.date() and not self.embarazo
+        
 
         current_year = date.today().year
         parts = self.fecha.split('/')
