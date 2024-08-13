@@ -1,6 +1,5 @@
 import json
 from browser import document
-from javascript import console
 from datetime import date, datetime
 
 
@@ -48,7 +47,6 @@ class Kid:
 
         return edad, cumple_date, int(((365 - dif_dates)/365) * 100)
 
-console.log(f"Start script")
 kids = []
 
 div_kid = document["kid"]
@@ -87,7 +85,6 @@ for kid in kids:
     hidden_span.text = kid.progreso
 
     if kid.progreso == 100:
-        console.log(f"Hoy es el cumpleaños de {kid.nombre}, progreso: {kid.progreso}")
         name_header.text = f"¡Felicidades a {kid.nombre}!"
         cumple_header.text = f"Hoy cumple {kid.edad} años"
 
