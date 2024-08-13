@@ -64,16 +64,39 @@
 .progress-purpura {
     background-color: rgb(191, 0, 255) !important;
 }
+
+
+/* Clase para la barra de progreso dorada con efecto de brillo */
 .progress-gold {
-    background-color: rgb(255, 215, 0) !important;
-    animation: goldAnimation 5s linear infinite;
+    background-color: #FFD700; /* Color dorado oscuro */
+    height: 20px; /* Altura de la barra */
+    border-radius: 10px; /* Bordes redondeados */
+    position: relative; /* Para posicionar el brillo */
+    overflow: hidden; /* Para ocultar el brillo que sale de la barra */
 }
 
-@keyframes goldAnimation {
-    0% { background-color: rgb(255, 215, 0); }
-    50% { background-color: rgb(255, 223, 0); }
-    100% { background-color: rgb(255, 215, 0); }
+/* Efecto de brillo animado */
+.progress-gold::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
+    animation: shine 3s infinite;
 }
+
+/* Animación del brillo horizontal */
+@keyframes shine {
+    0% {
+        left: -50%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
 
 @keyframes stripesAnimation {
   0% { background-position: 100% 0; }

@@ -18,6 +18,12 @@ class Kid:
     def __str__(self):
         if self.embarazo:
             return f"Fecha de parto {self.fecha}"
+        else:
+            today = datetime.today().date()
+            if today == self.cumple_date.date():
+                self.nombre = f"¡Felicidades a {self.nombre}!"
+                return f"Hoy cumple {str(self.edad+1)}"
+
         return f"Cumple {str(self.edad)}  el {self.cumple_date.strftime('%d/%m/%Y')}"
     
     def progress(self):
@@ -36,7 +42,10 @@ class Kid:
 
         edad = current_year - int(parts[2])
 
-        if today > cumple_date:
+        if today.date() == cumple_date.date():
+            self.fecha = f'{parts[0]}/{parts[1]}/{current_year}'
+            return edad, cumple_date, 100
+        elif today.date() > cumple_date.date():
             edad += 1
             self.fecha = f'{parts[0]}/{parts[1]}/{current_year+1}'
             cumple_date = datetime.strptime(self.fecha, '%d/%m/%Y')
@@ -72,17 +81,11 @@ for kid in kids:
     foto_link = new_div_kid.querySelector(".card-img-top")
     foto_link.attrs['src'] = kid.foto
 
-    name_header = new_div_kid.querySelector(".card-title")
-    if kid.progreso == 100:
-        name_header.text = f"¡Felicidades a {kid.nombre}!"
-    else:
-        name_header.text = kid.nombre
-
     cumple_header = new_div_kid.querySelector(".card-subtitle")
-    if kid.progreso == 100:
-        cumple_header.text = f"Hoy cumple {kid.edad} años"
-    else:
-        cumple_header.text = f"{kid}"
+    cumple_header.text = f"{kid}"
+
+    name_header = new_div_kid.querySelector(".card-title")
+    name_header.text = kid.nombre
 
     progress_div = new_div_kid.querySelector(".auxbar")
     progress_div.style.width = f"{str(kid.progreso)}%"
@@ -128,9 +131,10 @@ for kid in kids:
         progress_div.class_name = 'progress-indigo h-5 rounded-full striped-progress-bar'
     elif kid.progreso < 95:
         progress_div.class_name = 'progress-violeta h-5 rounded-full striped-progress-bar'
-    elif kid.progreso < 100:
-        progress_div.class_name = 'progress-purpura h-5 rounded-full striped-progress-bar'
     else:
+        progress_div.class_name = 'progress-purpura h-5 rounded-full striped-progress-bar'
+    
+    if kid.progreso == 100:
         progress_div.class_name = 'progress-gold h-5 rounded-full'
 
     contenedor.appendChild(new_div_kid)
