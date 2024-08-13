@@ -71,7 +71,8 @@ for kid in kids:
     new_div_kid = div_kid.cloneNode(True)
     
     foto_link = new_div_kid.querySelector(".card-img-top")
-    foto_link.src = kid.foto
+    foto_link.attrs['src'] = kid["foto"]
+    # foto_link.src = kid.foto
 
     name_header = new_div_kid.querySelector(".card-title")
     name_header.text = kid.nombre
