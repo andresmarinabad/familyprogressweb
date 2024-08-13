@@ -36,7 +36,7 @@ class Kid:
 
         edad = current_year - int(parts[2])
 
-        if today >= cumple_date:
+        if today > cumple_date:
             edad += 1
             self.fecha = f'{parts[0]}/{parts[1]}/{current_year+1}'
             cumple_date = datetime.strptime(self.fecha, '%d/%m/%Y')
@@ -44,10 +44,6 @@ class Kid:
             self.fecha = f'{parts[0]}/{parts[1]}/{current_year}'
         
         dif_dates = (cumple_date - today).days
-
-        # Si hoy es el día del cumpleaños, el progreso es 100%
-        if dif_dates == 0:
-            return edad, cumple_date, 100
 
         return edad, cumple_date, int(((365 - dif_dates)/365) * 100)
 
