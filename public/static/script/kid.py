@@ -44,6 +44,11 @@ class Kid:
             self.fecha = f'{parts[0]}/{parts[1]}/{current_year}'
         
         dif_dates = (cumple_date - today).days
+
+        # Si hoy es el día del cumpleaños, el progreso es 100%
+        if dif_dates == 0:
+            return edad, cumple_date, 100
+
         return edad, cumple_date, int(((365 - dif_dates)/365) * 100)
 
 
@@ -129,6 +134,6 @@ for kid in kids:
     elif kid.progreso < 100:
         progress_div.class_name = 'progress-purpura h-5 rounded-full striped-progress-bar'
     else:
-        progress_div.class_name = 'progress-gold h-5 rounded-full striped-progress-bar'
+        progress_div.class_name = 'progress-gold h-5 rounded-full'
 
     contenedor.appendChild(new_div_kid)
