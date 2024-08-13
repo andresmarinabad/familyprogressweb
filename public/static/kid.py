@@ -54,7 +54,7 @@ div_kid.removeAttribute("hidden")
 contenedor = document["contenedor"]
 contenedor.clear()
 
-data_file = "static/json/data.json"
+data_file = "static/data.json"
 data = json.load(open(data_file))
 
 for objeto in data:
