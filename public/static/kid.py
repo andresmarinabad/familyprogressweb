@@ -14,14 +14,15 @@ class Kid:
         self.foto = f'static/images/{nombre.lower()}.jpeg'
         self.embarazo = embarazo
         self.nacimiento = False
-        self.edad, self.cumple_date, self.progreso = self.progress()
+        self.edad, self.cumple_date, self.progreso, self.cumple_today = self.progress()
     
     def __str__(self):
         if self.embarazo:
             return f"Fecha de parto {self.fecha}"
         else:
-            today = datetime.today().date()
-            if today == self.cumple_date.date():
+            #today = datetime.today().date()
+            #if today == self.cumple_date.date():
+            if self.cumple_today:
                 self.nombre = f"¡Felicidades a {self.nombre}!"
                 if self.edad == 0:
                     return f"Hoy has nacido"
@@ -40,7 +41,7 @@ class Kid:
                 dif_dates = 0
             else:
                 dif_dates = (fecha_parto - today).days
-            return 0, fecha_parto, int(((270 - dif_dates)/270) * 100)
+            return 0, fecha_parto, int(((270 - dif_dates)/270) * 100), False
         
         fecha_nac = datetime.strptime(self.fecha, '%d/%m/%Y')
         self.nacimiento = fecha_nac.date() == today.date() and not self.embarazo
@@ -56,7 +57,7 @@ class Kid:
 
         if today.date() == cumple_date.date():
             self.fecha = f'{parts[0]}/{parts[1]}/{current_year}'
-            return edad, cumple_date, 100
+            return edad, cumple_date, 100, True
         elif today.date() > cumple_date.date():
             edad += 1
             self.fecha = f'{parts[0]}/{parts[1]}/{current_year+1}'
@@ -66,7 +67,7 @@ class Kid:
         
         dif_dates = (cumple_date - today).days
 
-        return edad, cumple_date, int(((365 - dif_dates)/365) * 100)
+        return edad, cumple_date, int(((365 - dif_dates)/365) * 100), False
 
 kids = []
 
@@ -146,7 +147,7 @@ for kid in kids:
     else:
         progress_div.class_name = 'progress-purpura h-5 rounded-full striped-progress-bar'
     
-    if kid.progreso == 100:
+    if kid.cumple_today:
         progress_div.class_name = 'progress-gold h-5 rounded-full'
 
     contenedor.appendChild(new_div_kid)
