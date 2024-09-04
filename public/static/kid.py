@@ -8,13 +8,14 @@ def get_hidden_number(item):
 
 
 class Kid:
-    def __init__(self, nombre, fecha, embarazo=False):
+    def __init__(self, nombre, fecha, dorsal, embarazo=False):
         self.nombre = nombre
         self.fecha = fecha
         self.foto = f'static/images/{nombre.lower()}.jpeg'
         self.embarazo = embarazo
         self.nacimiento = False
         self.edad, self.cumple_date, self.progreso, self.cumple_today = self.progress()
+        self.dorsal = dorsal
     
     def __str__(self):
         if self.embarazo:
@@ -81,9 +82,9 @@ data = json.load(open(data_file))
 
 for objeto in data:
     try:
-        kids.append(Kid(objeto['nombre'], objeto['fecha'], objeto['embarazo']))
+        kids.append(Kid(objeto['nombre'], objeto['fecha'],objeto['dorsal'], objeto['embarazo']))
     except KeyError:
-        kids.append(Kid(objeto['nombre'], objeto['fecha']))
+        kids.append(Kid(objeto['nombre'], objeto['fecha'], objeto['dorsal']))
 
 kids.sort(key=lambda x: x.progreso, reverse=True)
 
@@ -96,6 +97,9 @@ for kid in kids:
 
     cumple_header = new_div_kid.querySelector(".card-subtitle")
     cumple_header.text = f"{kid}"
+
+    tag_dorsal = new_div_kid.querySelector(".dorsal")
+    tag_dorsal.text = f"#{kid.dorsal}"
 
     name_header = new_div_kid.querySelector(".card-title")
     name_header.text = kid.nombre
