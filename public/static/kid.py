@@ -1,6 +1,9 @@
 import json
+import locale
 from browser import document
 from datetime import date, datetime
+
+locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
 
 
 def get_hidden_number(item):
@@ -21,8 +24,6 @@ class Kid:
         if self.embarazo:
             return f"Fecha de parto {self.fecha}"
         else:
-            #today = datetime.today().date()
-            #if today == self.cumple_date.date():
             if self.cumple_today:
                 self.nombre = f"¡Felicidades a {self.nombre}!"
                 if self.edad == 0:
@@ -31,7 +32,7 @@ class Kid:
                     return f"Hoy cumple 1 año"
                 return f"Hoy cumple {str(self.edad)} años"
 
-        return f"Cumple {str(self.edad)}  el {self.cumple_date.strftime('%d/%m/%Y')}"
+        return f"Cumple {str(self.edad)}  el {self.cumple_date.strftime('%d de %b.')}"
     
     def progress(self):
         today = datetime.today()
@@ -47,7 +48,6 @@ class Kid:
         fecha_nac = datetime.strptime(self.fecha, '%d/%m/%Y')
         self.nacimiento = fecha_nac.date() == today.date() and not self.embarazo
         
-
         current_year = date.today().year
         parts = self.fecha.split('/')
         cumple = f'{parts[0]}/{parts[1]}/{current_year}'
