@@ -1,9 +1,8 @@
 import json
-import locale
 from browser import document
 from datetime import date, datetime
 
-locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
+meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
 
 
 def get_hidden_number(item):
@@ -21,18 +20,20 @@ class Kid:
         self.dorsal = dorsal
     
     def __str__(self):
+        dia = self.cumple_date.day
+        mes = meses[self.cumple_date.month - 1]
         if self.embarazo:
-            return f"Fecha de parto {self.fecha}"
-        else:
-            if self.cumple_today:
-                self.nombre = f"¡Felicidades a {self.nombre}!"
-                if self.edad == 0:
-                    return f"Hoy has nacido"
-                elif self.edad == 1:
-                    return f"Hoy cumple 1 año"
-                return f"Hoy cumple {str(self.edad)} años"
+            return f"Se espera para el {dia} de {mes}"
 
-        return f"Cumple {str(self.edad)}  el {self.cumple_date.strftime('%d de %b.')}"
+        if self.cumple_today:
+            self.nombre = f"¡Felicidades a {self.nombre}!"
+            if self.edad == 0:
+                return f"Hoy has nacido"
+            elif self.edad == 1:
+                return f"Hoy cumple 1 año"
+            return f"Hoy cumple {str(self.edad)} años"
+        
+        return f"Cumple {str(self.edad)}  el {dia} de {mes}"
     
     def progress(self):
         today = datetime.today()
