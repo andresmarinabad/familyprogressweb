@@ -90,9 +90,15 @@
         "dorsal": 18
     },
     {
-        "nombre": "Martín Codina",
+        "nombre": "Pedro",
         "fecha": "01/02/2025",
         "embarazo": true,
         "dorsal": 19
+    },
+    {
+        "nombre": "Codina Ferreres",
+        "fecha": "04/07/2025",
+        "dorsal": 20,
+        "embarazo": true
     }
 ]
