@@ -100,5 +100,11 @@
         "fecha": "04/07/2025",
         "dorsal": 20,
         "embarazo": true
+    },
+    {
+        "nombre": "Codina Codina",
+        "fecha": "06/09/2025",
+        "dorsal": 21,
+        "embarazo": true
     }
 ]
