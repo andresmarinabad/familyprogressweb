@@ -1,0 +1,94 @@
+name: Upload Image from Issue
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  process_issue:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Obtener contenido del Issue
+        id: get_issue
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issue = context.payload.issue;
+            if (!issue) {
+              core.setFailed("Error: No se encontró el issue.");
+              return;
+            }
+
+            const body = issue.body || "";
+            console.log("DEBUG: Contenido del issue ->", body);
+            core.setOutput("issue_body", body);
+
+            const title = issue.title || "imagen";
+
+            // Convertir título a un nombre de archivo seguro
+            const safeTitle = title
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-") // Reemplaza caracteres especiales por guiones
+              .replace(/^-+|-+$/g, ""); // Elimina guiones al inicio y al final
+
+            // Expresión regular para detectar URLs de imágenes en issues
+            const regex = /!\[.*?\]\((https:\/\/(?:user-images\.githubusercontent\.com|github\.com\/user-attachments)\/.*?)\)/;
+            const match = body.match(regex);
+
+            if (!match) {
+              core.setFailed("No se encontró ninguna imagen en el issue. Verifica que la imagen esté correctamente subida.");
+            } else {
+              core.setOutput("image_url", match[1]);
+              core.setOutput("image_name", safeTitle + ".jpeg");
+              core.setOutput("issue_number", issue.number);
+            }
+
+      - name: Depurar contenido del Issue
+        run: |
+          echo "Contenido del issue:"
+          echo "${{ steps.get_issue.outputs.issue_body }}"
+
+      - name: Checkout del repositorio
+        uses: actions/checkout@v3
+
+      - name: Descargar imagen y sobreescribir si existe
+        run: |
+          mkdir -p public/static/images
+          wget -O "public/static/images/${{ steps.get_issue.outputs.image_name }}" "${{ steps.get_issue.outputs.image_url }}"
+
+      - name: Configurar usuario de Git
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
+      - name: Confirmar y enviar cambios (sobreescribiendo si es necesario)
+        run: |
+          git add "public/static/images/${{ steps.get_issue.outputs.image_name }}"
+          git commit -m "Actualizando imagen '${{ steps.get_issue.outputs.image_name }}' desde Issue #${{ steps.get_issue.outputs.issue_number }}" || echo "Sin cambios para commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comentar en el Issue y cerrarlo
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issueNumber = context.payload.issue.number;
+            const comment = `✅ Imagen subida y **sobreescrita**\n\nCerrando este issue automáticamente.`;
+
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              body: comment
+            });
+
+            github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              state: "closed"
+            });
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
