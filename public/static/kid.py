@@ -1,5 +1,6 @@
 import json
-from browser import document
+import time
+from browser import document, window
 from datetime import date, datetime
 
 meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
@@ -7,6 +8,20 @@ meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto
 
 def get_hidden_number(item):
     return int(item.select_one(".hidden-number").text)
+
+
+def calcular_tiempo_para_medianoche():
+    ahora = time.localtime()
+    segundos_hasta_medianoche = (
+        (24 - ahora.tm_hour - 1) * 3600 +
+        (60 - ahora.tm_min - 1) * 60 +
+        (60 - ahora.tm_sec)
+    )
+    return segundos_hasta_medianoche * 1000
+
+
+def refrescar_pagina():
+    window.location.reload()
 
 
 class Kid:
@@ -18,7 +33,7 @@ class Kid:
         self.nacimiento = False
         self.edad, self.cumple_date, self.progreso, self.cumple_today = self.progress()
         self.dorsal = dorsal
-    
+
     def __str__(self):
         dia = self.cumple_date.day
         mes = meses[self.cumple_date.month - 1]
@@ -32,9 +47,9 @@ class Kid:
             elif self.edad == 1:
                 return f"Hoy cumple 1 año"
             return f"Hoy cumple {str(self.edad)} años"
-        
+
         return f"Cumple {str(self.edad)}  el {dia} de {mes}"
-    
+
     def progress(self):
         today = datetime.today()
 
@@ -45,10 +60,10 @@ class Kid:
             else:
                 dif_dates = (fecha_parto - today).days
             return 0, fecha_parto, int(((270 - dif_dates)/270) * 100), False
-        
+
         fecha_nac = datetime.strptime(self.fecha, '%d/%m/%Y')
         self.nacimiento = fecha_nac.date() == today.date() and not self.embarazo
-        
+
         current_year = date.today().year
         parts = self.fecha.split('/')
         cumple = f'{parts[0]}/{parts[1]}/{current_year}'
@@ -66,10 +81,11 @@ class Kid:
             cumple_date = datetime.strptime(self.fecha, '%d/%m/%Y')
         else:
             self.fecha = f'{parts[0]}/{parts[1]}/{current_year}'
-        
+
         dif_dates = (cumple_date - today).days
 
         return edad, cumple_date, int(((365 - dif_dates)/365) * 100), False
+
 
 kids = []
 
@@ -92,7 +108,7 @@ kids.sort(key=lambda x: x.cumple_date, reverse=False)
 
 for kid in kids:
     new_div_kid = div_kid.cloneNode(True)
-    
+
     foto_link = new_div_kid.querySelector(".card-img-top")
     foto_link.attrs['src'] = kid.foto
 
@@ -151,8 +167,10 @@ for kid in kids:
         progress_div.class_name = 'progress-violeta h-5 rounded-full striped-progress-bar'
     else:
         progress_div.class_name = 'progress-purpura h-5 rounded-full striped-progress-bar'
-    
+
     if kid.cumple_today:
         progress_div.class_name = 'progress-gold h-5 rounded-full'
 
     contenedor.appendChild(new_div_kid)
+
+window.setTimeout(refrescar_pagina, calcular_tiempo_para_medianoche())
