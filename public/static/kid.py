@@ -87,7 +87,7 @@ for objeto in data:
     except KeyError:
         kids.append(Kid(objeto['nombre'], objeto['fecha'], objeto['dorsal']))
 
-kids.sort(key=lambda x: x.progreso, reverse=True)
+kids.sort(key=lambda x: x.cumple_date, reverse=False)
 
 
 for kid in kids:
