@@ -28,9 +28,7 @@ jobs:
 
             // Convertir título a un nombre de archivo seguro
             const safeTitle = title
-              .toLowerCase()
-              .replace(/[^a-z0-9]+/g, "-") // Reemplaza caracteres especiales por guiones
-              .replace(/^-+|-+$/g, ""); // Elimina guiones al inicio y al final
+              .toLowerCase();
 
             // Expresión regular para detectar URLs de imágenes en issues
             const regex = /!\[.*?\]\((https:\/\/(?:user-images\.githubusercontent\.com|github\.com\/user-attachments)\/.*?)\)/;
