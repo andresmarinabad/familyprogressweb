@@ -25,8 +25,8 @@
           {% if kid.video %}
           <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/{{ kid.nombre | lower }}.jpeg" onclick="mostrarVideo('{{kid.nombre | lower}}')" alt="">
           <span class="dorsal archivo-dorsal">#{{ kid.dorsal }}</span>
-          <video class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4 video" autoplay>
-              <source src="static/videos/míriam.mp4" type="video/mp4">
+          <video class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4 video" playsinline autoplay>
+              <source src="static/videos/{{ kid.nombre | lower }}.mp4" type="video/mp4">
               Tu navegador no soporta este formato de video.
           </video>
           {% else %}
@@ -64,15 +64,22 @@
           imagen.style.display = 'none';
           video.style.display = 'block';
 
+          video.setAttribute('playsinline', '');
+          video.currentTime = 0;
+          video.play();
+
           video.onended = function() {
+            video.pause();
+            video.currentTime = 0;
+            video.load();
             imagen.style.display = 'block';
             video.style.display = 'none';
           };
 
-          video.onpause = function() {
+          /*video.onpause = function() {
             imagen.style.display = 'block';
             video.style.display = 'none';
-          };
+          };*/
       }
   </script>
   </scirpt>
