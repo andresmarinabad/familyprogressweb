@@ -6,44 +6,41 @@
   <title>Family Expansion</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,container-queries"></script>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython.min.js"></script>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython_stdlib.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@1,87.5,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="static/kids.css">
 
 </head>
-<body class="bg-gray-100" onload="brython()">
+<body class="bg-gray-100">
 
   <section class="container mx-auto p-6">
     <h2 class="text-4xl font-bold text-center mb-8">Próximo Cumpleaños</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="contenedor">
       
-      <!-- Team Member 1 -->
-      <div hidden class="bg-white p-6 rounded-lg shadow-md" id="kid">
+      {% for kid in kids %}
+      <div class="bg-white p-6 rounded-lg shadow-md" id="kid">
 
         <div class="image-container rounded-xl">
-          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/marc.jpeg" alt="">
-          <span class="dorsal archivo-dorsal"></span>
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/{{ kid.nombre | lower }}.jpeg" alt="">
+          <span class="dorsal archivo-dorsal">#{{ kid.dorsal }}</span>
         </div>
 
-        <h3 class="text-xl font-semibold text-center card-title">Nombre</h3>
-        <p class="text-gray-600 text-center card-subtitle">Cumple</p>
-        <span hidden class="hidden-number"></span>
+        <h3 class="text-xl font-semibold text-center card-title">{{ kid.nombre }}</h3>
+        <p class="text-gray-600 text-center card-subtitle">{{ kid }}</p>
+        <!--span hidden class="hidden-number"></span-->
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
-                <div class="auxbar"></div>
+                <div class="auxbar {{ kid.color }}" style="width: {{ kid.progreso }}%;"></div>
             </div>
 
         </div>
       </div>
+      {% endfor %}
 
     </div>
   </section>
-
-  <script type="text/python" src="static/kid.py"></script>
 
 
 </body>
