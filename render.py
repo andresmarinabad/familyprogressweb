@@ -1,6 +1,7 @@
 """
 Render index.html with the kids data.
 """
+import os
 import json
 from datetime import date, datetime
 from jinja2 import Environment, FileSystemLoader
@@ -66,6 +67,7 @@ class Kid:
         self.edad, self.cumple_date, self.progreso, self.cumple_today = self.progress()
         self.dorsal = dorsal
         self.color = return_progress_color(self.progreso, self.cumple_today)
+        self.video = os.path.exists(f"public/static/videos/{self.nombre.lower()}.mp4")
 
     def __str__(self):
         dia = self.cumple_date.day

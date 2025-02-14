@@ -115,11 +115,17 @@
 
 }
 
+.video {
+    display: none;
+    object-fit: cover;
+}
+
 .image-container img {
     display: block;
     width: 100%;
     height: auto;
-    border-radius: inherit; 
+    border-radius: inherit;
+    object-fit: cover;
 }
 
 

@@ -21,9 +21,18 @@
       {% for kid in kids %}
       <div class="bg-white p-6 rounded-lg shadow-md" id="kid">
 
-        <div class="image-container rounded-xl">
+        <div class="image-container rounded-xl" id="{{kid.nombre | lower}}-div">
+          {% if kid.video %}
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/{{ kid.nombre | lower }}.jpeg" onclick="mostrarVideo('{{kid.nombre | lower}}')" alt="">
+          <span class="dorsal archivo-dorsal">#{{ kid.dorsal }}</span>
+          <video class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4 video" autoplay>
+              <source src="static/videos/míriam.mp4" type="video/mp4">
+              Tu navegador no soporta este formato de video.
+          </video>
+          {% else %}
           <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/{{ kid.nombre | lower }}.jpeg" alt="">
           <span class="dorsal archivo-dorsal">#{{ kid.dorsal }}</span>
+          {% endif %}
         </div>
 
         <h3 class="text-xl font-semibold text-center card-title">{{ kid.nombre }}</h3>
@@ -41,6 +50,27 @@
 
     </div>
   </section>
+
+  <scirpt>
+    <script>
+      function mostrarVideo(kidid) {
+          // Oculta la imagen
+          var divid = kidid + '-div';
+          var div = document.getElementById(divid);
+          
+          var imagen = div.querySelector('img');
+          var video = div.querySelector('video');
+          
+          imagen.style.display = 'none';
+          video.style.display = 'block';
+
+          video.onended = function() {
+            imagen.style.display = 'block';
+            video.style.display = 'none';
+          };
+      }
+  </script>
+  </scirpt>
 
 
 </body>
