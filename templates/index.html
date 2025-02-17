@@ -65,10 +65,13 @@
   </section>
 
   <script>
-      let video_actual = "";
+      // let video_actual = "";
 
       document.getElementById("filtro").addEventListener("change", function() {
-          resetImage(video_actual);
+          /*if (video_actual !== "") {
+              resetImage(video_actual);
+          }*/
+        
           if (this.checked) {
               ordenarDivsDorsal();
           } else {
@@ -76,7 +79,7 @@
           }
       });
 
-      function resetImage(divid) {
+      /*function resetImage(divid) {
           var div = document.getElementById(divid);
           var imagen = div.querySelector('img');
           var video = div.querySelector('video');
@@ -113,7 +116,7 @@
           video.onended = function(){
             resetImage(divid);
           };
-      }
+      }*/
 
       function ordenarDivsDorsal() {
         const container = document.getElementById('contenedor');
