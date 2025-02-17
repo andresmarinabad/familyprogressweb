@@ -65,12 +65,8 @@
   </section>
 
   <script>
-      // let video_actual = "";
 
       document.getElementById("filtro").addEventListener("change", function() {
-          /*if (video_actual !== "") {
-              resetImage(video_actual);
-          }*/
         
           if (this.checked) {
               ordenarDivsDorsal();
@@ -79,29 +75,10 @@
           }
       });
 
-      /*function resetImage(divid) {
-          var div = document.getElementById(divid);
-          var imagen = div.querySelector('img');
-          var video = div.querySelector('video');
-
-          video.currentTime = 0;
-          video.load();
-          video.pause();
-
-          imagen.style.display = 'block';
-          video.style.display = 'none';
-      }
-
       function mostrarVideo(kidid) {
-
-          if (video_actual !== "") {
-              resetImage(video_actual);
-          }
 
           var divid = kidid + '-div';
           var div = document.getElementById(divid);
-
-          video_actual = divid;
           
           var imagen = div.querySelector('img');
           var video = div.querySelector('video');
@@ -114,9 +91,14 @@
           video.play();
 
           video.onended = function(){
-            resetImage(divid);
+            video.currentTime = 0;
+            video.load();
+            video.pause();
+
+            imagen.style.display = 'block';
+            video.style.display = 'none';
           };
-      }*/
+      }
 
       function ordenarDivsDorsal() {
         const container = document.getElementById('contenedor');
