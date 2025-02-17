@@ -59,15 +59,16 @@ class Kid:
     """
     A class to represent a kid and track their progress.
     """
-    def __init__(self, nombre, fecha, dorsal, embarazo=False):
+    def __init__(self, nombre, fecha, num, embarazo=False):
         self.nombre = nombre
         self.fecha = fecha
         self.embarazo = embarazo
         self.nacimiento = False
         self.edad, self.cumple_date, self.progreso, self.cumple_today = self.progress()
-        self.dorsal = dorsal
+        self.dorsal = num
         self.color = return_progress_color(self.progreso, self.cumple_today)
         self.video = os.path.exists(f"public/static/videos/{self.nombre.lower()}.mp4")
+        self.image = self.get_image()
 
     def __str__(self):
         dia = self.cumple_date.day
@@ -84,6 +85,30 @@ class Kid:
             return f"Hoy cumple {str(self.edad)} años"
 
         return f"Cumple {str(self.edad)}  el {dia} de {mes}"
+
+    def get_image(self):
+        """
+        Return the image path based on the kid's age or pregnancy status.
+        """
+        if os.path.exists(f"public/static/images/{self.nombre.lower()}.jpeg"):
+            return f"static/images/{self.nombre.lower()}.jpeg"
+
+        if self.embarazo:
+            fpp = datetime.strptime(self.fecha, "%d/%m/%Y")
+            hoy = datetime.today()
+            semanas_restantes = (fpp - hoy).days // 7
+            semanas_actuales = 40 - semanas_restantes
+
+            if semanas_actuales < 10:
+                return "static/images/placeholder/1.png"
+            elif semanas_actuales < 20:
+                return "static/images/placeholder/2.png"
+            elif semanas_actuales < 30:
+                return "static/images/placeholder/3.png"
+            else:
+                return "static/images/placeholder/4.png"
+
+        return "static/images/placeholder/missing.jpg"
 
     def progress(self):
         """
@@ -131,11 +156,11 @@ if __name__ == '__main__':
     with open("data.json", encoding='utf-8') as f:
         data = json.load(f)
 
-    for objeto in data:
+    for dorsal, objeto in enumerate(data, start=1):
         try:
-            kids.append(Kid(objeto['nombre'], objeto['fecha'],objeto['dorsal'], objeto['embarazo']))
+            kids.append(Kid(objeto['nombre'], objeto['fecha'], dorsal, objeto['embarazo']))
         except KeyError:
-            kids.append(Kid(objeto['nombre'], objeto['fecha'], objeto['dorsal']))
+            kids.append(Kid(objeto['nombre'], objeto['fecha'], dorsal))
 
     kids.sort(key=lambda x: x.cumple_date, reverse=False)
 

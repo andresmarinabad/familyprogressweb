@@ -23,14 +23,14 @@
 
         <div class="image-container rounded-xl" id="{{kid.nombre | lower}}-div">
           {% if kid.video %}
-          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/{{ kid.nombre | lower }}.jpeg" onclick="mostrarVideo('{{kid.nombre | lower}}')" alt="">
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="{{ kid.image }}" onclick="mostrarVideo('{{kid.nombre | lower}}')" alt="">
           <span class="dorsal archivo-dorsal">#{{ kid.dorsal }}</span>
           <video class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4 video" playsinline autoplay>
               <source src="static/videos/{{ kid.nombre | lower }}.mp4" type="video/mp4">
               Tu navegador no soporta este formato de video.
           </video>
           {% else %}
-          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/{{ kid.nombre | lower }}.jpeg" alt="">
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="{{ kid.image }}" alt="">
           <span class="dorsal archivo-dorsal">#{{ kid.dorsal }}</span>
           {% endif %}
         </div>
