@@ -65,7 +65,10 @@
   </section>
 
   <script>
+      let video_actual = "";
+
       document.getElementById("filtro").addEventListener("change", function() {
+          resetImage(video_actual);
           if (this.checked) {
               ordenarDivsDorsal();
           } else {
@@ -73,9 +76,29 @@
           }
       });
 
+      function resetImage(divid) {
+          var div = document.getElementById(divid);
+          var imagen = div.querySelector('img');
+          var video = div.querySelector('video');
+
+          video.currentTime = 0;
+          video.load();
+          video.pause();
+
+          imagen.style.display = 'block';
+          video.style.display = 'none';
+      }
+
       function mostrarVideo(kidid) {
+
+          if (video_actual !== "") {
+              resetImage(video_actual);
+          }
+
           var divid = kidid + '-div';
           var div = document.getElementById(divid);
+
+          video_actual = divid;
           
           var imagen = div.querySelector('img');
           var video = div.querySelector('video');
@@ -87,12 +110,8 @@
           video.currentTime = 0;
           video.play();
 
-          video.onended = function() {
-            video.currentTime = 0;
-            video.load();
-            video.pause();
-            imagen.style.display = 'block';
-            video.style.display = 'none';
+          video.onended = function(){
+            resetImage(divid);
           };
       }
 
