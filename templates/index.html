@@ -17,17 +17,17 @@
   <section class="container mx-auto p-6">
     <h2 class="text-4xl font-bold text-center mb-8">Próximo Cumpleaños</h2>
 
-    <!--div class="mb-4 flex justify-end items-center gap-4">
+    <div class="mb-4 flex justify-end items-center gap-4">
       <span class="text-gray-700">Fecha</span>
   
       <label class="relative inline-flex items-center cursor-pointer">
           <input type="checkbox" id="filtro" class="sr-only peer">
-          <div class="w-14 h-7 bg-gray-300 rounded-full peer peer-checked:bg-blue-500 transition-all"></div>
+          <div class="w-14 h-7 bg-red-500 rounded-full peer peer-checked:bg-blue-500 transition-all"></div>
           <div class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full shadow-md peer-checked:translate-x-7 transition-all"></div>
       </label>
   
       <span class="text-gray-700">Dorsal</span>
-  </div-->
+  </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="contenedor">
       
@@ -38,7 +38,7 @@
           {% if kid.video %}
           <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="{{ kid.image }}" onclick="mostrarVideo('{{kid.nombre | lower}}')" alt="">
           <span class="dorsal archivo-dorsal">#{{ kid.dorsal }}</span>
-          <video class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4 video" playsinline autoplay>
+          <video class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4 video" playsinline>
               <source src="static/videos/{{ kid.nombre | lower }}.mp4" type="video/mp4">
               Tu navegador no soporta este formato de video.
           </video>
