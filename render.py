@@ -67,7 +67,7 @@ class Kid:
         self.edad, self.cumple_date, self.progreso, self.cumple_today = self.progress()
         self.dorsal = num
         self.color = return_progress_color(self.progreso, self.cumple_today)
-        self.video = False #os.path.exists(f"public/static/videos/{self.nombre.lower()}.mp4")
+        self.video = os.path.exists(f"public/static/videos/{self.nombre.lower()}.mp4")
         self.image = self.get_image()
 
     def __str__(self):
