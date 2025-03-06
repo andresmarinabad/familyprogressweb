@@ -1,8 +1,10 @@
 {
   "projects": {
-    "family": "family-progress"
+    "family": "family-expansion"
   },
   "targets": {},
   "etags": {},
-  "dataconnectEmulatorConfig": {}
+  "dataconnectEmulatorConfig": {},
+  "default": "family-expansion"
+  }
 }
