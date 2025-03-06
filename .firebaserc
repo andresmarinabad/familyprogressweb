@@ -1,10 +1,7 @@
 {
   "projects": {
-    "family": "family-expansion"
+    "prod": "family-expansion"
   },
   "targets": {},
-  "etags": {},
-  "dataconnectEmulatorConfig": {},
-  "default": "family-expansion"
-  }
+  "etags": {}
 }
