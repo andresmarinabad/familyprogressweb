@@ -51,7 +51,7 @@ def return_progress_color(progreso, today=False):
     if today:
         return 'progress-gold h-5 rounded-full'
     for threshold, class_name in progress_classes:
-        if progreso < threshold:
+        if progreso <= threshold:
             return f"{class_name} h-5 rounded-full striped-progress-bar"
 
 
@@ -150,8 +150,7 @@ class Kid:
         return edad, cumple_date, int(((365 - dif_dates)/365) * 100), False
 
 
-if __name__ == '__main__':
-
+def generate_kids_page():
     kids = []
     with open("data.json", encoding='utf-8') as f:
         data = json.load(f)
@@ -169,3 +168,7 @@ if __name__ == '__main__':
     output = template.render(kids=kids)
     with open("public/index.html", "w", encoding='utf-8') as f:
         f.write(output)
+
+
+if __name__ == '__main__':
+    generate_kids_page()

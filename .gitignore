@@ -44,3 +44,6 @@ public/index.html
 
 *.cache
 
+.coverage
+.env/
+.vscode
