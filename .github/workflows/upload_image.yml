@@ -99,7 +99,7 @@ jobs:
             await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_id: "deploy.yml",
+              workflow_id: "test_and_deploy.yml",
               ref: "master"
             });
         
