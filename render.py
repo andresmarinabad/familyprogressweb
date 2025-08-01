@@ -166,7 +166,7 @@ def generate_kids_page():
     env = Environment(loader=FileSystemLoader("templates"))
     template = env.get_template("index.html")
     output = template.render(kids=kids)
-    with open("public/index.html", "w", encoding='utf-8') as f:
+    with open("docs/index.html", "w", encoding='utf-8') as f:
         f.write(output)
 
 
