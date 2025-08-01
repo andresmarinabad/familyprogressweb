@@ -1,0 +1,151 @@
+.header {
+    text-align: center;
+    position: relative;
+    padding: 20px 0;
+}
+
+.progress-rojo-intenso {
+    background-color: rgb(255, 0, 0) !important;
+}
+.progress-rojo-anaranjado {
+    background-color: rgb(255, 64, 0) !important;
+}
+.progress-naranja-oscuro {
+    background-color: rgb(255, 128, 0) !important;
+}
+.progress-naranja-claro {
+    background-color: rgb(255, 191, 0) !important;
+}
+.progress-amarillo-dorado {
+    background-color: rgb(255, 255, 0) !important;
+}
+.progress-amarillo-verdoso {
+    background-color: rgb(191, 255, 0) !important;
+}
+.progress-verde-claro {
+    background-color: rgb(128, 255, 0) !important;
+}
+.progress-verde-lima {
+    background-color: rgb(64, 255, 0) !important;
+}
+.progress-verde-intenso {
+    background-color: rgb(0, 255, 0) !important;
+}
+.progress-verde-azulado {
+    background-color: rgb(0, 255, 64) !important;
+}
+.progress-turquesa {
+    background-color: rgb(0, 255, 128) !important;
+}
+.progress-cian {
+    background-color: rgb(0, 255, 191) !important;
+}
+.progress-azul-claro {
+    background-color: rgb(0, 255, 255) !important;
+}
+.progress-azul-cielo {
+    background-color: rgb(0, 191, 255) !important;
+}
+.progress-azul-medio {
+    background-color: rgb(0, 128, 255) !important;
+}
+.progress-azul-intenso {
+    background-color: rgb(0, 64, 255) !important;
+}
+.progress-azul-oscuro {
+    background-color: rgb(0, 0, 255) !important;
+}
+.progress-indigo {
+    background-color: rgb(64, 0, 255) !important;
+}
+.progress-violeta {
+    background-color: rgb(128, 0, 255) !important;
+}
+.progress-purpura {
+    background-color: rgb(191, 0, 255) !important;
+}
+
+
+/* Clase para la barra de progreso dorada con efecto de brillo */
+.progress-gold {
+    background-color: #FFD700; /* Color dorado oscuro */
+    height: 20px; /* Altura de la barra */
+    border-radius: 10px; /* Bordes redondeados */
+    position: relative; /* Para posicionar el brillo */
+    overflow: hidden; /* Para ocultar el brillo que sale de la barra */
+}
+
+/* Efecto de brillo animado */
+.progress-gold::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
+    animation: shine 3s infinite;
+}
+
+/* Animación del brillo horizontal */
+@keyframes shine {
+    0% {
+        left: -50%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+
+@keyframes stripesAnimation {
+  0% { background-position: 100% 0; }
+  100% { background-position: 0 0; }
+}
+
+.striped-progress-bar {
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-size: 20px 20px;
+  animation: stripesAnimation 10s linear infinite;
+}
+
+.image-container {
+
+    position: relative;
+
+}
+
+.video {
+    display: none;
+    object-fit: cover;
+}
+
+.image-container img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: inherit;
+    object-fit: cover;
+}
+
+
+.archivo-dorsal {
+  font-family: "Archivo", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: italic;
+  font-variation-settings:
+    "wdth" 87.5;
+}
+
+.dorsal {
+  position: absolute;
+  top: -20px; /* Ajusta este valor según sea necesario */
+  right: -10px; /* Ajusta este valor según sea necesario */
+  color: white;
+  font-size: 2.5em; /* Tamaño de fuente mayor */
+  font-weight: bold;
+  text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; /* Borde negro grueso */
+  
+}
+
