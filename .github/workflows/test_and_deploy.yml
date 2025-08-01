@@ -51,9 +51,8 @@ jobs:
       - name: Ejecutar script Python
         run: python render.py
 
-      - name: Deploy to Firebase Hosting
-        uses: w9jds/firebase-action@master
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          args: deploy --only hosting --project ${{ secrets.FIREBASE_PROJECT_ID }}
-        env:
-          GCP_SA_KEY: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
