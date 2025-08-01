@@ -1,4 +1,0 @@
-jinja2
-pytest
-pytest-cov
-time_machine

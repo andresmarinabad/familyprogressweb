@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Family Expansion</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,container-queries"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@1,87.5,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/kids.css">
+
+</head>
+<body class="bg-gray-100">
+
+  <section class="container mx-auto p-6">
+    <h2 class="text-4xl font-bold text-center mb-8">Próximo Cumpleaños</h2>
+
+    <div class="mb-4 flex justify-end items-center gap-4">
+      <span class="text-gray-700">Fecha</span>
+  
+      <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="filtro" class="sr-only peer">
+          <div class="w-14 h-7 bg-red-500 rounded-full peer peer-checked:bg-blue-500 transition-all"></div>
+          <div class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full shadow-md peer-checked:translate-x-7 transition-all"></div>
+      </label>
+  
+      <span class="text-gray-700">Dorsal</span>
+  </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="contenedor">
+      
+      
+      <div class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="image-container rounded-xl" id="bruno-div">
+          
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/placeholder/missing.jpg" alt="">
+          <span class="dorsal archivo-dorsal">#14</span>
+          
+        </div>
+
+        <h3 class="text-xl font-semibold text-center card-title">Bruno</h3>
+        <p class="text-gray-600 text-center card-subtitle">Hoy cumple 2 años</p>
+        <span hidden class="fecha">2025-08-01 00:00:00</span>
+        <div class="text-center mt-4">
+          
+            <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
+                <div class="auxbar progress-gold h-5 rounded-full" style="width: 100%;"></div>
+            </div>
+
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="image-container rounded-xl" id="marc-div">
+          
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/placeholder/missing.jpg" alt="">
+          <span class="dorsal archivo-dorsal">#15</span>
+          
+        </div>
+
+        <h3 class="text-xl font-semibold text-center card-title">Marc</h3>
+        <p class="text-gray-600 text-center card-subtitle">Cumple 2  el 13 de Agosto</p>
+        <span hidden class="fecha">2025-08-13 00:00:00</span>
+        <div class="text-center mt-4">
+          
+            <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
+                <div class="auxbar progress-purpura h-5 rounded-full striped-progress-bar" style="width: 96%;"></div>
+            </div>
+
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="image-container rounded-xl" id="mateo-div">
+          
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/placeholder/missing.jpg" alt="">
+          <span class="dorsal archivo-dorsal">#2</span>
+          
+        </div>
+
+        <h3 class="text-xl font-semibold text-center card-title">Mateo</h3>
+        <p class="text-gray-600 text-center card-subtitle">Cumple 7  el 28 de Agosto</p>
+        <span hidden class="fecha">2025-08-28 00:00:00</span>
+        <div class="text-center mt-4">
+          
+            <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
+                <div class="auxbar progress-violeta h-5 rounded-full striped-progress-bar" style="width: 92%;"></div>
+            </div>
+
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="image-container rounded-xl" id="maría-div">
+          
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/placeholder/4.png" alt="">
+          <span class="dorsal archivo-dorsal">#21</span>
+          
+        </div>
+
+        <h3 class="text-xl font-semibold text-center card-title">María</h3>
+        <p class="text-gray-600 text-center card-subtitle">Se espera para el 3 de Septiembre</p>
+        <span hidden class="fecha">2025-09-03 00:00:00</span>
+        <div class="text-center mt-4">
+          
+            <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
+                <div class="auxbar progress-indigo h-5 rounded-full striped-progress-bar" style="width: 88%;"></div>
+            </div>
+
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="image-container rounded-xl" id="paula-div">
+          
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/placeholder/missing.jpg" alt="">
+          <span class="dorsal archivo-dorsal">#12</span>
+          
+        </div>
+
+        <h3 class="text-xl font-semibold text-center card-title">Paula</h3>
+        <p class="text-gray-600 text-center card-subtitle">Cumple 3  el 17 de Septiembre</p>
+        <span hidden class="fecha">2025-09-17 00:00:00</span>
+        <div class="text-center mt-4">
+          
+            <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
+                <div class="auxbar progress-indigo h-5 rounded-full striped-progress-bar" style="width: 87%;"></div>
+            </div>
+
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="image-container rounded-xl" id="marta-div">
+          
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/placeholder/missing.jpg" alt="">
+          <span class="dorsal archivo-dorsal">#1</span>
+          
+        </div>
+
+        <h3 class="text-xl font-semibold text-center card-title">Marta</h3>
+        <p class="text-gray-600 text-center card-subtitle">Cumple 8  el 25 de Septiembre</p>
+        <span hidden class="fecha">2025-09-25 00:00:00</span>
+        <div class="text-center mt-4">
+          
+            <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
+                <div class="auxbar progress-azul-oscuro h-5 rounded-full striped-progress-bar" style="width: 85%;"></div>
+            </div>
+
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="image-container rounded-xl" id="lucas-div">
+          
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/placeholder/missing.jpg" alt="">
+          <span class="dorsal archivo-dorsal">#3</span>
+          
+        </div>
+
+        <h3 class="text-xl font-semibold text-center card-title">Lucas</h3>
+        <p class="text-gray-600 text-center card-subtitle">Cumple 7  el 10 de Octubre</p>
+        <span hidden class="fecha">2025-10-10 00:00:00</span>
+        <div class="text-center mt-4">
+          
+            <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
+                <div class="auxbar progress-azul-oscuro h-5 rounded-full striped-progress-bar" style="width: 81%;"></div>
+            </div>
+
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="image-container rounded-xl" id="rodrigo-div">
+          
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/placeholder/missing.jpg" alt="">
+          <span class="dorsal archivo-dorsal">#13</span>
+          
+        </div>
+
+        <h3 class="text-xl font-semibold text-center card-title">Rodrigo</h3>
+        <p class="text-gray-600 text-center card-subtitle">Cumple 3  el 29 de Octubre</p>
+        <span hidden class="fecha">2025-10-29 00:00:00</span>
+        <div class="text-center mt-4">
+          
+            <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
+                <div class="auxbar progress-azul-medio h-5 rounded-full striped-progress-bar" style="width: 75%;"></div>
+            </div>
+
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="image-container rounded-xl" id="juan-div">
+          
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/placeholder/missing.jpg" alt="">
+          <span class="dorsal archivo-dorsal">#5</span>
+          
+        </div>
+
+        <h3 class="text-xl font-semibold text-center card-title">Juan</h3>
+        <p class="text-gray-600 text-center card-subtitle">Cumple 6  el 10 de Diciembre</p>
+        <span hidden class="fecha">2025-12-10 00:00:00</span>
+        <div class="text-center mt-4">
+          
+            <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
+                <div class="auxbar progress-azul-claro h-5 rounded-full striped-progress-bar" style="width: 64%;"></div>
+            </div>
+
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="image-container rounded-xl" id="catalina-div">
+          
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/placeholder/missing.jpg" alt="">
+          <span class="dorsal archivo-dorsal">#6</span>
+          
+        </div>
+
+        <h3 class="text-xl font-semibold text-center card-title">Catalina</h3>
+        <p class="text-gray-600 text-center card-subtitle">Cumple 6  el 14 de Diciembre</p>
+        <span hidden class="fecha">2025-12-14 00:00:00</span>
+        <div class="text-center mt-4">
+          
+            <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
+                <div class="auxbar progress-azul-claro h-5 rounded-full striped-progress-bar" style="width: 63%;"></div>
+            </div>
+
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="image-container rounded-xl" id="javier-div">
+          
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/placeholder/missing.jpg" alt="">
+          <span class="dorsal archivo-dorsal">#7</span>
+          
+        </div>
+
+        <h3 class="text-xl font-semibold text-center card-title">Javier</h3>
+        <p class="text-gray-600 text-center card-subtitle">Cumple 5  el 18 de Diciembre</p>
+        <span hidden class="fecha">2025-12-18 00:00:00</span>
+        <div class="text-center mt-4">
+          
+            <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
+                <div class="auxbar progress-azul-claro h-5 rounded-full striped-progress-bar" style="width: 62%;"></div>
+            </div>
+
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="image-container rounded-xl" id="blanca-div">
+          
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/placeholder/missing.jpg" alt="">
+          <span class="dorsal archivo-dorsal">#16</span>
+          
+        </div>
+
+        <h3 class="text-xl font-semibold text-center card-title">Blanca</h3>
+        <p class="text-gray-600 text-center card-subtitle">Cumple 2  el 12 de Enero</p>
+        <span hidden class="fecha">2026-01-12 00:00:00</span>
+        <div class="text-center mt-4">
+          
+            <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
+                <div class="auxbar progress-turquesa h-5 rounded-full striped-progress-bar" style="width: 55%;"></div>
+            </div>
+
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="image-container rounded-xl" id="pedro-div">
+          
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/placeholder/missing.jpg" alt="">
+          <span class="dorsal archivo-dorsal">#19</span>
+          
+        </div>
+
+        <h3 class="text-xl font-semibold text-center card-title">Pedro</h3>
+        <p class="text-gray-600 text-center card-subtitle">Cumple 1  el 9 de Febrero</p>
+        <span hidden class="fecha">2026-02-09 00:00:00</span>
+        <div class="text-center mt-4">
+          
+            <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
+                <div class="auxbar progress-verde-azulado h-5 rounded-full striped-progress-bar" style="width: 47%;"></div>
+            </div>
+
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="image-container rounded-xl" id="míriam-div">
+          
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/placeholder/missing.jpg" alt="">
+          <span class="dorsal archivo-dorsal">#17</span>
+          
+        </div>
+
+        <h3 class="text-xl font-semibold text-center card-title">Míriam</h3>
+        <p class="text-gray-600 text-center card-subtitle">Cumple 2  el 14 de Abril</p>
+        <span hidden class="fecha">2026-04-14 00:00:00</span>
+        <div class="text-center mt-4">
+          
+            <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
+                <div class="auxbar progress-amarillo-verdoso h-5 rounded-full striped-progress-bar" style="width: 30%;"></div>
+            </div>
+
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="image-container rounded-xl" id="clara-div">
+          
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/placeholder/missing.jpg" alt="">
+          <span class="dorsal archivo-dorsal">#4</span>
+          
+        </div>
+
+        <h3 class="text-xl font-semibold text-center card-title">Clara</h3>
+        <p class="text-gray-600 text-center card-subtitle">Cumple 7  el 18 de Mayo</p>
+        <span hidden class="fecha">2026-05-18 00:00:00</span>
+        <div class="text-center mt-4">
+          
+            <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
+                <div class="auxbar progress-naranja-claro h-5 rounded-full striped-progress-bar" style="width: 20%;"></div>
+            </div>
+
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="image-container rounded-xl" id="raquel-div">
+          
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/placeholder/missing.jpg" alt="">
+          <span class="dorsal archivo-dorsal">#8</span>
+          
+        </div>
+
+        <h3 class="text-xl font-semibold text-center card-title">Raquel</h3>
+        <p class="text-gray-600 text-center card-subtitle">Cumple 5  el 19 de Mayo</p>
+        <span hidden class="fecha">2026-05-19 00:00:00</span>
+        <div class="text-center mt-4">
+          
+            <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
+                <div class="auxbar progress-naranja-claro h-5 rounded-full striped-progress-bar" style="width: 20%;"></div>
+            </div>
+
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="image-container rounded-xl" id="andreu-div">
+          
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/placeholder/missing.jpg" alt="">
+          <span class="dorsal archivo-dorsal">#18</span>
+          
+        </div>
+
+        <h3 class="text-xl font-semibold text-center card-title">Andreu</h3>
+        <p class="text-gray-600 text-center card-subtitle">Cumple 2  el 31 de Mayo</p>
+        <span hidden class="fecha">2026-05-31 00:00:00</span>
+        <div class="text-center mt-4">
+          
+            <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
+                <div class="auxbar progress-naranja-claro h-5 rounded-full striped-progress-bar" style="width: 17%;"></div>
+            </div>
+
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="image-container rounded-xl" id="sofía-div">
+          
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/placeholder/missing.jpg" alt="">
+          <span class="dorsal archivo-dorsal">#9</span>
+          
+        </div>
+
+        <h3 class="text-xl font-semibold text-center card-title">Sofía</h3>
+        <p class="text-gray-600 text-center card-subtitle">Cumple 5  el 28 de Junio</p>
+        <span hidden class="fecha">2026-06-28 00:00:00</span>
+        <div class="text-center mt-4">
+          
+            <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
+                <div class="auxbar progress-rojo-anaranjado h-5 rounded-full striped-progress-bar" style="width: 9%;"></div>
+            </div>
+
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="image-container rounded-xl" id="tomás-div">
+          
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/placeholder/missing.jpg" alt="">
+          <span class="dorsal archivo-dorsal">#10</span>
+          
+        </div>
+
+        <h3 class="text-xl font-semibold text-center card-title">Tomás</h3>
+        <p class="text-gray-600 text-center card-subtitle">Cumple 5  el 9 de Julio</p>
+        <span hidden class="fecha">2026-07-09 00:00:00</span>
+        <div class="text-center mt-4">
+          
+            <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
+                <div class="auxbar progress-rojo-anaranjado h-5 rounded-full striped-progress-bar" style="width: 6%;"></div>
+            </div>
+
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="image-container rounded-xl" id="carlos-div">
+          
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/placeholder/missing.jpg" alt="">
+          <span class="dorsal archivo-dorsal">#11</span>
+          
+        </div>
+
+        <h3 class="text-xl font-semibold text-center card-title">Carlos</h3>
+        <p class="text-gray-600 text-center card-subtitle">Cumple 4  el 10 de Julio</p>
+        <span hidden class="fecha">2026-07-10 00:00:00</span>
+        <div class="text-center mt-4">
+          
+            <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
+                <div class="auxbar progress-rojo-anaranjado h-5 rounded-full striped-progress-bar" style="width: 6%;"></div>
+            </div>
+
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="image-container rounded-xl" id="inés-div">
+          
+          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="static/images/placeholder/missing.jpg" alt="">
+          <span class="dorsal archivo-dorsal">#20</span>
+          
+        </div>
+
+        <h3 class="text-xl font-semibold text-center card-title">Inés</h3>
+        <p class="text-gray-600 text-center card-subtitle">Cumple 1  el 13 de Julio</p>
+        <span hidden class="fecha">2026-07-13 00:00:00</span>
+        <div class="text-center mt-4">
+          
+            <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
+                <div class="auxbar progress-rojo-intenso h-5 rounded-full striped-progress-bar" style="width: 5%;"></div>
+            </div>
+
+        </div>
+      </div>
+      
+
+    </div>
+  </section>
+
+  <script>
+
+      document.getElementById("filtro").addEventListener("change", function() {
+        
+          if (this.checked) {
+              ordenarDivsDorsal();
+          } else {
+              ordenarDivsFecha();
+          }
+      });
+
+      function mostrarVideo(kidid) {
+
+          var divid = kidid + '-div';
+          var div = document.getElementById(divid);
+          
+          var imagen = div.querySelector('img');
+          var video = div.querySelector('video');
+          
+          imagen.style.display = 'none';
+          video.style.display = 'block';
+
+          video.setAttribute('playsinline', '');
+          video.currentTime = 0;
+          video.play();
+
+          video.onended = function(){
+            video.currentTime = 0;
+            video.load();
+            video.pause();
+
+            imagen.style.display = 'block';
+            video.style.display = 'none';
+          };
+      }
+
+      function ordenarDivsDorsal() {
+        const container = document.getElementById('contenedor');
+        const items = Array.from(container.querySelectorAll('.bg-white'));
+  
+        items.sort((a, b) => {
+          const numA = parseInt(a.querySelector('.dorsal').textContent.replace('#', ''));
+          const numB = parseInt(b.querySelector('.dorsal').textContent.replace('#', ''));
+          return numA - numB;
+        });
+  
+        items.forEach(item => container.appendChild(item));
+      }
+
+      function ordenarDivsFecha() {
+          const container = document.getElementById('contenedor');
+          const items = Array.from(container.querySelectorAll('.bg-white'));
+
+          items.sort((a, b) => {
+              const fechaA = a.querySelector('.fecha').textContent.trim();
+              const fechaB = b.querySelector('.fecha').textContent.trim();
+
+              const dateA = new Date(fechaA);
+              const dateB = new Date(fechaB);
+
+              return dateA - dateB;
+          });
+
+          items.forEach(item => container.appendChild(item));
+      }
+  
+  </script>
+
+
+</body>
+</html>
