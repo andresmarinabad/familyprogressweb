@@ -62,8 +62,8 @@ jobs:
       - name: Confirmar y enviar cambios (sobreescribiendo si es necesario)
         run: |
           git add "public/index.html"
-          git commit -m "Actualizacion de la pagina"
-          git push
+          git commit -m "Actualizacion de la pagina" || echo "Sin cambios para commitear"
+          git push || echo "Nada que enviar"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
