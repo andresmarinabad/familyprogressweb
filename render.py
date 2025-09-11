@@ -67,7 +67,7 @@ class Kid:
         self.edad, self.cumple_date, self.progreso, self.cumple_today = self.progress()
         self.dorsal = num
         self.color = return_progress_color(self.progreso, self.cumple_today)
-        self.video = os.path.exists(f"docs/static/videos/{self.nombre.lower()}.mp4")
+        self.video = os.path.exists(f"public/static/videos/{self.nombre.lower()}.mp4")
         self.image = self.get_image()
 
     def __str__(self):
@@ -90,7 +90,7 @@ class Kid:
         """
         Return the image path based on the kid's age or pregnancy status.
         """
-        if os.path.exists(f"docs/static/images/{self.nombre.lower()}.jpeg"):
+        if os.path.exists(f"public/static/images/{self.nombre.lower()}.jpeg"):
             return f"static/images/{self.nombre.lower()}.jpeg"
 
         if self.embarazo:
@@ -166,7 +166,7 @@ def generate_kids_page():
     env = Environment(loader=FileSystemLoader("templates"))
     template = env.get_template("index.html")
     output = template.render(kids=kids)
-    with open("docs/index.html", "w", encoding='utf-8') as f:
+    with open("public/index.html", "w", encoding='utf-8') as f:
         f.write(output)
 
 

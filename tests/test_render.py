@@ -111,7 +111,7 @@ def test_generate_kids_page(mock_get_template, mock_json_load, mock_open, sample
     # Verificamos que el archivo 'data.json' fue abierto para leer
     mock_open.assert_any_call("data.json", encoding='utf-8')
     # Verificamos que el archivo 'public/index.html' fue abierto para escribir
-    mock_open.assert_any_call("docs/index.html", "w", encoding='utf-8')
+    mock_open.assert_any_call("public/index.html", "w", encoding='utf-8')
 
     # Comprobamos que `json.load` fue llamado para cargar los datos
     mock_json_load.assert_called_once()
