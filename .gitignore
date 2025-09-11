@@ -40,7 +40,6 @@ Thumbs.db
 *.exe
 *.war
 
-public/index.html
 
 *.cache
 
