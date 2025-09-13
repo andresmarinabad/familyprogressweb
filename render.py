@@ -172,3 +172,4 @@ def generate_kids_page():
 
 if __name__ == '__main__':
     generate_kids_page()
+
