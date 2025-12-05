@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Obtener contenido del Issue
         id: get_issue
-        uses: actions/github-script@v6
+        uses: actions/github-script@v8
         with:
           script: |
             const issue = context.payload.issue;
@@ -69,7 +69,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Comentar en el Issue y cerrarlo
-        uses: actions/github-script@v6
+        uses: actions/github-script@v8
         with:
           script: |
             const issueNumber = context.payload.issue.number;
