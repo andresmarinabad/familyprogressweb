@@ -1,91 +1,113 @@
 [
     {
         "nombre": "Marta",
-        "fecha": "25/09/2017"
+        "fecha": "25/09/2017",
+        "clan": "mc"
     },
     {
         "nombre": "Mateo",
-        "fecha": "28/08/2018"
+        "fecha": "28/08/2018",
+        "clan": "mc"
     },
     {
         "nombre": "Lucas",
-        "fecha": "10/10/2018"
+        "fecha": "10/10/2018",
+        "clan": "cm"
     },
     {
         "nombre": "Clara",
-        "fecha": "18/05/2019"
+        "fecha": "18/05/2019",
+        "clan": "cf"
     },
     {
         "nombre": "Juan",
-        "fecha": "10/12/2019"
+        "fecha": "10/12/2019",
+        "clan": "cc"
     },
     {
         "nombre": "Catalina",
-        "fecha": "14/12/2019"
+        "fecha": "14/12/2019",
+        "clan": "mc"
     },
     {
         "nombre": "Javier",
-        "fecha": "18/12/2020"
+        "fecha": "18/12/2020",
+        "clan": "cf"
     },
     {
         "nombre": "Raquel",
-        "fecha": "19/05/2021"
+        "fecha": "19/05/2021",
+        "clan": "cm"
     },
     {
         "nombre": "Sofía",
-        "fecha": "28/06/2021"
+        "fecha": "28/06/2021",
+        "clan": "mtc"
     },
     {
         "nombre": "Tomás",
-        "fecha": "09/07/2021"
+        "fecha": "09/07/2021",
+        "clan": "cc"
     },
     {
         "nombre": "Carlos",
-        "fecha": "10/07/2022"
+        "fecha": "10/07/2022",
+        "clan": "mtc"
     },
     {
         "nombre": "Paula",
-        "fecha": "17/09/2022"
+        "fecha": "17/09/2022",
+        "clan": "mc"
     },
     {
         "nombre": "Rodrigo",
-        "fecha": "29/10/2022"
+        "fecha": "29/10/2022",
+        "clan": "cc"
     },
     {
         "nombre": "Bruno",
-        "fecha": "01/08/2023"
+        "fecha": "01/08/2023",
+        "clan": "cm"
     },
     {
         "nombre": "Marc",
-        "fecha": "13/08/2023"
+        "fecha": "13/08/2023",
+        "clan": "mtc"
     },
     {
         "nombre": "Blanca",
-        "fecha": "12/01/2024"
+        "fecha": "12/01/2024",
+        "clan": "cc"
     },
     {
         "nombre": "Míriam",
-        "fecha": "14/04/2024"
+        "fecha": "14/04/2024",
+        "clan": "mc"
     },
     {
         "nombre": "Andreu",
-        "fecha": "31/05/2024"
+        "fecha": "31/05/2024",
+        "clan": "cf"
     },
     {
         "nombre": "Pedro",
-        "fecha": "09/02/2025"
+        "fecha": "09/02/2025",
+        "clan": "mtc"
     },
     {
         "nombre": "Inés",
-        "fecha": "13/07/2025"
+        "fecha": "13/07/2025",
+        "clan": "cf"
     },
     {
         "nombre": "María",
-        "fecha": "04/09/2025"
+        "fecha": "04/09/2025",
+        "clan": "cc"
     },
     {
         "nombre": "Macarena",
         "fecha": "23/06/2026",
+        "clan": "mtc",
         "embarazo": true
     }
     
