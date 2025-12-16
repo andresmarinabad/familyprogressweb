@@ -59,13 +59,14 @@ class Kid:
     """
     A class to represent a kid and track their progress.
     """
-    def __init__(self, nombre, fecha, num, embarazo=False):
+    def __init__(self, nombre, fecha, num, clan, embarazo=False):
         self.nombre = nombre
         self.fecha = fecha
         self.embarazo = embarazo
         self.nacimiento = False
         self.edad, self.cumple_date, self.progreso, self.cumple_today = self.progress()
         self.dorsal = num
+        self.clan = clan
         self.color = return_progress_color(self.progreso, self.cumple_today)
         self.video = os.path.exists(f"public/static/videos/{self.nombre.lower()}.mp4")
         self.image = self.get_image()
@@ -157,9 +158,9 @@ def generate_kids_page():
 
     for dorsal, objeto in enumerate(data, start=1):
         try:
-            kids.append(Kid(objeto['nombre'], objeto['fecha'], dorsal, objeto['embarazo']))
+            kids.append(Kid(objeto['nombre'], objeto['fecha'], dorsal, objeto['clan'], objeto['embarazo']))
         except KeyError:
-            kids.append(Kid(objeto['nombre'], objeto['fecha'], dorsal))
+            kids.append(Kid(objeto['nombre'], objeto['fecha'], dorsal, objeto['clan']))
 
     kids.sort(key=lambda x: x.cumple_date, reverse=False)
 

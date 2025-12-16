@@ -17,22 +17,39 @@
   <section class="container mx-auto p-6">
     <h2 class="text-4xl font-bold text-center mb-8">Próximo Cumpleaños</h2>
 
-    <div class="mb-4 flex justify-end items-center gap-4">
-      <span class="text-gray-700">Fecha</span>
-  
+    <div class="flex justify-between items-end mb-2">
+    
+    <div class="flex items-center gap-2">
+      <div class="relative w-30">
+        
+        <select id="clanes" style="appearance: none;margin-right: 0px;" class="bg-none block w-full px-1 py-1 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-xs cursor-pointer">
+          <option>Todos</option>
+          <option value="cm">Codina Martínez</option>
+          <option value="mc">Marín Codina</option>
+          <option value="cc">Cudina Codina</option>
+          <option value="cf">Codina Ferreres</option>
+          <option value="mtc">Martín Codina</option>
+        </select>
+      
+      </div>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <span class="text-gray-700 text-sm">Fecha</span>
       <label class="relative inline-flex items-center cursor-pointer">
-          <input type="checkbox" id="filtro" class="sr-only peer">
-          <div class="w-14 h-7 bg-red-500 rounded-full peer peer-checked:bg-blue-500 transition-all"></div>
-          <div class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full shadow-md peer-checked:translate-x-7 transition-all"></div>
+        <input type="checkbox" id="filtro" class="sr-only peer">
+        <div class="w-14 h-7 bg-red-500 rounded-full peer peer-checked:bg-blue-500 transition-all"></div>
+        <div class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full shadow-md peer-checked:translate-x-7 transition-all"></div>
       </label>
-  
-      <span class="text-gray-700">Dorsal</span>
-  </div>
+      <span class="text-gray-700 text-sm">Dorsal</span>
+    </div>
+
+    </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="contenedor">
       
       {% for kid in kids %}
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg shadow-md kid">
 
         <div class="image-container rounded-xl" id="{{kid.nombre | lower}}-div">
           {% if kid.video %}
@@ -51,6 +68,7 @@
         <h3 class="text-xl font-semibold text-center card-title">{{ kid.nombre }}</h3>
         <p class="text-gray-600 text-center card-subtitle">{{ kid }}</p>
         <span hidden class="fecha">{{ kid.cumple_date }}</span>
+        <span hidden class="clan">{{ kid.clan }}</span>
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -129,6 +147,28 @@
 
           items.forEach(item => container.appendChild(item));
       }
+
+      const selectorClan = document.getElementById('clanes');
+      const contenedor = document.getElementById('contenedor'); 
+
+      selectorClan.addEventListener('change', function() {
+          const filtro = this.value;
+          const kids = contenedor.getElementsByClassName('kid');
+
+          Array.from(kids).forEach(kid => {
+              const spanClan = kid.querySelector('.clan');
+              
+              if (spanClan) {
+                  const valorClan = spanClan.textContent.trim();
+
+                  if (filtro === "Todos" || valorClan === filtro) {
+                      kid.style.display = ''; 
+                  } else {
+                      kid.style.display = 'none';
+                  }
+              }
+          });
+      });
   
   </script>
 
