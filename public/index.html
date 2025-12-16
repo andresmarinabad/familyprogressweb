@@ -17,22 +17,39 @@
   <section class="container mx-auto p-6">
     <h2 class="text-4xl font-bold text-center mb-8">Próximo Cumpleaños</h2>
 
-    <div class="mb-4 flex justify-end items-center gap-4">
-      <span class="text-gray-700">Fecha</span>
-  
+    <div class="flex justify-between items-end mb-2">
+    
+    <div class="flex items-center gap-2">
+      <div class="relative w-30">
+        
+        <select id="clanes" style="appearance: none;margin-right: 0px;" class="bg-none block w-full px-1 py-1 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-xs cursor-pointer">
+          <option>Todos</option>
+          <option value="cm">Codina Martínez</option>
+          <option value="mc">Marín Codina</option>
+          <option value="cc">Cudina Codina</option>
+          <option value="cf">Codina Ferreres</option>
+          <option value="mtc">Martín Codina</option>
+        </select>
+      
+      </div>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <span class="text-gray-700 text-sm">Fecha</span>
       <label class="relative inline-flex items-center cursor-pointer">
-          <input type="checkbox" id="filtro" class="sr-only peer">
-          <div class="w-14 h-7 bg-red-500 rounded-full peer peer-checked:bg-blue-500 transition-all"></div>
-          <div class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full shadow-md peer-checked:translate-x-7 transition-all"></div>
+        <input type="checkbox" id="filtro" class="sr-only peer">
+        <div class="w-14 h-7 bg-red-500 rounded-full peer peer-checked:bg-blue-500 transition-all"></div>
+        <div class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full shadow-md peer-checked:translate-x-7 transition-all"></div>
       </label>
-  
-      <span class="text-gray-700">Dorsal</span>
-  </div>
+      <span class="text-gray-700 text-sm">Dorsal</span>
+    </div>
+
+    </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="contenedor">
       
       
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg shadow-md kid">
 
         <div class="image-container rounded-xl" id="javier-div">
           
@@ -44,6 +61,7 @@
         <h3 class="text-xl font-semibold text-center card-title">Javier</h3>
         <p class="text-gray-600 text-center card-subtitle">Cumple 5  el 18 de Diciembre</p>
         <span hidden class="fecha">2025-12-18 00:00:00</span>
+        <span hidden class="clan">cf</span>
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -53,7 +71,7 @@
         </div>
       </div>
       
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg shadow-md kid">
 
         <div class="image-container rounded-xl" id="blanca-div">
           
@@ -65,6 +83,7 @@
         <h3 class="text-xl font-semibold text-center card-title">Blanca</h3>
         <p class="text-gray-600 text-center card-subtitle">Cumple 2  el 12 de Enero</p>
         <span hidden class="fecha">2026-01-12 00:00:00</span>
+        <span hidden class="clan">cc</span>
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -74,7 +93,7 @@
         </div>
       </div>
       
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg shadow-md kid">
 
         <div class="image-container rounded-xl" id="pedro-div">
           
@@ -86,6 +105,7 @@
         <h3 class="text-xl font-semibold text-center card-title">Pedro</h3>
         <p class="text-gray-600 text-center card-subtitle">Cumple 1  el 9 de Febrero</p>
         <span hidden class="fecha">2026-02-09 00:00:00</span>
+        <span hidden class="clan">mtc</span>
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -95,7 +115,7 @@
         </div>
       </div>
       
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg shadow-md kid">
 
         <div class="image-container rounded-xl" id="míriam-div">
           
@@ -111,6 +131,7 @@
         <h3 class="text-xl font-semibold text-center card-title">Míriam</h3>
         <p class="text-gray-600 text-center card-subtitle">Cumple 2  el 14 de Abril</p>
         <span hidden class="fecha">2026-04-14 00:00:00</span>
+        <span hidden class="clan">mc</span>
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -120,7 +141,7 @@
         </div>
       </div>
       
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg shadow-md kid">
 
         <div class="image-container rounded-xl" id="clara-div">
           
@@ -132,6 +153,7 @@
         <h3 class="text-xl font-semibold text-center card-title">Clara</h3>
         <p class="text-gray-600 text-center card-subtitle">Cumple 7  el 18 de Mayo</p>
         <span hidden class="fecha">2026-05-18 00:00:00</span>
+        <span hidden class="clan">cf</span>
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -141,7 +163,7 @@
         </div>
       </div>
       
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg shadow-md kid">
 
         <div class="image-container rounded-xl" id="raquel-div">
           
@@ -153,6 +175,7 @@
         <h3 class="text-xl font-semibold text-center card-title">Raquel</h3>
         <p class="text-gray-600 text-center card-subtitle">Cumple 5  el 19 de Mayo</p>
         <span hidden class="fecha">2026-05-19 00:00:00</span>
+        <span hidden class="clan">cm</span>
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -162,7 +185,7 @@
         </div>
       </div>
       
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg shadow-md kid">
 
         <div class="image-container rounded-xl" id="andreu-div">
           
@@ -174,6 +197,7 @@
         <h3 class="text-xl font-semibold text-center card-title">Andreu</h3>
         <p class="text-gray-600 text-center card-subtitle">Cumple 2  el 31 de Mayo</p>
         <span hidden class="fecha">2026-05-31 00:00:00</span>
+        <span hidden class="clan">cf</span>
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -183,7 +207,7 @@
         </div>
       </div>
       
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg shadow-md kid">
 
         <div class="image-container rounded-xl" id="macarena-div">
           
@@ -195,6 +219,7 @@
         <h3 class="text-xl font-semibold text-center card-title">Macarena</h3>
         <p class="text-gray-600 text-center card-subtitle">Se espera para el 23 de Junio</p>
         <span hidden class="fecha">2026-06-23 00:00:00</span>
+        <span hidden class="clan">mtc</span>
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -204,7 +229,7 @@
         </div>
       </div>
       
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg shadow-md kid">
 
         <div class="image-container rounded-xl" id="sofía-div">
           
@@ -216,6 +241,7 @@
         <h3 class="text-xl font-semibold text-center card-title">Sofía</h3>
         <p class="text-gray-600 text-center card-subtitle">Cumple 5  el 28 de Junio</p>
         <span hidden class="fecha">2026-06-28 00:00:00</span>
+        <span hidden class="clan">mtc</span>
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -225,7 +251,7 @@
         </div>
       </div>
       
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg shadow-md kid">
 
         <div class="image-container rounded-xl" id="tomás-div">
           
@@ -237,6 +263,7 @@
         <h3 class="text-xl font-semibold text-center card-title">Tomás</h3>
         <p class="text-gray-600 text-center card-subtitle">Cumple 5  el 9 de Julio</p>
         <span hidden class="fecha">2026-07-09 00:00:00</span>
+        <span hidden class="clan">cc</span>
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -246,7 +273,7 @@
         </div>
       </div>
       
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg shadow-md kid">
 
         <div class="image-container rounded-xl" id="carlos-div">
           
@@ -258,6 +285,7 @@
         <h3 class="text-xl font-semibold text-center card-title">Carlos</h3>
         <p class="text-gray-600 text-center card-subtitle">Cumple 4  el 10 de Julio</p>
         <span hidden class="fecha">2026-07-10 00:00:00</span>
+        <span hidden class="clan">mtc</span>
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -267,7 +295,7 @@
         </div>
       </div>
       
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg shadow-md kid">
 
         <div class="image-container rounded-xl" id="inés-div">
           
@@ -279,6 +307,7 @@
         <h3 class="text-xl font-semibold text-center card-title">Inés</h3>
         <p class="text-gray-600 text-center card-subtitle">Cumple 1  el 13 de Julio</p>
         <span hidden class="fecha">2026-07-13 00:00:00</span>
+        <span hidden class="clan">cf</span>
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -288,7 +317,7 @@
         </div>
       </div>
       
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg shadow-md kid">
 
         <div class="image-container rounded-xl" id="bruno-div">
           
@@ -300,6 +329,7 @@
         <h3 class="text-xl font-semibold text-center card-title">Bruno</h3>
         <p class="text-gray-600 text-center card-subtitle">Cumple 3  el 1 de Agosto</p>
         <span hidden class="fecha">2026-08-01 00:00:00</span>
+        <span hidden class="clan">cm</span>
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -309,7 +339,7 @@
         </div>
       </div>
       
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg shadow-md kid">
 
         <div class="image-container rounded-xl" id="marc-div">
           
@@ -321,6 +351,7 @@
         <h3 class="text-xl font-semibold text-center card-title">Marc</h3>
         <p class="text-gray-600 text-center card-subtitle">Cumple 3  el 13 de Agosto</p>
         <span hidden class="fecha">2026-08-13 00:00:00</span>
+        <span hidden class="clan">mtc</span>
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -330,7 +361,7 @@
         </div>
       </div>
       
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg shadow-md kid">
 
         <div class="image-container rounded-xl" id="mateo-div">
           
@@ -346,6 +377,7 @@
         <h3 class="text-xl font-semibold text-center card-title">Mateo</h3>
         <p class="text-gray-600 text-center card-subtitle">Cumple 8  el 28 de Agosto</p>
         <span hidden class="fecha">2026-08-28 00:00:00</span>
+        <span hidden class="clan">mc</span>
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -355,7 +387,7 @@
         </div>
       </div>
       
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg shadow-md kid">
 
         <div class="image-container rounded-xl" id="maría-div">
           
@@ -367,6 +399,7 @@
         <h3 class="text-xl font-semibold text-center card-title">María</h3>
         <p class="text-gray-600 text-center card-subtitle">Cumple 1  el 4 de Septiembre</p>
         <span hidden class="fecha">2026-09-04 00:00:00</span>
+        <span hidden class="clan">cc</span>
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -376,7 +409,7 @@
         </div>
       </div>
       
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg shadow-md kid">
 
         <div class="image-container rounded-xl" id="paula-div">
           
@@ -392,6 +425,7 @@
         <h3 class="text-xl font-semibold text-center card-title">Paula</h3>
         <p class="text-gray-600 text-center card-subtitle">Cumple 4  el 17 de Septiembre</p>
         <span hidden class="fecha">2026-09-17 00:00:00</span>
+        <span hidden class="clan">mc</span>
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -401,7 +435,7 @@
         </div>
       </div>
       
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg shadow-md kid">
 
         <div class="image-container rounded-xl" id="marta-div">
           
@@ -413,6 +447,7 @@
         <h3 class="text-xl font-semibold text-center card-title">Marta</h3>
         <p class="text-gray-600 text-center card-subtitle">Cumple 9  el 25 de Septiembre</p>
         <span hidden class="fecha">2026-09-25 00:00:00</span>
+        <span hidden class="clan">mc</span>
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -422,7 +457,7 @@
         </div>
       </div>
       
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg shadow-md kid">
 
         <div class="image-container rounded-xl" id="lucas-div">
           
@@ -434,6 +469,7 @@
         <h3 class="text-xl font-semibold text-center card-title">Lucas</h3>
         <p class="text-gray-600 text-center card-subtitle">Cumple 8  el 10 de Octubre</p>
         <span hidden class="fecha">2026-10-10 00:00:00</span>
+        <span hidden class="clan">cm</span>
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -443,7 +479,7 @@
         </div>
       </div>
       
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg shadow-md kid">
 
         <div class="image-container rounded-xl" id="rodrigo-div">
           
@@ -455,6 +491,7 @@
         <h3 class="text-xl font-semibold text-center card-title">Rodrigo</h3>
         <p class="text-gray-600 text-center card-subtitle">Cumple 4  el 29 de Octubre</p>
         <span hidden class="fecha">2026-10-29 00:00:00</span>
+        <span hidden class="clan">cc</span>
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -464,7 +501,7 @@
         </div>
       </div>
       
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg shadow-md kid">
 
         <div class="image-container rounded-xl" id="juan-div">
           
@@ -476,6 +513,7 @@
         <h3 class="text-xl font-semibold text-center card-title">Juan</h3>
         <p class="text-gray-600 text-center card-subtitle">Cumple 7  el 10 de Diciembre</p>
         <span hidden class="fecha">2026-12-10 00:00:00</span>
+        <span hidden class="clan">cc</span>
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -485,7 +523,7 @@
         </div>
       </div>
       
-      <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="bg-white p-6 rounded-lg shadow-md kid">
 
         <div class="image-container rounded-xl" id="catalina-div">
           
@@ -501,6 +539,7 @@
         <h3 class="text-xl font-semibold text-center card-title">Catalina</h3>
         <p class="text-gray-600 text-center card-subtitle">Cumple 7  el 14 de Diciembre</p>
         <span hidden class="fecha">2026-12-14 00:00:00</span>
+        <span hidden class="clan">mc</span>
         <div class="text-center mt-4">
           
             <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -579,6 +618,28 @@
 
           items.forEach(item => container.appendChild(item));
       }
+
+      const selectorClan = document.getElementById('clanes');
+      const contenedor = document.getElementById('contenedor'); 
+
+      selectorClan.addEventListener('change', function() {
+          const filtro = this.value;
+          const kids = contenedor.getElementsByClassName('kid');
+
+          Array.from(kids).forEach(kid => {
+              const spanClan = kid.querySelector('.clan');
+              
+              if (spanClan) {
+                  const valorClan = spanClan.textContent.trim();
+
+                  if (filtro === "Todos" || valorClan === filtro) {
+                      kid.style.display = ''; 
+                  } else {
+                      kid.style.display = 'none';
+                  }
+              }
+          });
+      });
   
   </script>
 
