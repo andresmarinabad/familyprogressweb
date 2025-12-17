@@ -7,3 +7,7 @@ variable "github_repo" {
   type    = string
   default = "andresmarinabad/familyprogressweb"
 }
+
+variable "domain" {
+  type = string
+}

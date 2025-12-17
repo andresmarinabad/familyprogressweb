@@ -69,7 +69,7 @@
             onclick="mostrarVideo('{{kid.nombre | lower}}')" alt="">
           <span class="dorsal archivo-dorsal">#{{ kid.dorsal }}</span>
           <video class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4 video" playsinline>
-            <source src="static/videos/{{ kid.nombre | lower }}.mp4" type="video/mp4">
+            <source src="static/videos/{{ kid.normalized }}.mp4" type="video/mp4">
             Tu navegador no soporta este formato de video.
           </video>
           {% else %}

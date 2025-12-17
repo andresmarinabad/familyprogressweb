@@ -74,6 +74,7 @@ class Kid:
         self.clan = clan
         self.color = return_progress_color(self.progreso, self.cumple_today)
         self.video = os.path.exists(f"static/videos/{self.normalized_name()}.mp4")
+        self.normalized = self.normalized_name()
         self.image = self.get_image()
 
     def __str__(self):
