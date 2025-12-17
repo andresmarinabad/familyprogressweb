@@ -83,7 +83,11 @@
           
           <h3 class="text-xl font-semibold text-center card-title">{{ kid.nombre }}</h3>
           {% if not kid.embarazo %}
+            {% if not kid.cumple_today %}
           <span class="text-gray-600 text-xl" style="margin-left: 4px;">({{ kid.edad-1 }})</span>
+            {% else %}
+          <span class="text-gray-600 text-xl" style="margin-left: 4px;">({{ kid.edad }})</span>
+            {% endif %}
           {% endif %}
         </div>
 
