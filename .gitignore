@@ -46,3 +46,8 @@ Thumbs.db
 .coverage
 .env/
 .vscode
+
+# infra
+.terraform*
+terraform.tfvars
+terraform.tfstate*
