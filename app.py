@@ -90,7 +90,7 @@ class Kid:
                 return "Hoy cumple 1 año"
             return f"Hoy cumple {str(self.edad)} años"
 
-        return f"Cumple {str(self.edad)}  el {dia} de {mes}"
+        return f"Cumple {str(self.edad)} el {dia} de {mes}"
 
     def get_image(self):
         """

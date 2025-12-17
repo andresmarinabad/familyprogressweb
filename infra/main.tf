@@ -1,5 +1,5 @@
-resource "vercel_project" "familyprogress" {
-  name      = "familyprogress"
+resource "vercel_project" "familyprogressweb" {
+  name      = "familyprogressweb"
   
   framework = "flask"
 
@@ -10,12 +10,7 @@ resource "vercel_project" "familyprogress" {
   }
 }
 
-resource "vercel_deployment" "testing" {
-  project_id = vercel_project.familyprogress.id
-  ref     = "add_flask"
-}
-
 resource "vercel_deployment" "production" {
-  project_id = vercel_project.familyprogress.id
+  project_id = vercel_project.familyprogressweb.id
   ref     = "main"
 }
