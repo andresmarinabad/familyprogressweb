@@ -6,6 +6,7 @@ import json
 from datetime import date, datetime
 from jinja2 import Environment, FileSystemLoader
 import unicodedata
+from zoneinfo import ZoneInfo
 
 from flask import Flask
 
@@ -121,34 +122,34 @@ class Kid:
         """
         Calculate the progress of pregnancy or age based on the given date.
         """
-        today = datetime.today()
+        today = datetime.now(ZoneInfo("Europe/Madrid")).date()
 
         if self.embarazo:
-            fecha_parto = datetime.strptime(self.fecha, '%d/%m/%Y')
-            if fecha_parto.date() < today.date():
+            fecha_parto = datetime.strptime(self.fecha, '%d/%m/%Y').date()
+            if fecha_parto < today:
                 dif_dates = 0
             else:
                 dif_dates = (fecha_parto - today).days
             return 0, fecha_parto, int(((270 - dif_dates)/270) * 100), False
 
-        fecha_nac = datetime.strptime(self.fecha, '%d/%m/%Y')
-        self.nacimiento = fecha_nac.date() == today.date() and not self.embarazo
+        fecha_nac = datetime.strptime(self.fecha, '%d/%m/%Y').date()
+        self.nacimiento = fecha_nac == today and not self.embarazo
 
         current_year = date.today().year
         parts = self.fecha.split('/')
         cumple = f'{parts[0]}/{parts[1]}/{current_year}'
 
-        cumple_date = datetime.strptime(cumple, '%d/%m/%Y')
+        cumple_date = datetime.strptime(cumple, '%d/%m/%Y').date()
 
         edad = current_year - int(parts[2])
 
-        if today.date() == cumple_date.date():
+        if today == cumple_date:
             self.fecha = f'{parts[0]}/{parts[1]}/{current_year}'
             return edad, cumple_date, 100, True
-        if today.date() > cumple_date.date():
+        if today > cumple_date:
             edad += 1
             self.fecha = f'{parts[0]}/{parts[1]}/{current_year+1}'
-            cumple_date = datetime.strptime(self.fecha, '%d/%m/%Y')
+            cumple_date = datetime.strptime(self.fecha, '%d/%m/%Y').date()
         else:
             self.fecha = f'{parts[0]}/{parts[1]}/{current_year}'
 
