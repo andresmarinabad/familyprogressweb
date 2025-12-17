@@ -72,7 +72,7 @@ class Kid:
         self.dorsal = num
         self.clan = clan
         self.color = return_progress_color(self.progreso, self.cumple_today)
-        self.video = os.path.exists(f"public/static/videos/{self.nombre.lower()}.mp4")
+        self.video = os.path.exists(f"static/videos/{self.nombre.lower()}.mp4")
         self.image = self.get_image()
 
     def __str__(self):
@@ -95,7 +95,7 @@ class Kid:
         """
         Return the image path based on the kid's age or pregnancy status.
         """
-        if os.path.exists(f"public/static/images/{self.nombre.lower()}.jpeg"):
+        if os.path.exists(f"static/images/{self.nombre.lower()}.jpeg"):
             return f"static/images/{self.nombre.lower()}.jpeg"
 
         if self.embarazo:
@@ -175,6 +175,6 @@ def generate_kids_page():
     return output
 
 
-# if __name__ == '__main__':
-#     generate_kids_page()
+if __name__ == '__main__':
+    app.run()
 
