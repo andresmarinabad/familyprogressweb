@@ -5,6 +5,7 @@ import os
 import json
 from datetime import date, datetime
 from jinja2 import Environment, FileSystemLoader
+import unicodedata
 
 from flask import Flask
 
@@ -72,7 +73,7 @@ class Kid:
         self.dorsal = num
         self.clan = clan
         self.color = return_progress_color(self.progreso, self.cumple_today)
-        self.video = os.path.exists(f"static/videos/{self.nombre.lower()}.mp4")
+        self.video = os.path.exists(f"static/videos/{self.normalized_name()}.mp4")
         self.image = self.get_image()
 
     def __str__(self):
@@ -95,8 +96,8 @@ class Kid:
         """
         Return the image path based on the kid's age or pregnancy status.
         """
-        if os.path.exists(f"static/images/{self.nombre.lower()}.jpeg"):
-            return f"static/images/{self.nombre.lower()}.jpeg"
+        if os.path.exists(f"static/images/{self.normalized_name()}.jpeg"):
+            return f"static/images/{self.normalized_name()}.jpeg"
 
         if self.embarazo:
             fpp = datetime.strptime(self.fecha, "%d/%m/%Y")
@@ -153,6 +154,10 @@ class Kid:
         dif_dates = (cumple_date - today).days
 
         return edad, cumple_date, int(((365 - dif_dates)/365) * 100), False
+
+    def normalized_name(self):
+        nfkd_form = unicodedata.normalize('NFD', self.nombre.lower())
+        return ''.join([char for char in nfkd_form if not unicodedata.combining(char)])
 
 
 @app.route('/')

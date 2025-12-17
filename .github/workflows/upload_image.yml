@@ -20,15 +20,16 @@ jobs:
               return;
             }
 
+            function removeAccents(str) {
+              return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            }
+
             const body = issue.body || "";
             console.log("DEBUG: Contenido del issue ->", body);
             core.setOutput("issue_body", body);
 
             const title = issue.title || "imagen";
-
-            // Convertir título a un nombre de archivo seguro
-            const safeTitle = title
-              .toLowerCase();
+            const safeTitle = removeAccents(title.toLowerCase());
 
             // Expresión regular para detectar URLs de imágenes en issues
             const regex = /!\[.*?\]\((https:\/\/(?:user-images\.githubusercontent\.com|github\.com\/user-attachments)\/.*?)\)/;
