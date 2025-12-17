@@ -14,3 +14,8 @@ resource "vercel_deployment" "testing" {
   project_id = vercel_project.familyprogress.id
   ref     = "add_flask"
 }
+
+resource "vercel_deployment" "production" {
+  project_id = vercel_project.familyprogress.id
+  ref     = "main"
+}
