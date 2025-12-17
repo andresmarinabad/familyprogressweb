@@ -52,8 +52,8 @@ jobs:
 
       - name: Descargar imagen y sobreescribir si existe
         run: |
-          mkdir -p public/static/images
-          wget -O "public/static/images/${{ steps.get_issue.outputs.image_name }}" "${{ steps.get_issue.outputs.image_url }}"
+          mkdir -p static/images
+          wget -O "static/images/${{ steps.get_issue.outputs.image_name }}" "${{ steps.get_issue.outputs.image_url }}"
 
       - name: Configurar usuario de Git
         run: |
@@ -62,7 +62,7 @@ jobs:
 
       - name: Confirmar y enviar cambios (sobreescribiendo si es necesario)
         run: |
-          git add "public/static/images/${{ steps.get_issue.outputs.image_name }}"
+          git add "static/images/${{ steps.get_issue.outputs.image_name }}"
           git commit -m "Actualizando imagen '${{ steps.get_issue.outputs.image_name }}' desde Issue #${{ steps.get_issue.outputs.issue_number }}" || echo "Sin cambios para commit"
           git push
         env:
