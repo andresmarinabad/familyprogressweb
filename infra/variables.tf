@@ -11,3 +11,8 @@ variable "github_repo" {
 variable "domain" {
   type = string
 }
+
+variable "resend_apikey" {
+  type = string
+  sensitive = true
+}

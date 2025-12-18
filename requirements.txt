@@ -3,3 +3,4 @@ pytest
 pytest-cov
 time_machine
 flask
+resend

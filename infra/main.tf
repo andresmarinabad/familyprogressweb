@@ -3,7 +3,6 @@ resource "vercel_project" "familyprogressweb" {
   
   framework = "flask"
 
-  # CONEXIÓN CON GITHUB
   git_repository = {
     type = "github"
     repo = var.github_repo
@@ -20,3 +19,29 @@ resource "vercel_project_domain" "familyprogressweb_domain" {
   domain     = var.domain
 }
 
+resource "random_password" "api_key" {
+  length  = 32
+  special = true
+  upper   = true
+  lower   = true
+  numeric  = true
+}
+
+resource "vercel_project_environment_variable" "api_key" {
+  project_id = vercel_project.familyprogressweb.id
+  key        = "CRON_SECRET"
+  value      = random_password.api_key.result
+  target     = ["production"]
+}
+
+resource "vercel_project_environment_variable" "resend_api" {
+  project_id = vercel_project.familyprogressweb.id
+  key        = "RESEND_KEY"
+  value      = var.resend_apikey
+  target     = ["production"]
+}
+
+resource "vercel_project_crons" "crons" {
+  project_id = vercel_project.familyprogressweb.id
+  enabled    = true
+}

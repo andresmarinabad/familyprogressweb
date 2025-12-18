@@ -7,8 +7,9 @@ from datetime import date, datetime
 from jinja2 import Environment, FileSystemLoader
 import unicodedata
 from zoneinfo import ZoneInfo
+import resend
 
-from flask import Flask
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
@@ -59,6 +60,25 @@ def return_progress_color(progreso, today=False):
     for threshold, class_name in progress_classes:
         if progreso <= threshold:
             return f"{class_name} h-5 rounded-full striped-progress-bar"
+
+def comprobar_lista(json_file):
+    hoy = datetime.now()
+    dia_actual = hoy.day
+    mes_actual = hoy.month
+    
+    with open(json_file, 'r') as file:
+        datos = json.load(file)
+
+    for persona in datos:
+        fecha_persona = datetime.strptime(persona['fecha'], '%d/%m/%Y')
+        dia_persona = fecha_persona.day
+        mes_persona = fecha_persona.month
+        
+        if dia_actual == dia_persona and mes_actual == mes_persona:
+            edad = hoy.year - fecha_persona.year
+            return {"nombre": persona['nombre'], "edad": edad}
+
+    return None
 
 
 class Kid:
@@ -180,6 +200,28 @@ def generate_kids_page():
     template = env.get_template("index.html")
     output = template.render(kids=kids)
     return output
+
+@app.route('/send_email', methods=['POST'])
+def send_email():
+    CRON_SECRET = os.environ.get('CRON_SECRET')
+    authorization_header = request.headers.get('Authorization')
+
+    if authorization_header == f'Bearer {CRON_SECRET}':
+        resend.api_key = os.getenv("RESEND_KEY")
+        cumple = comprobar_lista('data.json')
+
+        if cumple:
+            # envia correo
+            r = resend.Emails.send({
+                "from": "onboarding@resend.dev",
+                "to": "andres.marin.abad+git@gmail.com",
+                "subject": f"Cumpleaños de {cumple['nombre']}",
+                "html": f"<p>Felicita a {cumple['nombre']} que hoy cumple {cumple['edad']}!</p>"
+            })
+
+        return jsonify({"message": "Cron job ejecutado correctamente."}), 200
+    else:
+        return jsonify({"error": "Unauthorized"}), 403
 
 
 if __name__ == '__main__':
