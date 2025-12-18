@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Family Expansion</title>
+  <title>Resaca de Cumples</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,container-queries"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,10 +14,10 @@
 
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-100" style="margin-bottom: 200px;">
 
   <section class="container mx-auto p-6">
-    <h2 class="text-4xl font-bold text-center mb-8">Próximo Cumpleaños</h2>
+    <h2 class="text-4xl font-bold text-center mb-8" id="Fire">Próximo Cumpleaños</h2>
 
     <div class="flex justify-between items-end mb-2">
 
@@ -46,7 +46,7 @@
 
       <div class="flex items-center gap-4">
         <span class="text-gray-700 text-sm">Fecha</span>
-        <label class="relative inline-flex items-center cursor-pointer">
+        <label class="relative inline-flex items-center cursor-pointer" style="margin-left: -10px;margin-right: -10px;">
           <input type="checkbox" id="filtro" class="sr-only peer">
           <div class="w-14 h-7 bg-red-500 rounded-full peer peer-checked:bg-blue-500 transition-all"></div>
           <div
@@ -195,8 +195,62 @@
       });
     });
 
+    (function() {
+      const runConfetti = document.querySelector('#hs-run-on-click-run-confetti');
+      runConfetti.addEventListener('click', () => {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: {
+            y: 0.6
+          }
+        });
+      });
+    })();
+
   </script>
 
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<script>
+    var count = 500;
+    var defaults = {
+        origin: { y: 0.8, x: 0.5 },
+    };
+
+    document.getElementById("Fire").onclick = FireCannon;
+
+    function Fire(particleRatio, opts) {
+        confetti(Object.assign({}, defaults, opts, {
+            particleCount: Math.floor(count * particleRatio)
+        }));
+    }
+
+    function FireCannon() {
+
+        Fire(0.25, {
+            spread: 26,
+            startVelocity: 55,
+        });
+        Fire(0.2, {
+            spread: 60,
+        });
+        Fire(0.35, {
+            spread: 100,
+            decay: 0.91,
+            scalar: 0.4
+        });
+        Fire(0.1, {
+            spread: 120,
+            startVelocity: 25,
+            decay: 0.92,
+            scalar: 1.2
+        });
+        Fire(0.1, {
+            spread: 120,
+            startVelocity: 45,
+        });
+    }
+</script>
 
 </body>
 
