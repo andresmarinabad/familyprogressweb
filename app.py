@@ -209,14 +209,20 @@ def send_email():
     if authorization_header == f'Bearer {CRON_SECRET}':
         resend.api_key = os.getenv("RESEND_KEY")
         cumple = comprobar_lista('data.json')
+        
+        nfkd_form = unicodedata.normalize('NFD', cumple['nombre'].lower())
+        cumple['nombre_foto'] = ''.join([char for char in nfkd_form if not unicodedata.combining(char)])
 
         if cumple:
-            # envia correo
+            env = Environment(loader=FileSystemLoader("templates"))
+            template = env.get_template("email.html")
+            email = template.render(cumple=cumple)
+
             r = resend.Emails.send({
-                "from": "onboarding@resend.dev",
+                "from": "info@resacadecumples.com",
                 "to": "andres.marin.abad+git@gmail.com",
-                "subject": f"Cumpleaños de {cumple['nombre']}",
-                "html": f"<p>Felicita a {cumple['nombre']} que hoy cumple {cumple['edad']}!</p>"
+                "subject": "Hoy es el cumpleaños de ...",
+                "html": f"{email}"
             })
 
         return jsonify({"message": "Cron job ejecutado correctamente."}), 200
