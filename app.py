@@ -201,7 +201,7 @@ def generate_kids_page():
     output = template.render(kids=kids)
     return output
 
-@app.route('/send_email', methods=['POST'])
+@app.route('/send_email', methods=['GET'])
 def send_email():
     CRON_SECRET = os.environ.get('CRON_SECRET')
     authorization_header = request.headers.get('Authorization')
