@@ -218,9 +218,11 @@ def send_email():
             template = env.get_template("email.html")
             email = template.render(cumple=cumple)
 
+            EMAIL_TO = os.environ.get('EMAIL_TO')
+
             r = resend.Emails.send({
                 "from": "info@resacadecumples.com",
-                "to": "andres.marin.abad+git@gmail.com",
+                "to": f"{EMAIL_TO}",
                 "subject": "Hoy es el cumpleaños de ...",
                 "html": f"{email}"
             })
