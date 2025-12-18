@@ -149,3 +149,23 @@
   
 }
 
+.festivo {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.g1  { background-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00); } /* rojo→naranja→amarillo */
+.g2  { background-image: linear-gradient(45deg, #00ff00, #00ffff, #0000ff); } /* verde→cyan→azul */
+.g3  { background-image: linear-gradient(45deg, #8e2de2, #ff0080, #ff0040); } /* violeta→magenta→rosa */
+.g4  { background-image: linear-gradient(45deg, #ff1744, #ff9100, #ffea00); } /* rojo intenso→naranja→amarillo */
+.g5  { background-image: linear-gradient(45deg, #00e676, #00c853, #00bfa5); } /* verde brillante→verde→turquesa */
+.g6  { background-image: linear-gradient(45deg, #ff6d00, #f50057, #d500f9); } /* naranja→rosa→violeta */
+.g7  { background-image: linear-gradient(45deg, #f50057, #ff4081, #ff80ab); } /* rosa fuerte→rosa claro→rosado pastel */
+.g8  { background-image: linear-gradient(45deg, #39ff14, #00e5ff, #ff00ff); } /* verde neón→cyan→magenta */
+.g9  { background-image: linear-gradient(45deg, #ff3d00, #ff9100, #ffd600); } /* rojo brillante→naranja→amarillo */
+.g10 { background-image: linear-gradient(45deg, #00ffff, #2979ff, #651fff); } /* cyan→azul→violeta */
+.g11 { background-image: linear-gradient(45deg, #ff00ff, #ff4081, #ff80ab); } /* magenta→rosa fuerte→rosa pastel */
+.g12 { background-image: linear-gradient(45deg, #ff6ec7, #ff3d00, #ffea00); } /* rosa→rojo→amarillo */
+.g13 { background-image: linear-gradient(45deg, #00ffea, #00c853, #ffff00); } /* aqua→verde→amarillo */
+.g14 { background-image: linear-gradient(45deg, #ff4081, #f50057, #d500f9); } /* rosa→fucsia→violeta */
