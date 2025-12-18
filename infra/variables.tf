@@ -5,7 +5,6 @@ variable "vercel_api_token" {
 
 variable "github_repo" {
   type    = string
-  default = "andresmarinabad/familyprogressweb"
 }
 
 variable "domain" {
@@ -15,4 +14,8 @@ variable "domain" {
 variable "resend_apikey" {
   type = string
   sensitive = true
+}
+
+variable "email_to_list" {
+  type = string
 }

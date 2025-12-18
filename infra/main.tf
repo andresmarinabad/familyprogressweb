@@ -41,6 +41,13 @@ resource "vercel_project_environment_variable" "resend_api" {
   target     = ["production"]
 }
 
+resource "vercel_project_environment_variable" "email_to_list" {
+  project_id = vercel_project.familyprogressweb.id
+  key        = "EMAIL_TO"
+  value      = var.email_to_list
+  target     = ["production"]
+}
+
 resource "vercel_project_crons" "crons" {
   project_id = vercel_project.familyprogressweb.id
   enabled    = true
