@@ -202,60 +202,61 @@ def generate_kids_page():
     output = template.render(kids=kids)
     return output
 
-@app.route('/OneSignalSDKWorker.js')
-def serve_worker():
-    return send_from_directory('static', 'OneSignalSDKWorker.js')
+# @app.route('/OneSignalSDKWorker.js')
+# def serve_worker():
+#     return send_from_directory('static', 'OneSignalSDKWorker.js')
 
-@app.route('/send_email', methods=['GET'])
-def send_email():
-    CRON_SECRET = os.environ.get('CRON_SECRET')
-    authorization_header = request.headers.get('Authorization')
 
-    if authorization_header == f'Bearer {CRON_SECRET}':
-        #resend.api_key = os.getenv("RESEND_KEY")
-        onesignal_apikey = os.getenv("ONESIGNAL_APIKEY")
-        onesignal_appid = os.getenv("ONESIGNAL_APPID")
-        cumple = comprobar_lista('data.json')
+# @app.route('/send_email', methods=['GET'])
+# def send_email():
+#     CRON_SECRET = os.environ.get('CRON_SECRET')
+#     authorization_header = request.headers.get('Authorization')
+
+#     if authorization_header == f'Bearer {CRON_SECRET}':
+#         #resend.api_key = os.getenv("RESEND_KEY")
+#         onesignal_apikey = os.getenv("ONESIGNAL_APIKEY")
+#         onesignal_appid = os.getenv("ONESIGNAL_APPID")
+#         cumple = comprobar_lista('data.json')
         
-        nfkd_form = unicodedata.normalize('NFD', cumple['nombre'].lower())
-        cumple['nombre_foto'] = ''.join([char for char in nfkd_form if not unicodedata.combining(char)])
+#         nfkd_form = unicodedata.normalize('NFD', cumple['nombre'].lower())
+#         cumple['nombre_foto'] = ''.join([char for char in nfkd_form if not unicodedata.combining(char)])
 
-        if cumple:
-            # env = Environment(loader=FileSystemLoader("templates"))
-            # template = env.get_template("email.html")
-            # email = template.render(cumple=cumple)
+#         if cumple:
+#             # env = Environment(loader=FileSystemLoader("templates"))
+#             # template = env.get_template("email.html")
+#             # email = template.render(cumple=cumple)
 
-            # EMAIL_TO = os.environ.get('EMAIL_TO')
+#             # EMAIL_TO = os.environ.get('EMAIL_TO')
 
-            # req = resend.Emails.send({
-            #     "from": "info@resacadecumples.com",
-            #     "to": f"{EMAIL_TO}",
-            #     "subject": "Hoy es el cumpleaños de ...",
-            #     "html": f"{email}"
-            # })
+#             # req = resend.Emails.send({
+#             #     "from": "info@resacadecumples.com",
+#             #     "to": f"{EMAIL_TO}",
+#             #     "subject": "Hoy es el cumpleaños de ...",
+#             #     "html": f"{email}"
+#             # })
 
-            header = {
-                "Content-Type": "application/json; charset=utf-8",
-                "Authorization": f"Basic {onesignal_apikey}"
-            }
+#             header = {
+#                 "Content-Type": "application/json; charset=utf-8",
+#                 "Authorization": f"Basic {onesignal_apikey}"
+#             }
 
-            payload = {
-                "app_id": onesignal_appid,
-                "included_segments": ["Active Users"],
-                "contents": {"es": f"Hoy es el cumpleaños de {cumple['nombre']} que cumple {cumple['edad']}"},
-                "headings": {"es": "¡Feliz cumpleaños!"}
-            }
+#             payload = {
+#                 "app_id": onesignal_appid,
+#                 "included_segments": ["Active Users"],
+#                 "contents": {"es": f"Hoy es el cumpleaños de {cumple['nombre']} que cumple {cumple['edad']}"},
+#                 "headings": {"es": "¡Feliz cumpleaños!"}
+#             }
 
-            req = requests.post("https://onesignal.com/api/v1/notifications", headers=header, data=json.dumps(payload))
+#             req = requests.post("https://onesignal.com/api/v1/notifications", headers=header, data=json.dumps(payload))
 
-            if req.status_code == 200:
-                return jsonify({"status": "Notification sent"}), 200
-            else:
-                return jsonify({"error": req.text}), 400
+#             if req.status_code == 200:
+#                 return jsonify({"status": "Notification sent"}), 200
+#             else:
+#                 return jsonify({"error": req.text}), 400
 
-        return jsonify({"message": "Cron executed but not notification sent"}), 200
-    else:
-        return jsonify({"error": "Unauthorized"}), 403
+#         return jsonify({"message": "Cron executed but not notification sent"}), 200
+#     else:
+#         return jsonify({"error": "Unauthorized"}), 403
 
 if __name__ == '__main__':
     app.run()
