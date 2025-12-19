@@ -10,7 +10,7 @@ from zoneinfo import ZoneInfo
 import resend
 import requests
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 
 app = Flask(__name__)
 
@@ -201,6 +201,10 @@ def generate_kids_page():
     template = env.get_template("index.html")
     output = template.render(kids=kids)
     return output
+
+@app.route('/OneSignalSDKWorker.js')
+def serve_worker():
+    return send_from_directory('static', 'OneSignalSDKWorker.js')
 
 @app.route('/send_email', methods=['GET'])
 def send_email():
