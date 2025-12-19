@@ -11,6 +11,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@1,87.5,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="static/kids.css">
+
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+      await OneSignal.init({
+        appId: "4592a16d-5e29-4f84-ae95-b591758a7dd6",
+        safari_web_id: "web.onesignal.auto.0f4ef0fc-d020-4184-9066-253532c318fc",
+        notifyButton: {
+          enable: true,
+        },
+      });
+    });
+  </script>
+
 </head>
 
 <body class="bg-gray-100" style="margin-bottom: 200px;">
