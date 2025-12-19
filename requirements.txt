@@ -4,3 +4,4 @@ pytest-cov
 time_machine
 flask
 resend
+requests

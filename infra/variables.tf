@@ -19,3 +19,13 @@ variable "resend_apikey" {
 variable "email_to_list" {
   type = string
 }
+
+variable "onesignal_apikey" {
+  type = string
+  sensitive = true
+}
+
+variable "onesignal_appid" {
+  type = string
+  sensitive = true
+}

@@ -8,6 +8,7 @@ from jinja2 import Environment, FileSystemLoader
 import unicodedata
 from zoneinfo import ZoneInfo
 import resend
+import requests
 
 from flask import Flask, request, jsonify
 
@@ -208,6 +209,8 @@ def send_email():
 
     if authorization_header == f'Bearer {CRON_SECRET}':
         resend.api_key = os.getenv("RESEND_KEY")
+        # onesignal_apikey = os.getenv("ONESIGNAL_APIKEY")
+        # onesignal_appid = os.getenv("ONESIGNAL_APPID")
         cumple = comprobar_lista('data.json')
         
         nfkd_form = unicodedata.normalize('NFD', cumple['nombre'].lower())
@@ -220,25 +223,35 @@ def send_email():
 
             EMAIL_TO = os.environ.get('EMAIL_TO')
 
-            r = resend.Emails.send({
+            req = resend.Emails.send({
                 "from": "info@resacadecumples.com",
                 "to": f"{EMAIL_TO}",
                 "subject": "Hoy es el cumpleaños de ...",
                 "html": f"{email}"
             })
 
-        return jsonify({"message": "Cron job ejecutado correctamente."}), 200
+            # header = {
+            #     "Content-Type": "application/json; charset=utf-8",
+            #     "Authorization": f"Basic {onesignal_apikey}"
+            # }
+
+            # payload = {
+            #     "app_id": onesignal_appid,
+            #     "included_segments": ["Subscribed Users"],
+            #     "contents": {"en": "¡Nueva actualización disponible!", "es": "¡Mensaje desde Flask!"},
+            #     "headings": {"es": "Aviso importante"}
+            # }
+
+            # req = requests.post("https://onesignal.com/api/v1/notifications", headers=header, data=json.dumps(payload))
+
+            if req.status_code == 200:
+                return jsonify({"status": "Notification sent"}), 200
+            else:
+                return jsonify({"error": req.text}), 400
+
+        return jsonify({"message": "Cron executed but not notification sent"}), 200
     else:
         return jsonify({"error": "Unauthorized"}), 403
-
-@app.route("/OneSignalSDKWorker.js")
-def onesignal_worker():
-    return send_from_directory("static", "OneSignalSDKWorker.js")
-
-@app.route("/OneSignalSDK.sw.js")
-def onesignal_sw():
-    return send_from_directory("static", "OneSignalSDK.sw.js")
-
 
 if __name__ == '__main__':
     app.run()

@@ -48,6 +48,20 @@ resource "vercel_project_environment_variable" "email_to_list" {
   target     = ["production"]
 }
 
+resource "vercel_project_environment_variable" "onesignal_appid" {
+  project_id = vercel_project.familyprogressweb.id
+  key        = "ONESIGNAL_APPID"
+  value      = var.onesignal_appid
+  target     = ["production"]
+}
+
+resource "vercel_project_environment_variable" "onesignal_apikey" {
+  project_id = vercel_project.familyprogressweb.id
+  key        = "ONESIGNAL_APIKEY"
+  value      = var.onesignal_apikey
+  target     = ["production"]
+}
+
 resource "vercel_project_crons" "crons" {
   project_id = vercel_project.familyprogressweb.id
   enabled    = true

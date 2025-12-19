@@ -32,13 +32,16 @@
             pythonPackages.time-machine
             pythonPackages.flask
             pythonPackages.resend
+            pythonPackages.requests
 
           ];
 
           # Comandos que se ejecutan al entrar al shell
           shellHook = ''
             export RESEND_KEY=
-            export CRON_SECRET=
+            export ONESIGNAL_APIKEY=
+            export ONESIGNAL_APPID=
+            export CRON_SECRET=test
             echo "--- Entorno Python cargado ---"
           '';
         };
