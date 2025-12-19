@@ -231,6 +231,14 @@ def send_email():
     else:
         return jsonify({"error": "Unauthorized"}), 403
 
+@app.route("/OneSignalSDKWorker.js")
+def onesignal_worker():
+    return send_from_directory("static", "OneSignalSDKWorker.js")
+
+@app.route("/OneSignalSDK.sw.js")
+def onesignal_sw():
+    return send_from_directory("static", "OneSignalSDK.sw.js")
+
 
 if __name__ == '__main__':
     app.run()
