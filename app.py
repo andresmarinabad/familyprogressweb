@@ -241,7 +241,7 @@ def send_email():
 
             payload = {
                 "app_id": onesignal_appid,
-                "included_segments": ["Subscribed Users"],
+                "included_segments": ["Active Users"],
                 "contents": {"es": f"Hoy es el cumpleaños de {cumple['nombre']} que cumple {cumple['edad']}"},
                 "headings": {"es": "¡Feliz cumpleaños!"}
             }
