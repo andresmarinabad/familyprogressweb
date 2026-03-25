@@ -1,4 +1,4 @@
-/* Tema según el sistema: página oscura; tarjetas siguen claras para no pelear con las fotos */
+/* Tema según el sistema */
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
@@ -20,6 +20,31 @@
   /* Select: texto legible sobre fondo oscuro */
   #clanes {
     color: #f4f4f5;
+  }
+
+  /* Tarjetas: superficie oscura, texto y track de progreso ajustados */
+  .kid {
+    background-color: #262626 !important;
+    border: 1px solid rgb(255 255 255 / 0.14);
+    box-shadow:
+      0 4px 6px -1px rgb(0 0 0 / 0.35),
+      0 2px 4px -2px rgb(0 0 0 / 0.3);
+  }
+
+  .kid .image-container {
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.12);
+  }
+
+  .kid .card-title {
+    color: #fafafa;
+  }
+
+  .kid .text-gray-600 {
+    color: #a3a3a3 !important;
+  }
+
+  .kid .bg-gray-200 {
+    background-color: #404040 !important;
   }
 }
 
