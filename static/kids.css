@@ -1,141 +1,178 @@
+/* Tema según el sistema: página oscura; tarjetas siguen claras para no pelear con las fotos */
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: #171717 !important;
+  }
+
+  body > section .text-gray-700 {
+    color: #d4d4d8;
+  }
+
+  /* Chevron del desplegable de clanes */
+  .relative.w-30 svg path {
+    stroke: #d4d4d8;
+  }
+
+  /* Select: texto legible sobre fondo oscuro */
+  #clanes {
+    color: #f4f4f5;
+  }
+}
+
 .header {
-    text-align: center;
-    position: relative;
-    padding: 20px 0;
+  text-align: center;
+  position: relative;
+  padding: 20px 0;
 }
 
 .progress-rojo-intenso {
-    background-color: rgb(255, 0, 0) !important;
+  background-color: rgb(255, 0, 0) !important;
 }
 .progress-rojo-anaranjado {
-    background-color: rgb(255, 64, 0) !important;
+  background-color: rgb(255, 64, 0) !important;
 }
 .progress-naranja-oscuro {
-    background-color: rgb(255, 128, 0) !important;
+  background-color: rgb(255, 128, 0) !important;
 }
 .progress-naranja-claro {
-    background-color: rgb(255, 191, 0) !important;
+  background-color: rgb(255, 191, 0) !important;
 }
 .progress-amarillo-dorado {
-    background-color: rgb(255, 255, 0) !important;
+  background-color: rgb(255, 255, 0) !important;
 }
 .progress-amarillo-verdoso {
-    background-color: rgb(191, 255, 0) !important;
+  background-color: rgb(191, 255, 0) !important;
 }
 .progress-verde-claro {
-    background-color: rgb(128, 255, 0) !important;
+  background-color: rgb(128, 255, 0) !important;
 }
 .progress-verde-lima {
-    background-color: rgb(64, 255, 0) !important;
+  background-color: rgb(64, 255, 0) !important;
 }
 .progress-verde-intenso {
-    background-color: rgb(0, 255, 0) !important;
+  background-color: rgb(0, 255, 0) !important;
 }
 .progress-verde-azulado {
-    background-color: rgb(0, 255, 64) !important;
+  background-color: rgb(0, 255, 64) !important;
 }
 .progress-turquesa {
-    background-color: rgb(0, 255, 128) !important;
+  background-color: rgb(0, 255, 128) !important;
 }
 .progress-cian {
-    background-color: rgb(0, 255, 191) !important;
+  background-color: rgb(0, 255, 191) !important;
 }
 .progress-azul-claro {
-    background-color: rgb(0, 255, 255) !important;
+  background-color: rgb(0, 255, 255) !important;
 }
 .progress-azul-cielo {
-    background-color: rgb(0, 191, 255) !important;
+  background-color: rgb(0, 191, 255) !important;
 }
 .progress-azul-medio {
-    background-color: rgb(0, 128, 255) !important;
+  background-color: rgb(0, 128, 255) !important;
 }
 .progress-azul-intenso {
-    background-color: rgb(0, 64, 255) !important;
+  background-color: rgb(0, 64, 255) !important;
 }
 .progress-azul-oscuro {
-    background-color: rgb(0, 0, 255) !important;
+  background-color: rgb(0, 0, 255) !important;
 }
 .progress-indigo {
-    background-color: rgb(64, 0, 255) !important;
+  background-color: rgb(64, 0, 255) !important;
 }
 .progress-violeta {
-    background-color: rgb(128, 0, 255) !important;
+  background-color: rgb(128, 0, 255) !important;
 }
 .progress-purpura {
-    background-color: rgb(191, 0, 255) !important;
+  background-color: rgb(191, 0, 255) !important;
 }
-
 
 /* Clase para la barra de progreso dorada con efecto de brillo */
 .progress-gold {
-    background-color: #FFD700; /* Color dorado oscuro */
-    height: 20px; /* Altura de la barra */
-    border-radius: 10px; /* Bordes redondeados */
-    position: relative; /* Para posicionar el brillo */
-    overflow: hidden; /* Para ocultar el brillo que sale de la barra */
+  background-color: #ffd700; /* Color dorado oscuro */
+  height: 20px; /* Altura de la barra */
+  border-radius: 10px; /* Bordes redondeados */
+  position: relative; /* Para posicionar el brillo */
+  overflow: hidden; /* Para ocultar el brillo que sale de la barra */
 }
 
 /* Efecto de brillo animado */
 .progress-gold::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -50%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
-    animation: shine 3s infinite;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: shine 3s infinite;
 }
 
 /* Animación del brillo horizontal */
 @keyframes shine {
-    0% {
-        left: -50%;
-    }
-    100% {
-        left: 100%;
-    }
+  0% {
+    left: -50%;
+  }
+  100% {
+    left: 100%;
+  }
 }
 
-
 @keyframes stripesAnimation {
-  0% { background-position: 100% 0; }
-  100% { background-position: 0 0; }
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
 }
 
 .striped-progress-bar {
-  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
   background-size: 20px 20px;
   animation: stripesAnimation 10s linear infinite;
 }
 
 .image-container {
-
-    position: relative;
-
+  position: relative;
 }
 
 .video {
-    display: none;
-    object-fit: cover;
+  display: none;
+  object-fit: cover;
 }
 
 .image-container img {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-radius: inherit;
-    object-fit: cover;
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: inherit;
+  object-fit: cover;
 }
-
 
 .archivo-dorsal {
   font-family: "Archivo", sans-serif;
   font-optical-sizing: auto;
   font-weight: 700;
   font-style: italic;
-  font-variation-settings:
-    "wdth" 87.5;
+  font-variation-settings: "wdth" 87.5;
 }
 
 .dorsal {
@@ -145,8 +182,11 @@
   color: white;
   font-size: 2.5em; /* Tamaño de fuente mayor */
   font-weight: bold;
-  text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; /* Borde negro grueso */
-  
+  text-shadow:
+    -2px -2px 0 #000,
+    2px -2px 0 #000,
+    -2px 2px 0 #000,
+    2px 2px 0 #000; /* Borde negro grueso */
 }
 
 .festivo {
@@ -155,17 +195,45 @@
   background-clip: text;
 }
 
-.g1  { background-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00); } /* rojo→naranja→amarillo */
-.g2  { background-image: linear-gradient(45deg, #00ff00, #00ffff, #0000ff); } /* verde→cyan→azul */
-.g3  { background-image: linear-gradient(45deg, #8e2de2, #ff0080, #ff0040); } /* violeta→magenta→rosa */
-.g4  { background-image: linear-gradient(45deg, #ff1744, #ff9100, #ffea00); } /* rojo intenso→naranja→amarillo */
-.g5  { background-image: linear-gradient(45deg, #00e676, #00c853, #00bfa5); } /* verde brillante→verde→turquesa */
-.g6  { background-image: linear-gradient(45deg, #ff6d00, #f50057, #d500f9); } /* naranja→rosa→violeta */
-.g7  { background-image: linear-gradient(45deg, #f50057, #ff4081, #ff80ab); } /* rosa fuerte→rosa claro→rosado pastel */
-.g8  { background-image: linear-gradient(45deg, #39ff14, #00e5ff, #ff00ff); } /* verde neón→cyan→magenta */
-.g9  { background-image: linear-gradient(45deg, #ff3d00, #ff9100, #ffd600); } /* rojo brillante→naranja→amarillo */
-.g10 { background-image: linear-gradient(45deg, #00ffff, #2979ff, #651fff); } /* cyan→azul→violeta */
-.g11 { background-image: linear-gradient(45deg, #ff00ff, #ff4081, #ff80ab); } /* magenta→rosa fuerte→rosa pastel */
-.g12 { background-image: linear-gradient(45deg, #ff6ec7, #ff3d00, #ffea00); } /* rosa→rojo→amarillo */
-.g13 { background-image: linear-gradient(45deg, #00ffea, #00c853, #ffff00); } /* aqua→verde→amarillo */
-.g14 { background-image: linear-gradient(45deg, #ff4081, #f50057, #d500f9); } /* rosa→fucsia→violeta */
+.g1 {
+  background-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00);
+} /* rojo→naranja→amarillo */
+.g2 {
+  background-image: linear-gradient(45deg, #00ff00, #00ffff, #0000ff);
+} /* verde→cyan→azul */
+.g3 {
+  background-image: linear-gradient(45deg, #8e2de2, #ff0080, #ff0040);
+} /* violeta→magenta→rosa */
+.g4 {
+  background-image: linear-gradient(45deg, #ff1744, #ff9100, #ffea00);
+} /* rojo intenso→naranja→amarillo */
+.g5 {
+  background-image: linear-gradient(45deg, #00e676, #00c853, #00bfa5);
+} /* verde brillante→verde→turquesa */
+.g6 {
+  background-image: linear-gradient(45deg, #ff6d00, #f50057, #d500f9);
+} /* naranja→rosa→violeta */
+.g7 {
+  background-image: linear-gradient(45deg, #f50057, #ff4081, #ff80ab);
+} /* rosa fuerte→rosa claro→rosado pastel */
+.g8 {
+  background-image: linear-gradient(45deg, #39ff14, #00e5ff, #ff00ff);
+} /* verde neón→cyan→magenta */
+.g9 {
+  background-image: linear-gradient(45deg, #ff3d00, #ff9100, #ffd600);
+} /* rojo brillante→naranja→amarillo */
+.g10 {
+  background-image: linear-gradient(45deg, #00ffff, #2979ff, #651fff);
+} /* cyan→azul→violeta */
+.g11 {
+  background-image: linear-gradient(45deg, #ff00ff, #ff4081, #ff80ab);
+} /* magenta→rosa fuerte→rosa pastel */
+.g12 {
+  background-image: linear-gradient(45deg, #ff6ec7, #ff3d00, #ffea00);
+} /* rosa→rojo→amarillo */
+.g13 {
+  background-image: linear-gradient(45deg, #00ffea, #00c853, #ffff00);
+} /* aqua→verde→amarillo */
+.g14 {
+  background-image: linear-gradient(45deg, #ff4081, #f50057, #d500f9);
+} /* rosa→fucsia→violeta */
