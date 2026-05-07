@@ -10,9 +10,10 @@ from zoneinfo import ZoneInfo
 import resend
 import requests
 
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, redirect, session
 
 app = Flask(__name__)
+app.secret_key = os.getenv("SECRET_KEY")
 
 meses = ['Enero',
          'Febrero',
@@ -27,6 +28,8 @@ meses = ['Enero',
          'Noviembre',
          'Diciembre'
          ]
+
+PASSWORD = os.getenv("APP_PASSWORD")
 
 
 def return_progress_color(progreso, today=False):
@@ -202,61 +205,42 @@ def generate_kids_page():
     output = template.render(kids=kids)
     return output
 
-# @app.route('/OneSignalSDKWorker.js')
-# def serve_worker():
-#     return send_from_directory('static', 'OneSignalSDKWorker.js')
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+
+    error = None
+
+    if request.method == "POST":
+
+        if request.form.get("password") == PASSWORD:
+
+            session.permanent = True
+            session["logged_in"] = True
+
+            return redirect("/")
+
+        error = "Contraseña incorrecta"
+
+    env = Environment(loader=FileSystemLoader("templates"))
+    template = env.get_template("login.html")
+    output = template.render(error=error)
+    return output
 
 
-# @app.route('/send_email', methods=['GET'])
-# def send_email():
-#     CRON_SECRET = os.environ.get('CRON_SECRET')
-#     authorization_header = request.headers.get('Authorization')
+@app.before_request
+def protect_routes():
 
-#     if authorization_header == f'Bearer {CRON_SECRET}':
-#         #resend.api_key = os.getenv("RESEND_KEY")
-#         onesignal_apikey = os.getenv("ONESIGNAL_APIKEY")
-#         onesignal_appid = os.getenv("ONESIGNAL_APPID")
-#         cumple = comprobar_lista('data.json')
-        
-#         nfkd_form = unicodedata.normalize('NFD', cumple['nombre'].lower())
-#         cumple['nombre_foto'] = ''.join([char for char in nfkd_form if not unicodedata.combining(char)])
+    if request.path.startswith("/static/"):
+        return
 
-#         if cumple:
-#             # env = Environment(loader=FileSystemLoader("templates"))
-#             # template = env.get_template("email.html")
-#             # email = template.render(cumple=cumple)
+    public_routes = {"login"}
 
-#             # EMAIL_TO = os.environ.get('EMAIL_TO')
+    if request.endpoint in public_routes:
+        return
 
-#             # req = resend.Emails.send({
-#             #     "from": "info@resacadecumples.com",
-#             #     "to": f"{EMAIL_TO}",
-#             #     "subject": "Hoy es el cumpleaños de ...",
-#             #     "html": f"{email}"
-#             # })
-
-#             header = {
-#                 "Content-Type": "application/json; charset=utf-8",
-#                 "Authorization": f"Basic {onesignal_apikey}"
-#             }
-
-#             payload = {
-#                 "app_id": onesignal_appid,
-#                 "included_segments": ["Active Users"],
-#                 "contents": {"es": f"Hoy es el cumpleaños de {cumple['nombre']} que cumple {cumple['edad']}"},
-#                 "headings": {"es": "¡Feliz cumpleaños!"}
-#             }
-
-#             req = requests.post("https://onesignal.com/api/v1/notifications", headers=header, data=json.dumps(payload))
-
-#             if req.status_code == 200:
-#                 return jsonify({"status": "Notification sent"}), 200
-#             else:
-#                 return jsonify({"error": req.text}), 400
-
-#         return jsonify({"message": "Cron executed but not notification sent"}), 200
-#     else:
-#         return jsonify({"error": "Unauthorized"}), 403
+    if not session.get("logged_in"):
+        return redirect("/login")
 
 if __name__ == '__main__':
     app.run()
