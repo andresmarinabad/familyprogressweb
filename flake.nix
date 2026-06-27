@@ -38,13 +38,12 @@
             pythonPackages.flask
             pythonPackages.resend
             pythonPackages.requests
+            pythonPackages.pillow
 
           ];
 
           # Comandos que se ejecutan al entrar al shell
           shellHook = ''
-            export APP_PASSWORD=
-            export SECRET_KEY=
             echo "--- Entorno Python cargado ---"
           '';
         };

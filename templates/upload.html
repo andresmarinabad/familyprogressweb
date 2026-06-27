@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Subir foto</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,container-queries"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@1,87.5,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/kids.css" />
+  </head>
+
+  <body class="min-h-screen bg-gray-100 flex items-center justify-center px-4">
+    <div class="w-full max-w-sm bg-white rounded-3xl shadow-xl p-6 sm:p-8">
+      <h1 class="text-2xl sm:text-3xl font-bold text-center mb-2 text-gray-800">
+        Subir foto
+      </h1>
+      <p class="text-center text-gray-600 mb-6 text-sm sm:text-base">
+        La imagen se guardará en el repositorio
+      </p>
+
+      {% if error %}
+      <div class="bg-red-100 text-red-700 p-3 rounded-xl mb-4 text-sm">
+        {{ error }}
+      </div>
+      {% endif %}
+
+      <form method="POST" enctype="multipart/form-data" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+          <select name="nombre" required
+            class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-800 bg-white text-base">
+            <option value="" disabled selected>Selecciona un niño</option>
+            {% for nombre in nombres %}
+            <option value="{{ nombre }}">{{ nombre }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Imagen</label>
+          <input type="file" name="image" accept="image/*" required
+            class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-800 bg-white text-base" />
+        </div>
+
+        <button type="submit"
+          class="w-full bg-black text-white py-3 rounded-xl text-base font-medium hover:opacity-90 transition">
+          Subir foto
+        </button>
+      </form>
+
+      <a href="/" class="block text-center text-gray-500 text-sm mt-4 hover:underline">Volver</a>
+    </div>
+  </body>
+</html>

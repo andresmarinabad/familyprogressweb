@@ -5,3 +5,4 @@ time_machine
 flask
 resend
 requests
+Pillow

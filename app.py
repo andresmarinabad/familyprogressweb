@@ -3,17 +3,23 @@ Render index.html with the kids data.
 """
 import os
 import json
+import base64
+import io
 from datetime import date, datetime
 from jinja2 import Environment, FileSystemLoader
 import unicodedata
 from zoneinfo import ZoneInfo
 import resend
 import requests
+from PIL import Image
 
 from flask import Flask, request, jsonify, send_from_directory, redirect, session
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
+app.config['MAX_CONTENT_LENGTH'] = 4 * 1024 * 1024  # 4 MB (límite de Vercel)
+
+GITHUB_REPO = "https://github.com/andresmarinabad/familyprogressweb"
 
 meses = ['Enero',
          'Febrero',
@@ -241,6 +247,71 @@ def protect_routes():
 
     if not session.get("logged_in"):
         return redirect("/login")
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload_image():
+    with open("data.json", encoding='utf-8') as f:
+        data = json.load(f)
+    nombres = [obj['nombre'] for obj in data]
+
+    env = Environment(loader=FileSystemLoader("templates"))
+    template = env.get_template("upload.html")
+
+    if request.method == 'GET':
+        return template.render(nombres=nombres)
+
+    nombre = request.form.get('nombre')
+    file = request.files.get('image')
+
+    if not nombre or not file or file.filename == '':
+        return template.render(nombres=nombres, error="Selecciona un nombre y una imagen"), 400
+
+    nfkd_form = unicodedata.normalize('NFD', nombre.lower())
+    normalized = ''.join([c for c in nfkd_form if not unicodedata.combining(c)])
+    gh_path = f"static/images/{normalized}.jpeg"
+
+    app.logger.info("Procesando imagen para %s -> %s", nombre, gh_path)
+
+    try:
+        img = Image.open(file.stream).convert('RGB')
+        buf = io.BytesIO()
+        img.save(buf, format='JPEG', quality=85)
+        content_b64 = base64.b64encode(buf.getvalue()).decode()
+    except Exception as e:
+        app.logger.error("Error procesando imagen: %s", e)
+        return template.render(nombres=nombres, error=f"Error procesando la imagen: {e}"), 500
+
+    token = os.getenv("GITHUB_TOKEN")
+    if not token:
+        app.logger.error("GITHUB_TOKEN no configurado")
+        return template.render(nombres=nombres, error="GITHUB_TOKEN no configurado"), 500
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
+    api_url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{gh_path}"
+
+    sha = None
+    get_resp = requests.get(api_url, headers=headers)
+    app.logger.info("GET %s -> %s", api_url, get_resp.status_code)
+    if get_resp.status_code == 200:
+        sha = get_resp.json().get("sha")
+
+    body = {"message": f"Subir foto de {nombre}", "content": content_b64}
+    if sha:
+        body["sha"] = sha
+
+    put_resp = requests.put(api_url, headers=headers, json=body)
+    app.logger.info("PUT %s -> %s %s", api_url, put_resp.status_code, put_resp.text[:300])
+
+    if put_resp.status_code in (200, 201):
+        return redirect('/')
+
+    error_detail = put_resp.json().get("message", put_resp.text[:200]) if put_resp.content else "sin respuesta"
+    return template.render(nombres=nombres, error=f"Error GitHub API ({put_resp.status_code}): {error_detail}"), 500
+
 
 if __name__ == '__main__':
     app.run()
