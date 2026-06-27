@@ -19,7 +19,7 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 app.config['MAX_CONTENT_LENGTH'] = 4 * 1024 * 1024  # 4 MB (límite de Vercel)
 
-GITHUB_REPO = "https://github.com/andresmarinabad/familyprogressweb"
+GITHUB_REPO = "andresmarinabad/familyprogressweb"
 
 meses = ['Enero',
          'Febrero',
