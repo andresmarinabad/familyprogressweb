@@ -12,26 +12,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@1,87.5,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="static/kids.css">
 
-  <!-- <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-  <script>
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-    OneSignalDeferred.push(async function(OneSignal) {
-      await OneSignal.init({
-        appId: "4bd73901-9665-4f75-ae38-872b55702a15",
-        safari_web_id: "web.onesignal.auto.5694d1e9-fcaa-415d-b1f1-1ef52daca700",
-        notifyButton: {
-          enable: true,
-          text: {
-            'tip.state.unsubscribed': 'Recibe avisos de los cumples',
-            'tip.state.subscribed': 'Te mantendré informado',
-            'tip.state.blocked': 'Has bloqueado las notificaciones'
-          }
-        },
-        serviceWorkerPath: "OneSignalSDKWorker.js",
-        serviceWorkerParam: { scope: "/" },
-      });
-    });
-  </script> -->
   
 </head>
 
@@ -39,10 +19,6 @@
 
   <section class="container mx-auto p-6">
     <h2 class="text-4xl font-bold text-center mb-8 titulo festivo g1" id="Fire" style="user-select: none;">Próximo Cumpleaños</h2>
-
-    <div class="flex justify-end mb-2">
-      <a href="/upload" class="text-sm text-gray-500 hover:text-gray-800 underline">Subir foto</a>
-    </div>
 
     <div class="flex justify-between items-end mb-2">
 
@@ -130,6 +106,12 @@
       {% endfor %}
 
     </div>
+    
+    <div class="flex justify-end mb-2">
+      <a href="/upload" class="text-sm text-gray-500 hover:text-gray-800 underline">Subir foto</a>
+    </div>
+    
+    
   </section>
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
