@@ -206,9 +206,11 @@ def generate_kids_page():
 
     kids.sort(key=lambda x: x.cumple_date, reverse=False)
 
+    uploaded = request.args.get('uploaded')
+
     env = Environment(loader=FileSystemLoader("templates"))
     template = env.get_template("index.html")
-    output = template.render(kids=kids)
+    output = template.render(kids=kids, uploaded=uploaded)
     return output
 
 
@@ -307,7 +309,7 @@ def upload_image():
     app.logger.info("PUT %s -> %s %s", api_url, put_resp.status_code, put_resp.text[:300])
 
     if put_resp.status_code in (200, 201):
-        return redirect('/')
+        return redirect(f'/?uploaded={nombre}')
 
     error_detail = put_resp.json().get("message", put_resp.text[:200]) if put_resp.content else "sin respuesta"
     return template.render(nombres=nombres, error=f"Error GitHub API ({put_resp.status_code}): {error_detail}"), 500
