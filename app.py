@@ -276,6 +276,9 @@ def upload_image():
 
     try:
         img = Image.open(file.stream).convert('RGB')
+        w, h = img.size
+        side = min(w, h)
+        img = img.crop(((w - side) // 2, (h - side) // 2, (w + side) // 2, (h + side) // 2))
         buf = io.BytesIO()
         img.save(buf, format='JPEG', quality=85)
         content_b64 = base64.b64encode(buf.getvalue()).decode()
