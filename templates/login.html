@@ -1,16 +1,17 @@
 <!doctype html>
-<html lang="es">
+<html lang="{{ lang }}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Acceso privado</title>
+    <title>{{ t.login_tab_title }}</title>
 
     <link
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
       rel="stylesheet"
     />
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,container-queries"></script>
+    <script>tailwind.config = { darkMode: 'media' }</script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -23,14 +24,15 @@
     <link rel="stylesheet" href="/static/kids.css" />
   </head>
 
-  <body class="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-    <div class="w-full max-w-sm bg-white rounded-3xl shadow-xl p-6 sm:p-8">
+  <body class="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center px-4">
+
+    <div class="w-full max-w-sm bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-6 sm:p-8">
       <h1 class="text-2xl sm:text-3xl font-bold text-center mb-2 text-gray-800">
-        Resaca de Cumples 🎂
+        {{ t.login_title }}
       </h1>
 
       <p class="text-center text-gray-600 mb-6 text-sm sm:text-base">
-        Acceso privado familiar
+        {{ t.login_subtitle }}
       </p>
 
       {% if error %}
@@ -43,7 +45,7 @@
         <input
           type="password"
           name="password"
-          placeholder="Contraseña"
+          placeholder="{{ t.login_placeholder }}"
           required
           class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-800 bg-white text-base"
         />
@@ -52,9 +54,17 @@
           type="submit"
           class="w-full bg-black text-white py-3 rounded-xl text-base font-medium hover:opacity-90 transition"
         >
-          Entrar
+          {{ t.login_button }}
         </button>
       </form>
+
+      <div class="flex justify-center items-center gap-1 text-xs mt-5">
+        <a href="/set_language/es"
+          class="{{ 'font-semibold text-gray-700 dark:text-gray-200' if lang == 'es' else 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300' }}">ES</a>
+        <span class="text-gray-300 dark:text-gray-600">|</span>
+        <a href="/set_language/ca"
+          class="{{ 'font-semibold text-gray-700 dark:text-gray-200' if lang == 'ca' else 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300' }}">CA</a>
+      </div>
     </div>
   </body>
 </html>

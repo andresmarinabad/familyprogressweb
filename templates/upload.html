@@ -1,24 +1,26 @@
 <!doctype html>
-<html lang="es">
+<html lang="{{ lang }}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Subir foto</title>
+    <title>{{ t.upload_tab_title }}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,container-queries"></script>
+    <script>tailwind.config = { darkMode: 'media' }</script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@1,87.5,700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/static/kids.css" />
   </head>
 
-  <body class="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-    <div class="w-full max-w-sm bg-white rounded-3xl shadow-xl p-6 sm:p-8">
+  <body class="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center px-4">
+
+    <div class="w-full max-w-sm bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-6 sm:p-8">
       <h1 class="text-2xl sm:text-3xl font-bold text-center mb-2 text-gray-800">
-        Subir foto
+        {{ t.upload_title }}
       </h1>
       <p class="text-center text-gray-600 mb-6 text-sm sm:text-base">
-        La imagen se guardará en el repositorio
+        {{ t.upload_subtitle }}
       </p>
 
       {% if error %}
@@ -29,10 +31,10 @@
 
       <form method="POST" enctype="multipart/form-data" class="space-y-4">
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ t.upload_name_label }}</label>
           <select name="nombre" required
             class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-800 bg-white text-base">
-            <option value="" disabled selected>Selecciona un niño</option>
+            <option value="" disabled selected>{{ t.upload_name_placeholder }}</option>
             {% for nombre in nombres %}
             <option value="{{ nombre }}">{{ nombre }}</option>
             {% endfor %}
@@ -40,32 +42,41 @@
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Imagen</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ t.upload_image_label }}</label>
           <input type="file" name="image" accept="image/*" required
             class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-800 bg-white text-base" />
         </div>
 
         <button id="submit-btn" type="submit"
           class="w-full bg-black text-white py-3 rounded-xl text-base font-medium hover:opacity-90 transition flex items-center justify-center gap-2">
-          Subir foto
+          {{ t.upload_submit }}
         </button>
       </form>
 
-      <script>
-        document.querySelector('form').addEventListener('submit', function () {
-          const btn = document.getElementById('submit-btn');
-          btn.disabled = true;
-          btn.innerHTML = `
-            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
-            </svg>
-            Subiendo...
-          `;
-        });
-      </script>
-
-      <a href="/" class="block text-center text-gray-500 text-sm mt-4 hover:underline">Volver</a>
+      <div class="flex justify-between items-center mt-4">
+        <div class="flex items-center gap-1 text-xs">
+          <a href="/set_language/es"
+            class="{{ 'font-semibold text-gray-700 dark:text-gray-200' if lang == 'es' else 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300' }}">ES</a>
+          <span class="text-gray-300 dark:text-gray-600">|</span>
+          <a href="/set_language/ca"
+            class="{{ 'font-semibold text-gray-700 dark:text-gray-200' if lang == 'ca' else 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300' }}">CA</a>
+        </div>
+        <a href="/" class="text-gray-500 dark:text-gray-400 text-sm hover:underline">{{ t.upload_back }}</a>
+      </div>
     </div>
+
+    <script>
+      document.querySelector('form').addEventListener('submit', function () {
+        const btn = document.getElementById('submit-btn');
+        btn.disabled = true;
+        btn.innerHTML = `
+          <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+          </svg>
+          {{ t.upload_submit }}...
+        `;
+      });
+    </script>
   </body>
 </html>

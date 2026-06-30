@@ -7,7 +7,7 @@ from unittest.mock import patch, MagicMock
 from PIL import Image
 import time_machine
 
-from app import app as flask_app, Kid, return_progress_color
+from app import app as flask_app, Kid, return_progress_color, TRANSLATIONS
 
 
 # ---------------------------------------------------------------------------
@@ -38,12 +38,40 @@ def auth_client(client):
     return client
 
 
+@pytest.fixture
+def es():
+    return TRANSLATIONS["es"]
+
+
+@pytest.fixture
+def ca():
+    return TRANSLATIONS["ca"]
+
+
 def _make_jpeg(width=100, height=100, color="blue") -> io.BytesIO:
     img = Image.new("RGB", (width, height), color=color)
     buf = io.BytesIO()
     img.save(buf, format="JPEG")
     buf.seek(0)
     return buf
+
+
+# ---------------------------------------------------------------------------
+# Translation files
+# ---------------------------------------------------------------------------
+
+def test_translations_load():
+    assert "es" in TRANSLATIONS
+    assert "ca" in TRANSLATIONS
+
+
+def test_translations_have_same_keys():
+    assert set(TRANSLATIONS["es"].keys()) == set(TRANSLATIONS["ca"].keys())
+
+
+def test_translations_months_length():
+    assert len(TRANSLATIONS["es"]["months"]) == 12
+    assert len(TRANSLATIONS["ca"]["months"]) == 12
 
 
 # ---------------------------------------------------------------------------
@@ -71,8 +99,7 @@ def test_kid_progress_bar_color():
 
 
 def test_str_method(sample_data):
-    meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-             "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+    meses = TRANSLATIONS["es"]["months"]
     with time_machine.travel(datetime(2026, 1, 1)):
         kid = Kid(sample_data[1]["nombre"], sample_data[1]["fecha"], 1, sample_data[1]["clan"])
         assert str(kid) == f"Cumple {kid.edad} el {kid.cumple_date.day} de {meses[kid.cumple_date.month - 1]}"
@@ -115,6 +142,78 @@ def test_file_existence(sample_data):
 
 
 # ---------------------------------------------------------------------------
+# Kid.label(t) — i18n
+# ---------------------------------------------------------------------------
+
+def test_label_birthday_coming_es(sample_data, es):
+    with time_machine.travel(datetime(2026, 1, 1)):
+        kid = Kid(sample_data[1]["nombre"], sample_data[1]["fecha"], 1, sample_data[1]["clan"])
+        assert "Cumple" in kid.label(es)
+        assert "Julio" in kid.label(es)
+
+
+def test_label_birthday_coming_ca(sample_data, ca):
+    with time_machine.travel(datetime(2026, 1, 1)):
+        kid = Kid(sample_data[1]["nombre"], sample_data[1]["fecha"], 1, sample_data[1]["clan"])
+        assert "Compleix" in kid.label(ca)
+        assert "Juliol" in kid.label(ca)
+
+
+def test_label_pregnancy_es(sample_data, es):
+    kid = Kid(sample_data[0]["nombre"], sample_data[0]["fecha"], 2, sample_data[0]["clan"], embarazo=True)
+    assert "Se espera" in kid.label(es)
+    assert "Marzo" in kid.label(es)
+
+
+def test_label_pregnancy_ca(sample_data, ca):
+    kid = Kid(sample_data[0]["nombre"], sample_data[0]["fecha"], 2, sample_data[0]["clan"], embarazo=True)
+    assert "S'espera" in kid.label(ca)
+    assert "Març" in kid.label(ca)
+
+
+def test_label_birthday_today_es(sample_data, es):
+    with time_machine.travel(datetime(2026, 7, 15)):
+        kid = Kid(sample_data[1]["nombre"], sample_data[1]["fecha"], 1, sample_data[1]["clan"])
+        assert "Hoy cumple" in kid.label(es)
+
+
+def test_label_birthday_today_ca(sample_data, ca):
+    with time_machine.travel(datetime(2026, 7, 15)):
+        kid = Kid(sample_data[1]["nombre"], sample_data[1]["fecha"], 1, sample_data[1]["clan"])
+        assert "Avui compleix" in kid.label(ca)
+
+
+# ---------------------------------------------------------------------------
+# Kid.display_name(t) — i18n
+# ---------------------------------------------------------------------------
+
+def test_display_name_normal(sample_data, es):
+    kid = Kid(sample_data[1]["nombre"], sample_data[1]["fecha"], 1, sample_data[1]["clan"])
+    assert kid.display_name(es) == "Alice"
+
+
+def test_display_name_birthday_es(sample_data, es):
+    with time_machine.travel(datetime(2026, 7, 15)):
+        kid = Kid(sample_data[1]["nombre"], sample_data[1]["fecha"], 1, sample_data[1]["clan"])
+        assert "Felicidades" in kid.display_name(es)
+        assert "Alice" in kid.display_name(es)
+
+
+def test_display_name_birthday_ca(sample_data, ca):
+    with time_machine.travel(datetime(2026, 7, 15)):
+        kid = Kid(sample_data[1]["nombre"], sample_data[1]["fecha"], 1, sample_data[1]["clan"])
+        assert "Felicitats" in kid.display_name(ca)
+        assert "Alice" in kid.display_name(ca)
+
+
+def test_display_name_no_side_effect(sample_data, es):
+    with time_machine.travel(datetime(2026, 7, 15)):
+        kid = Kid(sample_data[1]["nombre"], sample_data[1]["fecha"], 1, sample_data[1]["clan"])
+        kid.display_name(es)
+        assert kid.nombre == "Alice"
+
+
+# ---------------------------------------------------------------------------
 # Route: / (index)
 # ---------------------------------------------------------------------------
 
@@ -127,7 +226,7 @@ def test_index_redirects_unauthenticated(client):
 def test_index_renders_authenticated(auth_client):
     response = auth_client.get("/")
     assert response.status_code == 200
-    assert b"Cumple" in response.data or b"cumple" in response.data
+    assert "Cumple".encode() in response.data or "Compleix".encode() in response.data
 
 
 def test_index_shows_success_banner(auth_client):
@@ -135,6 +234,52 @@ def test_index_shows_success_banner(auth_client):
     assert response.status_code == 200
     assert b"Alice" in response.data
     assert b"subida correctamente" in response.data
+
+
+def test_index_catalan(auth_client):
+    with auth_client.session_transaction() as sess:
+        sess["lang"] = "ca"
+    response = auth_client.get("/")
+    assert response.status_code == 200
+    assert "Proper Aniversari".encode() in response.data
+
+
+def test_index_catalan_success_banner(auth_client):
+    with auth_client.session_transaction() as sess:
+        sess["lang"] = "ca"
+    response = auth_client.get("/?uploaded=Alice")
+    assert b"pujada correctament" in response.data
+
+
+# ---------------------------------------------------------------------------
+# Route: /set_language
+# ---------------------------------------------------------------------------
+
+def test_set_language_es(client):
+    with client.session_transaction() as sess:
+        sess["logged_in"] = True
+    client.get("/set_language/es")
+    with client.session_transaction() as sess:
+        assert sess.get("lang") == "es"
+
+
+def test_set_language_ca(client):
+    with client.session_transaction() as sess:
+        sess["logged_in"] = True
+    client.get("/set_language/ca")
+    with client.session_transaction() as sess:
+        assert sess.get("lang") == "ca"
+
+
+def test_set_language_invalid_ignored(client):
+    client.get("/set_language/fr")
+    with client.session_transaction() as sess:
+        assert sess.get("lang") is None
+
+
+def test_set_language_accessible_without_auth(client):
+    response = client.get("/set_language/ca")
+    assert response.status_code in (200, 302)
 
 
 # ---------------------------------------------------------------------------
@@ -145,6 +290,13 @@ def test_login_get(client):
     response = client.get("/login")
     assert response.status_code == 200
     assert b"password" in response.data.lower()
+
+
+def test_login_get_catalan(client):
+    with client.session_transaction() as sess:
+        sess["lang"] = "ca"
+    response = client.get("/login")
+    assert b"Contrasenya" in response.data
 
 
 def test_login_post_wrong_password(client):
@@ -177,6 +329,13 @@ def test_upload_get_renders_form(auth_client):
     assert "Subir foto".encode() in response.data
 
 
+def test_upload_get_renders_form_catalan(auth_client):
+    with auth_client.session_transaction() as sess:
+        sess["lang"] = "ca"
+    response = auth_client.get("/upload")
+    assert b"Pujar foto" in response.data
+
+
 def test_upload_post_missing_fields(auth_client):
     response = auth_client.post("/upload", data={})
     assert response.status_code == 400
@@ -197,7 +356,6 @@ def test_upload_post_no_token(auth_client):
 
 def test_upload_post_success(auth_client):
     buf = _make_jpeg()
-
     mock_get = MagicMock(status_code=404)
     mock_put = MagicMock(status_code=201)
 
@@ -216,7 +374,6 @@ def test_upload_post_success(auth_client):
 
 def test_upload_post_github_error(auth_client):
     buf = _make_jpeg()
-
     mock_get = MagicMock(status_code=404)
     mock_put = MagicMock(status_code=403, content=b'{"message":"Forbidden"}')
     mock_put.json.return_value = {"message": "Forbidden"}
@@ -235,9 +392,7 @@ def test_upload_post_github_error(auth_client):
 
 
 def test_upload_includes_sha_when_file_exists(auth_client):
-    """PUT body must include SHA when the file already exists in the repo."""
     buf = _make_jpeg()
-
     mock_get = MagicMock(status_code=200)
     mock_get.json.return_value = {"sha": "abc123"}
 
@@ -260,9 +415,7 @@ def test_upload_includes_sha_when_file_exists(auth_client):
 
 
 def test_upload_normalizes_accented_name(auth_client):
-    """Miriam with accent → miriam.jpeg path sent to GitHub API."""
     buf = _make_jpeg()
-
     mock_get = MagicMock(status_code=404)
     mock_put = MagicMock(status_code=201)
     captured_url = {}
@@ -306,12 +459,11 @@ def test_crop_square_unchanged():
 
 
 def test_crop_is_centered():
-    # 300×100 image: left third blue, center third red, right third blue
     img = Image.new("RGB", (300, 100), color=(0, 0, 255))
     for x in range(100, 200):
         for y in range(100):
             img.putpixel((x, y), (255, 0, 0))
 
-    cropped = _crop(img)  # expects 100×100 center crop
+    cropped = _crop(img)
     assert cropped.size == (100, 100)
     assert cropped.getpixel((50, 50)) == (255, 0, 0)

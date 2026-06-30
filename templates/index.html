@@ -1,138 +1,204 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="{{ lang }}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resaca de Cumples</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,container-queries"></script>
+    <script>tailwind.config = { darkMode: 'media' }</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@1,87.5,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="static/kids.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Resaca de Cumples</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,container-queries"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@1,87.5,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="static/kids.css">
+  <body class="bg-gray-100 dark:bg-gray-900" style="margin-bottom: 200px">
+    {% if uploaded %}
+    <div
+      id="success-banner"
+      class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-2xl shadow-lg z-50 flex items-center gap-3 transition-opacity duration-500"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5 flex-shrink-0"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+          clip-rule="evenodd"
+        />
+      </svg>
+      {{ t.success_pre }} <strong class="mx-1">{{ uploaded }}</strong> {{
+      t.success_post }}
+    </div>
+    <script>
+      setTimeout(function () {
+        const b = document.getElementById("success-banner");
+        b.style.opacity = "0";
+        setTimeout(() => b.remove(), 500);
+      }, 3000);
+    </script>
+    {% endif %}
 
-  
-</head>
+    <section class="container mx-auto p-6">
+      <h2
+        class="text-4xl font-bold text-center mb-8 titulo festivo g1"
+        id="Fire"
+        style="user-select: none"
+      >
+        {{ t.page_title }}
+      </h2>
 
-<body class="bg-gray-100" style="margin-bottom: 200px;">
+      <div class="flex justify-between items-end mb-2">
+        <div class="flex items-center gap-2">
+          <div class="relative w-30" style="margin-bottom: -6px">
+            <span
+              class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-1"
+            >
+              <svg
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 8"
+                class="w-3 h-3 text-gray-800 dark:text-white"
+              >
+                <path
+                  stroke="#000000"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"
+                ></path>
+              </svg>
+            </span>
 
-  {% if uploaded %}
-  <div id="success-banner" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-2xl shadow-lg z-50 flex items-center gap-3 transition-opacity duration-500">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
-      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-    </svg>
-    Foto de <strong class="mx-1">{{ uploaded }}</strong> subida correctamente
-  </div>
-  <script>
-    setTimeout(function () {
-      const b = document.getElementById('success-banner');
-      b.style.opacity = '0';
-      setTimeout(() => b.remove(), 500);
-    }, 3000);
-  </script>
-  {% endif %}
+            <select
+              id="clanes"
+              style="font-weight: bold"
+              class="appearance-none bg-none block w-full bg-transparent border-0 border-b-0 border-default-medium text-sm text-body focus:outline-none focus:ring-0 focus:border-brand peer py-2.5 pl-6 pr-2"
+            >
+              <option>{{ t.filter_all }}</option>
+              <option value="cm">Codina Martínez</option>
+              <option value="mc">Marín Codina</option>
+              <option value="cc">Cudina Codina</option>
+              <option value="cf">Codina Ferreres</option>
+              <option value="mtc">Martín Codina</option>
+            </select>
+          </div>
+        </div>
 
-  <section class="container mx-auto p-6">
-    <h2 class="text-4xl font-bold text-center mb-8 titulo festivo g1" id="Fire" style="user-select: none;">Próximo Cumpleaños</h2>
-
-    <div class="flex justify-between items-end mb-2">
-
-      <div class="flex items-center gap-2">
-        <div class="relative w-30" style="margin-bottom: -6px;">
-          <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-1">
-            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8"
-              class="w-3 h-3 text-gray-800 dark:text-white">
-              <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"></path>
-            </svg>
-          </span>
-
-          <select id="clanes" style="font-weight: bold;"
-            class="appearance-none bg-none  block w-full bg-transparent border-0 border-b-0 border-default-medium text-sm text-body focus:outline-none focus:ring-0 focus:border-brand peer py-2.5 pl-6 pr-2">
-            <option>Todos</option>
-            <option value="cm">Codina Martínez</option>
-            <option value="mc">Marín Codina</option>
-            <option value="cc">Cudina Codina</option>
-            <option value="cf">Codina Ferreres</option>
-            <option value="mtc">Martín Codina</option>
-          </select>
-
+        <div class="flex items-center gap-4">
+          <span class="text-gray-700 text-sm">{{ t.filter_date }}</span>
+          <label
+            class="relative inline-flex items-center cursor-pointer"
+            style="margin-left: -10px; margin-right: -10px"
+          >
+            <input type="checkbox" id="filtro" class="sr-only peer" />
+            <div
+              class="w-14 h-7 bg-red-500 rounded-full peer peer-checked:bg-blue-500 transition-all"
+            ></div>
+            <div
+              class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full shadow-md peer-checked:translate-x-7 transition-all"
+            ></div>
+          </label>
+          <span class="text-gray-700 text-sm">{{ t.filter_number }}</span>
         </div>
       </div>
 
-      <div class="flex items-center gap-4">
-        <span class="text-gray-700 text-sm">Fecha</span>
-        <label class="relative inline-flex items-center cursor-pointer" style="margin-left: -10px;margin-right: -10px;">
-          <input type="checkbox" id="filtro" class="sr-only peer">
-          <div class="w-14 h-7 bg-red-500 rounded-full peer peer-checked:bg-blue-500 transition-all"></div>
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+        id="contenedor"
+      >
+        {% for kid in kids %}
+        <div class="bg-white p-6 rounded-lg shadow-md kid">
           <div
-            class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full shadow-md peer-checked:translate-x-7 transition-all">
-          </div>
-        </label>
-        <span class="text-gray-700 text-sm">Dorsal</span>
-      </div>
-
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="contenedor">
-
-      {% for kid in kids %}
-      <div class="bg-white p-6 rounded-lg shadow-md kid">
-
-        <div class="image-container rounded-xl" id="{{kid.nombre | lower}}-div">
-          {% if kid.video %}
-          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="{{ kid.image }}"
-            onclick="mostrarVideo('{{kid.nombre | lower}}')" alt="">
-          <span class="dorsal archivo-dorsal">#{{ kid.dorsal }}</span>
-          <video class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4 video" playsinline>
-            <source src="static/videos/{{ kid.normalized }}.mp4" type="video/mp4">
-            Tu navegador no soporta este formato de video.
-          </video>
-          {% else %}
-          <img class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4" src="{{ kid.image }}"
-            alt="">
-          <span class="dorsal archivo-dorsal">#{{ kid.dorsal }}</span>
-          {% endif %}
-        </div>
-
-        <div class="flex" style="justify-content: center;">
-          
-          <h3 class="text-xl font-semibold text-center card-title">{{ kid.nombre }}</h3>
-          {% if not kid.embarazo %}
-            {% if not kid.cumple_today %}
-          <span class="text-gray-600 text-xl" style="margin-left: 4px;">({{ kid.edad-1 }})</span>
+            class="image-container rounded-xl"
+            id="{{kid.nombre | lower}}-div"
+          >
+            {% if kid.video %}
+            <img
+              class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4"
+              src="{{ kid.image }}"
+              onclick="mostrarVideo('{{kid.nombre | lower}}')"
+              alt=""
+            />
+            <span class="dorsal archivo-dorsal">#{{ kid.dorsal }}</span>
+            <video
+              class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4 video"
+              playsinline
+            >
+              <source
+                src="static/videos/{{ kid.normalized }}.mp4"
+                type="video/mp4"
+              />
+              {{ t.video_unsupported }}
+            </video>
             {% else %}
-          <span class="text-gray-600 text-xl" style="margin-left: 4px;">({{ kid.edad }})</span>
+            <img
+              class="object-cover w-full rounded-xl aspect-square card-img-top mx-auto mb-4"
+              src="{{ kid.image }}"
+              alt=""
+            />
+            <span class="dorsal archivo-dorsal">#{{ kid.dorsal }}</span>
             {% endif %}
-          {% endif %}
-        </div>
-
-        <p class="text-gray-600 text-center card-subtitle">{{ kid }}</p>
-        <span hidden class="fecha">{{ kid.cumple_date }}</span>
-        <span hidden class="clan">{{ kid.clan }}</span>
-        <div class="text-center mt-4">
-
-          <div class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden">
-            <div class="auxbar {{ kid.color }}" style="width: {{ kid.progreso }}%;"></div>
           </div>
 
+          <div class="flex" style="justify-content: center">
+            <h3 class="text-xl font-semibold text-center card-title">
+              {{ kid.display_name(t) }}
+            </h3>
+            {% if not kid.embarazo %} {% if not kid.cumple_today %}
+            <span class="text-gray-600 text-xl" style="margin-left: 4px"
+              >({{ kid.edad-1 }})</span
+            >
+            {% else %}
+            <span class="text-gray-600 text-xl" style="margin-left: 4px"
+              >({{ kid.edad }})</span
+            >
+            {% endif %} {% endif %}
+          </div>
+
+          <p class="text-gray-600 text-center card-subtitle">
+            {{ kid.label(t) }}
+          </p>
+          <span hidden class="fecha">{{ kid.cumple_date }}</span>
+          <span hidden class="clan">{{ kid.clan }}</span>
+          <div class="text-center mt-4">
+            <div
+              class="w-full max-w-xl bg-gray-200 rounded-full h-5 overflow-hidden"
+            >
+              <div
+                class="auxbar {{ kid.color }}"
+                style="width: {{ kid.progreso }}%;"
+              ></div>
+            </div>
+          </div>
         </div>
+        {% endfor %}
       </div>
-      {% endfor %}
 
-    </div>
-    
-    <div class="flex justify-end mb-2" style="margin-top: 10px";>
-      <a href="/upload" class="text-sm text-gray-500 hover:text-gray-800 underline">Subir foto</a>
-    </div>
-    
-    
-  </section>
+      <div class="flex justify-between items-center mb-2" style="margin-top: 10px">
+        <div class="flex items-center gap-1 text-xs">
+          <a href="/set_language/es"
+            class="{{ 'font-semibold text-gray-800 dark:text-gray-100' if lang == 'es' else 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300' }}">ES</a>
+          <span class="text-gray-300 dark:text-gray-600">|</span>
+          <a href="/set_language/ca"
+            class="{{ 'font-semibold text-gray-800 dark:text-gray-100' if lang == 'ca' else 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300' }}">CA</a>
+        </div>
+        <a href="/upload" class="text-sm text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 underline">{{ t.upload_link }}</a>
+      </div>
+    </section>
 
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-  <script src="static/kids.js"></script>
-  
-</body>
-
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script src="static/kids.js"></script>
+  </body>
 </html>

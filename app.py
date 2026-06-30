@@ -20,22 +20,30 @@ app.secret_key = os.getenv("SECRET_KEY")
 app.config['MAX_CONTENT_LENGTH'] = 4 * 1024 * 1024  # 4 MB (límite de Vercel)
 
 GITHUB_REPO = "andresmarinabad/familyprogressweb"
-
-meses = ['Enero',
-         'Febrero',
-         'Marzo',
-         'Abril',
-         'Mayo',
-         'Junio',
-         'Julio',
-         'Agosto',
-         'Septiembre',
-         'Octubre',
-         'Noviembre',
-         'Diciembre'
-         ]
-
 PASSWORD = os.getenv("APP_PASSWORD")
+
+
+def _load_translations():
+    base = os.path.dirname(os.path.abspath(__file__))
+    out = {}
+    for lang in ("es", "ca"):
+        path = os.path.join(base, "translations", f"{lang}.json")
+        with open(path, encoding="utf-8") as f:
+            out[lang] = json.load(f)
+    return out
+
+
+TRANSLATIONS = _load_translations()
+
+
+def get_lang():
+    lang = session.get("lang")
+    if lang in TRANSLATIONS:
+        return lang
+    accept = request.headers.get("Accept-Language", "")
+    if accept[:2].lower() == "ca":
+        return "ca"
+    return "es"
 
 
 def return_progress_color(progreso, today=False):
@@ -108,21 +116,26 @@ class Kid:
         self.normalized = self.normalized_name()
         self.image = self.get_image()
 
-    def __str__(self):
+    def label(self, t):
         dia = self.cumple_date.day
-        mes = meses[self.cumple_date.month - 1]
+        mes = t["months"][self.cumple_date.month - 1]
         if self.embarazo:
-            return f"Se espera para el {dia} de {mes}"
-
+            return t["expected"].format(day=dia, month=mes)
         if self.cumple_today:
-            self.nombre = f"¡Felicidades a {self.nombre}!"
             if self.edad == 0:
-                return "Hoy has nacido"
-            elif self.edad == 1:
-                return "Hoy cumple 1 año"
-            return f"Hoy cumple {str(self.edad)} años"
+                return t["born_today"]
+            if self.edad == 1:
+                return t["birthday_today_1"]
+            return t["birthday_today"].format(age=self.edad)
+        return t["birthday_coming"].format(age=self.edad, day=dia, month=mes)
 
-        return f"Cumple {str(self.edad)} el {dia} de {mes}"
+    def display_name(self, t):
+        if self.cumple_today:
+            return t["congrats"].format(name=self.nombre)
+        return self.nombre
+
+    def __str__(self):
+        return self.label(TRANSLATIONS["es"])
 
     def get_image(self):
         """
@@ -206,34 +219,38 @@ def generate_kids_page():
 
     kids.sort(key=lambda x: x.cumple_date, reverse=False)
 
+    lang = get_lang()
+    t = TRANSLATIONS[lang]
     uploaded = request.args.get('uploaded')
 
     env = Environment(loader=FileSystemLoader("templates"))
     template = env.get_template("index.html")
-    output = template.render(kids=kids, uploaded=uploaded)
-    return output
+    return template.render(kids=kids, uploaded=uploaded, t=t, lang=lang)
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-
+    lang = get_lang()
+    t = TRANSLATIONS[lang]
     error = None
 
     if request.method == "POST":
-
         if request.form.get("password") == PASSWORD:
-
             session.permanent = True
             session["logged_in"] = True
-
             return redirect("/")
-
-        error = "Contraseña incorrecta"
+        error = t["login_error"]
 
     env = Environment(loader=FileSystemLoader("templates"))
     template = env.get_template("login.html")
-    output = template.render(error=error)
-    return output
+    return template.render(error=error, t=t, lang=lang)
+
+
+@app.route("/set_language/<lang>")
+def set_language(lang):
+    if lang in TRANSLATIONS:
+        session["lang"] = lang
+    return redirect(request.referrer or "/")
 
 
 @app.before_request
@@ -242,7 +259,7 @@ def protect_routes():
     if request.path.startswith("/static/"):
         return
 
-    public_routes = {"login"}
+    public_routes = {"login", "set_language"}
 
     if request.endpoint in public_routes:
         return
@@ -256,17 +273,19 @@ def upload_image():
         data = json.load(f)
     nombres = [obj['nombre'] for obj in data]
 
+    lang = get_lang()
+    t = TRANSLATIONS[lang]
     env = Environment(loader=FileSystemLoader("templates"))
     template = env.get_template("upload.html")
 
     if request.method == 'GET':
-        return template.render(nombres=nombres)
+        return template.render(nombres=nombres, t=t, lang=lang)
 
     nombre = request.form.get('nombre')
     file = request.files.get('image')
 
     if not nombre or not file or file.filename == '':
-        return template.render(nombres=nombres, error="Selecciona un nombre y una imagen"), 400
+        return template.render(nombres=nombres, t=t, lang=lang, error=t["error_missing_fields"]), 400
 
     nfkd_form = unicodedata.normalize('NFD', nombre.lower())
     normalized = ''.join([c for c in nfkd_form if not unicodedata.combining(c)])
@@ -284,12 +303,12 @@ def upload_image():
         content_b64 = base64.b64encode(buf.getvalue()).decode()
     except Exception as e:
         app.logger.error("Error procesando imagen: %s", e)
-        return template.render(nombres=nombres, error=f"Error procesando la imagen: {e}"), 500
+        return template.render(nombres=nombres, t=t, lang=lang, error=t["error_image"].format(detail=e)), 500
 
     token = os.getenv("GITHUB_TOKEN")
     if not token:
         app.logger.error("GITHUB_TOKEN no configurado")
-        return template.render(nombres=nombres, error="GITHUB_TOKEN no configurado"), 500
+        return template.render(nombres=nombres, t=t, lang=lang, error=t["error_no_token"]), 500
 
     headers = {
         "Authorization": f"Bearer {token}",
@@ -315,7 +334,7 @@ def upload_image():
         return redirect(f'/?uploaded={nombre}')
 
     error_detail = put_resp.json().get("message", put_resp.text[:200]) if put_resp.content else "sin respuesta"
-    return template.render(nombres=nombres, error=f"Error GitHub API ({put_resp.status_code}): {error_detail}"), 500
+    return template.render(nombres=nombres, t=t, lang=lang, error=t["error_github"].format(status=put_resp.status_code, detail=error_detail)), 500
 
 
 if __name__ == '__main__':
