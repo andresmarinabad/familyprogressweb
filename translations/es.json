@@ -22,7 +22,7 @@
   "login_error": "Contraseña incorrecta",
   "upload_tab_title": "Subir foto",
   "upload_title": "Subir foto",
-  "upload_subtitle": "La imagen se guardará en el repositorio",
+  "upload_subtitle": "La imagen se guardará en Supabase",
   "upload_name_label": "Nombre",
   "upload_name_placeholder": "Selecciona un niño",
   "upload_image_label": "Imagen",
@@ -30,6 +30,5 @@
   "upload_back": "Volver",
   "error_missing_fields": "Selecciona un nombre y una imagen",
   "error_image": "Error procesando la imagen: {detail}",
-  "error_no_token": "GITHUB_TOKEN no configurado",
-  "error_github": "Error GitHub API ({status}): {detail}"
+  "error_storage": "Error al subir la imagen: {detail}"
 }

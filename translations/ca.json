@@ -22,7 +22,7 @@
   "login_error": "Contrasenya incorrecta",
   "upload_tab_title": "Pujar foto",
   "upload_title": "Pujar foto",
-  "upload_subtitle": "La imatge es guardarà al repositori",
+  "upload_subtitle": "La imatge es guardarà a Supabase",
   "upload_name_label": "Nom",
   "upload_name_placeholder": "Selecciona un nen",
   "upload_image_label": "Imatge",
@@ -30,6 +30,5 @@
   "upload_back": "Tornar",
   "error_missing_fields": "Selecciona un nom i una imatge",
   "error_image": "Error processant la imatge: {detail}",
-  "error_no_token": "GITHUB_TOKEN no configurat",
-  "error_github": "Error GitHub API ({status}): {detail}"
+  "error_storage": "Error en pujar la imatge: {detail}"
 }

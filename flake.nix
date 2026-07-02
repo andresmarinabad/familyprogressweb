@@ -39,6 +39,7 @@
             pythonPackages.resend
             pythonPackages.requests
             pythonPackages.pillow
+            pythonPackages.supabase
 
           ];
 

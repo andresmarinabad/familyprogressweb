@@ -3,24 +3,30 @@ Render index.html with the kids data.
 """
 import os
 import json
-import base64
 import io
 from datetime import date, datetime
 from jinja2 import Environment, FileSystemLoader
 import unicodedata
 from zoneinfo import ZoneInfo
 import resend
-import requests
 from PIL import Image
+from supabase import create_client, Client
 
-from flask import Flask, request, jsonify, send_from_directory, redirect, session
+from flask import Flask, request, redirect, session
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 app.config['MAX_CONTENT_LENGTH'] = 4 * 1024 * 1024  # 4 MB (límite de Vercel)
 
-GITHUB_REPO = "andresmarinabad/familyprogressweb"
 PASSWORD = os.getenv("APP_PASSWORD")
+
+_supabase_url = os.getenv("SUPABASE_URL")
+_supabase_key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+supabase_client: Client | None = (
+    create_client(_supabase_url, _supabase_key)
+    if _supabase_url and _supabase_key
+    else None
+)
 
 
 def _load_translations():
@@ -46,10 +52,12 @@ def get_lang():
     return "es"
 
 
+def _normalize_name(nombre):
+    nfkd_form = unicodedata.normalize('NFD', nombre.lower())
+    return ''.join([c for c in nfkd_form if not unicodedata.combining(c)])
+
+
 def return_progress_color(progreso, today=False):
-    """
-    Returns the CSS class for the progress bar based on the progress value.
-    """
     progress_classes = [
         (5, 'progress-rojo-intenso'),
         (10, 'progress-rojo-anaranjado'),
@@ -79,31 +87,20 @@ def return_progress_color(progreso, today=False):
         if progreso <= threshold:
             return f"{class_name} h-5 rounded-full striped-progress-bar"
 
-def comprobar_lista(json_file):
-    hoy = datetime.now()
-    dia_actual = hoy.day
-    mes_actual = hoy.month
-    
-    with open(json_file, 'r') as file:
-        datos = json.load(file)
 
-    for persona in datos:
+def comprobar_lista():
+    hoy = datetime.now()
+    response = supabase_client.table("kids").select("nombre, fecha").execute()
+    for persona in response.data:
         fecha_persona = datetime.strptime(persona['fecha'], '%d/%m/%Y')
-        dia_persona = fecha_persona.day
-        mes_persona = fecha_persona.month
-        
-        if dia_actual == dia_persona and mes_actual == mes_persona:
+        if hoy.day == fecha_persona.day and hoy.month == fecha_persona.month:
             edad = hoy.year - fecha_persona.year
             return {"nombre": persona['nombre'], "edad": edad}
-
     return None
 
 
 class Kid:
-    """
-    A class to represent a kid and track their progress.
-    """
-    def __init__(self, nombre, fecha, num, clan, embarazo=False):
+    def __init__(self, nombre, fecha, num, clan, embarazo=False, image_url=None):
         self.nombre = nombre
         self.fecha = fecha
         self.embarazo = embarazo
@@ -114,6 +111,7 @@ class Kid:
         self.color = return_progress_color(self.progreso, self.cumple_today)
         self.video = os.path.exists(f"static/videos/{self.normalized_name()}.mp4")
         self.normalized = self.normalized_name()
+        self._image_url = image_url
         self.image = self.get_image()
 
     def label(self, t):
@@ -138,11 +136,8 @@ class Kid:
         return self.label(TRANSLATIONS["es"])
 
     def get_image(self):
-        """
-        Return the image path based on the kid's age or pregnancy status.
-        """
-        if os.path.exists(f"static/images/{self.normalized_name()}.jpeg"):
-            return f"static/images/{self.normalized_name()}.jpeg"
+        if self._image_url:
+            return self._image_url
 
         if self.embarazo:
             fpp = datetime.strptime(self.fecha, "%d/%m/%Y")
@@ -162,9 +157,6 @@ class Kid:
         return "static/images/placeholder/missing.jpg"
 
     def progress(self):
-        """
-        Calculate the progress of pregnancy or age based on the given date.
-        """
         today = datetime.now(ZoneInfo("Europe/Madrid")).date()
 
         if self.embarazo:
@@ -181,9 +173,7 @@ class Kid:
         current_year = date.today().year
         parts = self.fecha.split('/')
         cumple = f'{parts[0]}/{parts[1]}/{current_year}'
-
         cumple_date = datetime.strptime(cumple, '%d/%m/%Y').date()
-
         edad = current_year - int(parts[2])
 
         if today == cumple_date:
@@ -197,27 +187,23 @@ class Kid:
             self.fecha = f'{parts[0]}/{parts[1]}/{current_year}'
 
         dif_dates = (cumple_date - today).days
-
         return edad, cumple_date, int(((365 - dif_dates)/365) * 100), False
 
     def normalized_name(self):
-        nfkd_form = unicodedata.normalize('NFD', self.nombre.lower())
-        return ''.join([char for char in nfkd_form if not unicodedata.combining(char)])
+        return _normalize_name(self.nombre)
 
 
 @app.route('/')
 def generate_kids_page():
+    response = supabase_client.table("kids").select("*").execute()
     kids = []
-    with open("data.json", encoding='utf-8') as f:
-        data = json.load(f)
+    for dorsal, obj in enumerate(response.data, start=1):
+        kids.append(Kid(
+            obj['nombre'], obj['fecha'], dorsal, obj['clan'],
+            obj.get('embarazo', False), obj.get('image_url'),
+        ))
 
-    for dorsal, objeto in enumerate(data, start=1):
-        try:
-            kids.append(Kid(objeto['nombre'], objeto['fecha'], dorsal, objeto['clan'], objeto['embarazo']))
-        except KeyError:
-            kids.append(Kid(objeto['nombre'], objeto['fecha'], dorsal, objeto['clan']))
-
-    kids.sort(key=lambda x: x.cumple_date, reverse=False)
+    kids.sort(key=lambda x: x.cumple_date)
 
     lang = get_lang()
     t = TRANSLATIONS[lang]
@@ -255,23 +241,18 @@ def set_language(lang):
 
 @app.before_request
 def protect_routes():
-
     if request.path.startswith("/static/"):
         return
-
-    public_routes = {"login", "set_language"}
-
-    if request.endpoint in public_routes:
+    if request.endpoint in {"login", "set_language"}:
         return
-
     if not session.get("logged_in"):
         return redirect("/login")
 
+
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_image():
-    with open("data.json", encoding='utf-8') as f:
-        data = json.load(f)
-    nombres = [obj['nombre'] for obj in data]
+    response = supabase_client.table("kids").select("nombre").execute()
+    nombres = [obj['nombre'] for obj in response.data]
 
     lang = get_lang()
     t = TRANSLATIONS[lang]
@@ -287,11 +268,8 @@ def upload_image():
     if not nombre or not file or file.filename == '':
         return template.render(nombres=nombres, t=t, lang=lang, error=t["error_missing_fields"]), 400
 
-    nfkd_form = unicodedata.normalize('NFD', nombre.lower())
-    normalized = ''.join([c for c in nfkd_form if not unicodedata.combining(c)])
-    gh_path = f"static/images/{normalized}.jpeg"
-
-    app.logger.info("Procesando imagen para %s -> %s", nombre, gh_path)
+    storage_path = f"{_normalize_name(nombre)}.jpeg"
+    app.logger.info("Procesando imagen para %s -> %s", nombre, storage_path)
 
     try:
         img = Image.open(file.stream).convert('RGB')
@@ -300,43 +278,26 @@ def upload_image():
         img = img.crop(((w - side) // 2, (h - side) // 2, (w + side) // 2, (h + side) // 2))
         buf = io.BytesIO()
         img.save(buf, format='JPEG', quality=85)
-        content_b64 = base64.b64encode(buf.getvalue()).decode()
+        image_bytes = buf.getvalue()
     except Exception as e:
         app.logger.error("Error procesando imagen: %s", e)
         return template.render(nombres=nombres, t=t, lang=lang, error=t["error_image"].format(detail=e)), 500
 
-    token = os.getenv("GITHUB_TOKEN")
-    if not token:
-        app.logger.error("GITHUB_TOKEN no configurado")
-        return template.render(nombres=nombres, t=t, lang=lang, error=t["error_no_token"]), 500
+    try:
+        supabase_client.storage.from_("images").upload(
+            path=storage_path,
+            file=image_bytes,
+            file_options={"content-type": "image/jpeg", "upsert": "true"},
+        )
+    except Exception as e:
+        app.logger.error("Error subiendo imagen a Supabase Storage: %s", e)
+        return template.render(nombres=nombres, t=t, lang=lang, error=t["error_storage"].format(detail=e)), 500
 
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "Accept": "application/vnd.github+json",
-        "X-GitHub-Api-Version": "2022-11-28",
-    }
-    api_url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{gh_path}"
+    public_url = supabase_client.storage.from_("images").get_public_url(storage_path)
+    supabase_client.table("kids").update({"image_url": public_url}).eq("nombre", nombre).execute()
 
-    sha = None
-    get_resp = requests.get(api_url, headers=headers)
-    app.logger.info("GET %s -> %s", api_url, get_resp.status_code)
-    if get_resp.status_code == 200:
-        sha = get_resp.json().get("sha")
-
-    body = {"message": f"Subir foto de {nombre}", "content": content_b64}
-    if sha:
-        body["sha"] = sha
-
-    put_resp = requests.put(api_url, headers=headers, json=body)
-    app.logger.info("PUT %s -> %s %s", api_url, put_resp.status_code, put_resp.text[:300])
-
-    if put_resp.status_code in (200, 201):
-        return redirect(f'/?uploaded={nombre}')
-
-    error_detail = put_resp.json().get("message", put_resp.text[:200]) if put_resp.content else "sin respuesta"
-    return template.render(nombres=nombres, t=t, lang=lang, error=t["error_github"].format(status=put_resp.status_code, detail=error_detail)), 500
+    return redirect(f'/?uploaded={nombre}')
 
 
 if __name__ == '__main__':
     app.run()
-

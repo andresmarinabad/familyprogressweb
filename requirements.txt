@@ -4,5 +4,5 @@ pytest-cov
 time_machine
 flask
 resend
-requests
 Pillow
+supabase>=2.0.0

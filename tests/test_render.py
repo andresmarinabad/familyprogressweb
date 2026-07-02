@@ -48,6 +48,22 @@ def ca():
     return TRANSLATIONS["ca"]
 
 
+@pytest.fixture
+def supabase_mock(monkeypatch):
+    mock = MagicMock()
+    kids_data = [
+        {"nombre": "Alice", "fecha": "15/07/2018", "clan": "test", "embarazo": False, "image_url": None},
+    ]
+    mock.table.return_value.select.return_value.execute.return_value.data = kids_data
+    mock.table.return_value.update.return_value.eq.return_value.execute.return_value.data = kids_data
+    mock.storage.from_.return_value.upload.return_value = None
+    mock.storage.from_.return_value.get_public_url.return_value = (
+        "https://proj.supabase.co/storage/v1/object/public/images/alice.jpeg"
+    )
+    monkeypatch.setattr("app.supabase_client", mock)
+    return mock
+
+
 def _make_jpeg(width=100, height=100, color="blue") -> io.BytesIO:
     img = Image.new("RGB", (width, height), color=color)
     buf = io.BytesIO()
@@ -141,6 +157,12 @@ def test_file_existence(sample_data):
     assert kid.image == "static/images/placeholder/missing.jpg"
 
 
+def test_kid_uses_image_url_when_provided(sample_data):
+    url = "https://proj.supabase.co/storage/v1/object/public/images/alice.jpeg"
+    kid = Kid(sample_data[1]["nombre"], sample_data[1]["fecha"], 1, sample_data[1]["clan"], image_url=url)
+    assert kid.image == url
+
+
 # ---------------------------------------------------------------------------
 # Kid.label(t) — i18n
 # ---------------------------------------------------------------------------
@@ -223,20 +245,20 @@ def test_index_redirects_unauthenticated(client):
     assert "/login" in response.headers["Location"]
 
 
-def test_index_renders_authenticated(auth_client):
+def test_index_renders_authenticated(auth_client, supabase_mock):
     response = auth_client.get("/")
     assert response.status_code == 200
     assert "Cumple".encode() in response.data or "Compleix".encode() in response.data
 
 
-def test_index_shows_success_banner(auth_client):
+def test_index_shows_success_banner(auth_client, supabase_mock):
     response = auth_client.get("/?uploaded=Alice")
     assert response.status_code == 200
     assert b"Alice" in response.data
     assert b"subida correctamente" in response.data
 
 
-def test_index_catalan(auth_client):
+def test_index_catalan(auth_client, supabase_mock):
     with auth_client.session_transaction() as sess:
         sess["lang"] = "ca"
     response = auth_client.get("/")
@@ -244,7 +266,7 @@ def test_index_catalan(auth_client):
     assert "Proper Aniversari".encode() in response.data
 
 
-def test_index_catalan_success_banner(auth_client):
+def test_index_catalan_success_banner(auth_client, supabase_mock):
     with auth_client.session_transaction() as sess:
         sess["lang"] = "ca"
     response = auth_client.get("/?uploaded=Alice")
@@ -323,117 +345,77 @@ def test_upload_get_requires_auth(client):
     assert "/login" in response.headers["Location"]
 
 
-def test_upload_get_renders_form(auth_client):
+def test_upload_get_renders_form(auth_client, supabase_mock):
     response = auth_client.get("/upload")
     assert response.status_code == 200
     assert "Subir foto".encode() in response.data
 
 
-def test_upload_get_renders_form_catalan(auth_client):
+def test_upload_get_renders_form_catalan(auth_client, supabase_mock):
     with auth_client.session_transaction() as sess:
         sess["lang"] = "ca"
     response = auth_client.get("/upload")
     assert b"Pujar foto" in response.data
 
 
-def test_upload_post_missing_fields(auth_client):
+def test_upload_post_missing_fields(auth_client, supabase_mock):
     response = auth_client.post("/upload", data={})
     assert response.status_code == 400
 
 
-def test_upload_post_no_token(auth_client):
+def test_upload_post_success(auth_client, supabase_mock):
     buf = _make_jpeg()
-    with patch.dict(os.environ, {}, clear=False):
-        os.environ.pop("GITHUB_TOKEN", None)
-        response = auth_client.post(
-            "/upload",
-            data={"nombre": "Alice", "image": (buf, "alice.jpg")},
-            content_type="multipart/form-data",
-        )
-    assert response.status_code == 500
-    assert b"GITHUB_TOKEN" in response.data
-
-
-def test_upload_post_success(auth_client):
-    buf = _make_jpeg()
-    mock_get = MagicMock(status_code=404)
-    mock_put = MagicMock(status_code=201)
-
-    with patch.dict(os.environ, {"GITHUB_TOKEN": "fake-token"}):
-        with patch("app.requests.get", return_value=mock_get):
-            with patch("app.requests.put", return_value=mock_put):
-                response = auth_client.post(
-                    "/upload",
-                    data={"nombre": "Alice", "image": (buf, "alice.jpg")},
-                    content_type="multipart/form-data",
-                )
-
+    response = auth_client.post(
+        "/upload",
+        data={"nombre": "Alice", "image": (buf, "alice.jpg")},
+        content_type="multipart/form-data",
+    )
     assert response.status_code == 302
     assert "uploaded=Alice" in response.headers["Location"]
 
 
-def test_upload_post_github_error(auth_client):
+def test_upload_post_success_calls_storage(auth_client, supabase_mock):
     buf = _make_jpeg()
-    mock_get = MagicMock(status_code=404)
-    mock_put = MagicMock(status_code=403, content=b'{"message":"Forbidden"}')
-    mock_put.json.return_value = {"message": "Forbidden"}
+    auth_client.post(
+        "/upload",
+        data={"nombre": "Alice", "image": (buf, "alice.jpg")},
+        content_type="multipart/form-data",
+    )
+    supabase_mock.storage.from_.assert_called_with("images")
+    supabase_mock.storage.from_.return_value.upload.assert_called_once()
 
-    with patch.dict(os.environ, {"GITHUB_TOKEN": "fake-token"}):
-        with patch("app.requests.get", return_value=mock_get):
-            with patch("app.requests.put", return_value=mock_put):
-                response = auth_client.post(
-                    "/upload",
-                    data={"nombre": "Alice", "image": (buf, "alice.jpg")},
-                    content_type="multipart/form-data",
-                )
 
+def test_upload_post_success_updates_db(auth_client, supabase_mock):
+    buf = _make_jpeg()
+    auth_client.post(
+        "/upload",
+        data={"nombre": "Alice", "image": (buf, "alice.jpg")},
+        content_type="multipart/form-data",
+    )
+    supabase_mock.table.return_value.update.assert_called_once()
+
+
+def test_upload_post_storage_error(auth_client, supabase_mock):
+    supabase_mock.storage.from_.return_value.upload.side_effect = Exception("bucket error")
+    buf = _make_jpeg()
+    response = auth_client.post(
+        "/upload",
+        data={"nombre": "Alice", "image": (buf, "alice.jpg")},
+        content_type="multipart/form-data",
+    )
     assert response.status_code == 500
-    assert b"Error GitHub" in response.data
+    assert b"bucket error" in response.data
 
 
-def test_upload_includes_sha_when_file_exists(auth_client):
+def test_upload_normalizes_accented_name(auth_client, supabase_mock):
     buf = _make_jpeg()
-    mock_get = MagicMock(status_code=200)
-    mock_get.json.return_value = {"sha": "abc123"}
-
-    captured = {}
-
-    def fake_put(url, headers, json):
-        captured["body"] = json
-        return MagicMock(status_code=200)
-
-    with patch.dict(os.environ, {"GITHUB_TOKEN": "fake-token"}):
-        with patch("app.requests.get", return_value=mock_get):
-            with patch("app.requests.put", side_effect=fake_put):
-                auth_client.post(
-                    "/upload",
-                    data={"nombre": "Alice", "image": (buf, "alice.jpg")},
-                    content_type="multipart/form-data",
-                )
-
-    assert captured["body"]["sha"] == "abc123"
-
-
-def test_upload_normalizes_accented_name(auth_client):
-    buf = _make_jpeg()
-    mock_get = MagicMock(status_code=404)
-    mock_put = MagicMock(status_code=201)
-    captured_url = {}
-
-    def fake_get(url, headers):
-        captured_url["url"] = url
-        return mock_get
-
-    with patch.dict(os.environ, {"GITHUB_TOKEN": "fake-token"}):
-        with patch("app.requests.get", side_effect=fake_get):
-            with patch("app.requests.put", return_value=mock_put):
-                auth_client.post(
-                    "/upload",
-                    data={"nombre": "Míriam", "image": (buf, "miriam.jpg")},
-                    content_type="multipart/form-data",
-                )
-
-    assert "miriam.jpeg" in captured_url["url"]
+    auth_client.post(
+        "/upload",
+        data={"nombre": "Míriam", "image": (buf, "miriam.jpg")},
+        content_type="multipart/form-data",
+    )
+    call_kwargs = supabase_mock.storage.from_.return_value.upload.call_args
+    assert "miriam.jpeg" in str(call_kwargs)
 
 
 # ---------------------------------------------------------------------------
