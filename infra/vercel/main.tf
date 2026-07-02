@@ -51,14 +51,6 @@ resource "vercel_project_environment_variable" "app_password" {
   sensitive  = true
 }
 
-resource "vercel_project_environment_variable" "github_token" {
-  project_id = vercel_project.familyprogressweb.id
-  key        = "GITHUB_TOKEN"
-  value      = var.github_token
-  target     = ["production", "preview", "development"]
-  sensitive  = true
-}
-
 resource "vercel_project_environment_variable" "supabase_url" {
   project_id = vercel_project.familyprogressweb.id
   key        = "SUPABASE_URL"
