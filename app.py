@@ -197,12 +197,7 @@ class Kid:
 
 @app.route('/')
 def generate_kids_page():
-    try:
-        response = supabase_client.table("kids").select("*").execute()
-    except Exception as e:
-        url_set = bool(os.getenv("SUPABASE_URL"))
-        key_set = bool(os.getenv("SUPABASE_SERVICE_ROLE_KEY"))
-        return f"<pre>SUPABASE_URL set: {url_set}\nSUPABASE_SERVICE_ROLE_KEY set: {key_set}\nclient is None: {supabase_client is None}</pre>", 500
+    response = supabase_client.table("kids").select("*").execute()
     kids = []
     for dorsal, obj in enumerate(response.data, start=1):
         kids.append(Kid(
