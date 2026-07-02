@@ -2,117 +2,127 @@
 
 [![Tests](https://github.com/andresmarinabad/familyprogressweb/actions/workflows/ci-tests.yml/badge.svg)](https://github.com/andresmarinabad/familyprogressweb/actions/workflows/ci-tests.yml)
 
-## Overview
+App familiar que muestra barras de progreso hasta el próximo cumpleaños de cada niño, con soporte para embarazos. Disponible en castellano y catalán.
 
-**FamilyProgressWeb** is a static HTML page that visually tracks the progress of family members, displaying their birthdays and pregnancy progress bars. The website is dynamically generated from a JSON file containing birth dates and pregnancy statuses.
+🔗 **[resacadecumples.com](https://resacadecumples.com)**
 
-🔗 **Live Website:** [FamilyProgressWeb](https://family-expansion.web.app/)
+## Stack
 
-## Features
+| Capa | Tecnología |
+|---|---|
+| App | Python · Flask (serverless) |
+| Deploy | Vercel |
+| Base de datos | Supabase (PostgreSQL) |
+| Imágenes | Supabase Storage (bucket `images`, público) |
+| Infra como código | OpenTofu (Terraform) |
 
-- Displays family members' names, birthdays, and a progress bar showing time until the next birthday.
-- Supports pregnancy tracking by showing expected birth dates.
-- Automatically updates when new data is added.
-- Deploys automatically to Firebase Hosting.
-- Allows users to upload new photos by creating a GitHub issue.
-- Scheduled daily deployment to keep data updated.
-
-## File Structure
+## Estructura
 
 ```
-FamilyProgressWeb/
-│── data.json         # Contains family members' data
-│── templates/
-│   ├── index.html    # Jinja template for rendering HTML
-│── public/
-│   ├── css/          # Static CSS files
-│   ├── images/       # Uploaded images
-│── render.py         # Python script to generate index.html
-│── .github/
-│   ├── workflows/
-│   │   ├── deploy.yml       # GitHub Action to render and deploy
-│   │   ├── upload_image.yml # GitHub Action to process new photos
+├── app.py                          # Flask app
+├── templates/                      # Jinja2 templates
+├── static/
+│   ├── kids.css / kids.js
+│   └── images/placeholder/         # Placeholders locales (missing, embarazo)
+├── translations/
+│   ├── es.json
+│   └── ca.json
+├── scripts/
+│   └── migrate_to_supabase.py      # Script de migración inicial
+├── infra/
+│   ├── vercel/                     # Terraform: proyecto Vercel + env vars
+│   └── supabase/
+│       ├── main.tf                 # Terraform: proyecto Supabase + bucket
+│       ├── kids.sql                # Schema de la tabla + datos iniciales
+│       └── migrate_to_supabase.py  # (ver scripts/)
+├── tests/
+└── requirements.txt
 ```
 
-## Data Format
+## Variables de entorno
 
-The `data.json` file should contain entries in the following format:
+| Variable | Descripción |
+|---|---|
+| `SECRET_KEY` | Flask session key (generada por Terraform) |
+| `APP_PASSWORD` | Contraseña del login (generada por Terraform) |
+| `SUPABASE_URL` | URL del proyecto Supabase |
+| `SUPABASE_SERVICE_ROLE_KEY` | JWT secret de Supabase (Settings → API → service_role) |
 
-```json
-[
-  {
-    "nombre": "John Doe",
-    "fecha": "25/09/2017"
-  },
-  {
-    "nombre": "Jane Smith",
-    "fecha": "28/08/2018"
-  },
-  {
-    "nombre": "Baby Doe",
-    "fecha": "04/07/2025",
-    "embarazo": true
-  }
-]
+## Desarrollo local
+
+```bash
+# Rellenar .envrc con SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY
+direnv allow
+flask --app app run --debug
 ```
 
-## Setup & Installation
+La app apunta directamente a Supabase en producción — no hay base de datos local.
 
-### Prerequisites
+## Infraestructura (OpenTofu)
 
-- Python 3 installed
-- Firebase CLI installed (`npm install -g firebase-tools`)
-- A Firebase account and a configured project
-- GitHub repository with Actions enabled
+Hay dos módulos independientes. Cada uno necesita su propio `tofu init` + `tofu apply`.
 
-### Installation Steps
+```bash
+# 1. Crear proyecto Supabase + bucket de imágenes
+cd infra/supabase
+tofu init && tofu apply
 
-1. Clone the repository:
-   ```sh
-   git clone https://github.com/yourusername/FamilyProgressWeb.git
-   cd FamilyProgressWeb
-   ```
-2. Install dependencies:
-   ```sh
-   pip install -r requirements.txt  # If required
-   ```
-3. Authenticate Firebase:
-   ```sh
-   firebase login
-   firebase init hosting
-   ```
-4. Configure Firebase settings (`firebase.json` and `.firebaserc` files as needed).
-
-## GitHub Actions Workflow
-
-### Rendering & Deployment
-
-- A GitHub Action (`deploy.yml`) runs `render.py` to update `index.html` whenever changes are made to `data.json`.
-- The updated site is deployed to Firebase.
-- A scheduled daily action at **12:00 UTC** updates the page to reflect any changes.
-
-### Uploading Photos
-
-- Creating an **issue** with the child's name as the title and attaching an image triggers the `upload_image.yml` action.
-- The image is added to the repository, committed, and a new deployment is triggered.
-
-## Deployment
-
-After making changes, you can manually deploy the site with:
-
-```sh
-firebase deploy
+# 2. Crear proyecto Vercel + env vars
+cd infra/vercel
+# Rellenar terraform.tfvars con github_token, supabase_url, supabase_service_role_key
+tofu init && tofu apply
 ```
 
-Alternatively, push changes to GitHub, and the workflow will handle the deployment automatically.
+## Añadir un niño nuevo
 
-## Contributing
+Ejecutar en el **SQL Editor** de Supabase:
 
-1. Fork the repository.
-2. Create a new branch (`feature-branch`).
-3. Commit changes and push.
-4. Open a Pull Request for review.
+```sql
+INSERT INTO kids (nombre, fecha, clan)
+VALUES ('Nombre', 'DD/MM/YYYY', 'clan');
+```
 
-## License
+Para embarazos:
+```sql
+INSERT INTO kids (nombre, fecha, clan, embarazo)
+VALUES ('Nombre', 'DD/MM/YYYY', 'clan', true);
+```
 
-This project is licensed under the MIT License.
+Clanes disponibles: `mc`, `cm`, `cf`, `cc`, `mtc`.
+
+## Subir una foto
+
+Accede a `/upload` desde la app (requiere login). La imagen se recorta a cuadrado, se sube al bucket `images` de Supabase y se actualiza el campo `image_url` en la tabla `kids`.
+
+## Migración inicial (primera vez)
+
+Si ya tienes la tabla creada con `kids.sql` y las imágenes subidas manualmente al bucket, ejecuta el script para enlazar las imágenes con sus filas en la tabla:
+
+```bash
+SUPABASE_URL=https://xxx.supabase.co \
+SUPABASE_SERVICE_ROLE_KEY=eyJ... \
+python scripts/migrate_to_supabase.py
+```
+
+El script lista los ficheros del bucket `images`, busca el kid con nombre normalizado equivalente y actualiza `image_url`.
+
+## Schema de la tabla `kids`
+
+```sql
+CREATE TABLE kids (
+  id        SERIAL PRIMARY KEY,
+  nombre    TEXT    NOT NULL,
+  fecha     TEXT    NOT NULL,  -- formato DD/MM/YYYY
+  clan      TEXT    NOT NULL,
+  embarazo  BOOLEAN NOT NULL DEFAULT FALSE,
+  image_url TEXT                -- URL pública de Supabase Storage
+);
+```
+
+El SQL completo con los datos iniciales está en `infra/supabase/kids.sql`.
+
+## Tests
+
+```bash
+direnv exec . pytest tests/ -v
+```
