@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin · Resaca de Cumples</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gray-950 flex items-center justify-center px-4">
+  <div class="w-full max-w-sm bg-gray-900 border border-gray-800 rounded-2xl shadow-xl p-8">
+    <h1 class="text-xl font-bold text-white text-center mb-6 tracking-wide">Admin</h1>
+
+    {% if error %}
+    <div class="bg-red-900/50 border border-red-700 text-red-300 px-4 py-3 rounded-xl mb-4 text-sm">
+      {{ error }}
+    </div>
+    {% endif %}
+
+    <form method="POST" class="space-y-4">
+      <input
+        type="password"
+        name="password"
+        placeholder="Contraseña"
+        autofocus
+        required
+        class="w-full bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-xl px-4 py-3 text-base focus:outline-none focus:border-gray-500"
+      />
+      <button type="submit"
+        class="w-full bg-white text-gray-900 font-semibold py-3 rounded-xl hover:bg-gray-100 transition text-base">
+        Entrar
+      </button>
+    </form>
+  </div>
+</body>
+</html>

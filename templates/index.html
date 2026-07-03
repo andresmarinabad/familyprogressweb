@@ -44,7 +44,7 @@
       setTimeout(function () {
         const b = document.getElementById("success-banner");
         b.style.opacity = "0";
-        setTimeout(() => b.remove(), 500);
+        setTimeout(() => window.location.replace("/"), 500);
       }, 3000);
     </script>
     {% endif %}

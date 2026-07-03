@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin · Resaca de Cumples</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gray-950 text-gray-100">
+
+  <header class="bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between">
+    <h1 class="text-lg font-bold tracking-wide">Admin · Resaca de Cumples</h1>
+    <div class="flex items-center gap-4">
+      <a href="/admin/kids/new"
+        class="bg-white text-gray-900 font-semibold px-4 py-2 rounded-xl text-sm hover:bg-gray-100 transition">
+        + Añadir niño
+      </a>
+      <a href="/admin/logout" class="text-gray-400 hover:text-white text-sm transition">Salir</a>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+    <p class="text-gray-400 text-sm mb-4">{{ kids|length }} niños en total</p>
+
+    <div class="overflow-x-auto rounded-2xl border border-gray-800">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="bg-gray-900 text-gray-400 text-left">
+            <th class="px-4 py-3 font-medium">ID</th>
+            <th class="px-4 py-3 font-medium">Nombre</th>
+            <th class="px-4 py-3 font-medium">Fecha</th>
+            <th class="px-4 py-3 font-medium">Clan</th>
+            <th class="px-4 py-3 font-medium text-center">Embarazo</th>
+            <th class="px-4 py-3 font-medium text-center">Foto</th>
+            <th class="px-4 py-3 font-medium text-right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-800">
+          {% for kid in kids %}
+          <tr class="hover:bg-gray-900/50 transition">
+            <td class="px-4 py-3 text-gray-500">{{ kid.id }}</td>
+            <td class="px-4 py-3 font-medium">{{ kid.nombre }}</td>
+            <td class="px-4 py-3 text-gray-300 font-mono">{{ kid.fecha }}</td>
+            <td class="px-4 py-3">
+              <span class="bg-gray-800 text-gray-300 px-2 py-0.5 rounded-lg text-xs">{{ kid.clan }}</span>
+            </td>
+            <td class="px-4 py-3 text-center">
+              {% if kid.embarazo %}
+              <span class="text-yellow-400">●</span>
+              {% else %}
+              <span class="text-gray-700">—</span>
+              {% endif %}
+            </td>
+            <td class="px-4 py-3 text-center">
+              {% if kid.image_url %}
+              <a href="{{ kid.image_url }}" target="_blank"
+                class="text-blue-400 hover:text-blue-300 text-xs underline">ver</a>
+              {% else %}
+              <span class="text-gray-700">—</span>
+              {% endif %}
+            </td>
+            <td class="px-4 py-3 text-right">
+              <div class="flex items-center justify-end gap-2">
+                <a href="/admin/kids/{{ kid.id }}/edit"
+                  class="text-gray-400 hover:text-white text-xs px-3 py-1 border border-gray-700 rounded-lg hover:border-gray-500 transition">
+                  Editar
+                </a>
+                <form method="POST" action="/admin/kids/{{ kid.id }}/delete"
+                  onsubmit="return confirm('¿Eliminar a {{ kid.nombre }}?')">
+                  <button type="submit"
+                    class="text-red-400 hover:text-red-300 text-xs px-3 py-1 border border-red-900 rounded-lg hover:border-red-700 transition">
+                    Eliminar
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+</body>
+</html>

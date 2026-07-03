@@ -6,6 +6,7 @@ from __future__ import annotations
 import os
 import json
 import io
+import time
 from datetime import date, datetime
 from jinja2 import Environment, FileSystemLoader
 import unicodedata
@@ -14,13 +15,14 @@ import resend
 from PIL import Image
 from supabase import create_client, Client
 
-from flask import Flask, request, redirect, session
+from flask import Flask, request, redirect, session, render_template
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 app.config['MAX_CONTENT_LENGTH'] = 4 * 1024 * 1024  # 4 MB (límite de Vercel)
 
 PASSWORD = os.getenv("APP_PASSWORD")
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
 
 _supabase_url = os.getenv("SUPABASE_URL")
 _supabase_key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
@@ -245,7 +247,11 @@ def set_language(lang):
 def protect_routes():
     if request.path.startswith("/static/"):
         return
-    if request.endpoint in {"login", "set_language"}:
+    if request.endpoint in {"login", "set_language", "admin_login"}:
+        return
+    if request.path.startswith("/admin"):
+        if not session.get("admin_logged_in"):
+            return redirect("/admin/login")
         return
     if not session.get("logged_in"):
         return redirect("/login")
@@ -296,9 +302,80 @@ def upload_image():
         return template.render(nombres=nombres, t=t, lang=lang, error=t["error_storage"].format(detail=e)), 500
 
     public_url = supabase_client.storage.from_("images").get_public_url(storage_path)
+    public_url = f"{public_url}?t={int(time.time())}"
     supabase_client.table("kids").update({"image_url": public_url}).eq("nombre", nombre).execute()
 
     return redirect(f'/?uploaded={nombre}')
+
+
+CLANES = ["mc", "cm", "cf", "cc", "mtc"]
+
+
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+    error = None
+    if request.method == "POST":
+        if request.form.get("password") == ADMIN_PASSWORD:
+            session["admin_logged_in"] = True
+            return redirect("/admin")
+        error = "Contraseña incorrecta"
+    return render_template("admin_login.html", error=error)
+
+
+@app.route("/admin/logout")
+def admin_logout():
+    session.pop("admin_logged_in", None)
+    return redirect("/admin/login")
+
+
+@app.route("/admin")
+def admin_index():
+    kids = supabase_client.table("kids").select("*").order("id").execute().data
+    return render_template("admin.html", kids=kids)
+
+
+@app.route("/admin/kids/new", methods=["GET", "POST"])
+def admin_kid_new():
+    error = None
+    if request.method == "POST":
+        nombre   = request.form.get("nombre", "").strip()
+        fecha    = request.form.get("fecha", "").strip()
+        clan     = request.form.get("clan", "").strip()
+        embarazo = request.form.get("embarazo") == "on"
+        if not nombre or not fecha or not clan:
+            error = "Todos los campos son obligatorios"
+        else:
+            supabase_client.table("kids").insert(
+                {"nombre": nombre, "fecha": fecha, "clan": clan, "embarazo": embarazo}
+            ).execute()
+            return redirect("/admin")
+    return render_template("admin_form.html", kid=None, clanes=CLANES, error=error, action="/admin/kids/new")
+
+
+@app.route("/admin/kids/<int:kid_id>/edit", methods=["GET", "POST"])
+def admin_kid_edit(kid_id):
+    error = None
+    if request.method == "POST":
+        nombre   = request.form.get("nombre", "").strip()
+        fecha    = request.form.get("fecha", "").strip()
+        clan     = request.form.get("clan", "").strip()
+        embarazo = request.form.get("embarazo") == "on"
+        if not nombre or not fecha or not clan:
+            error = "Todos los campos son obligatorios"
+        else:
+            supabase_client.table("kids").update(
+                {"nombre": nombre, "fecha": fecha, "clan": clan, "embarazo": embarazo}
+            ).eq("id", kid_id).execute()
+            return redirect("/admin")
+    kid = supabase_client.table("kids").select("*").eq("id", kid_id).single().execute().data
+    return render_template("admin_form.html", kid=kid, clanes=CLANES, error=error,
+                           action=f"/admin/kids/{kid_id}/edit")
+
+
+@app.route("/admin/kids/<int:kid_id>/delete", methods=["POST"])
+def admin_kid_delete(kid_id):
+    supabase_client.table("kids").delete().eq("id", kid_id).execute()
+    return redirect("/admin")
 
 
 if __name__ == '__main__':

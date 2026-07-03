@@ -35,6 +35,14 @@ resource "random_password" "app_password" {
   numeric = true
 }
 
+resource "random_password" "admin_password" {
+  length  = 16
+  special = false
+  upper   = true
+  lower   = true
+  numeric = true
+}
+
 resource "vercel_project_environment_variable" "secret_key" {
   project_id = vercel_project.familyprogressweb.id
   key        = "SECRET_KEY"
@@ -47,6 +55,14 @@ resource "vercel_project_environment_variable" "app_password" {
   project_id = vercel_project.familyprogressweb.id
   key        = "APP_PASSWORD"
   value      = random_password.app_password.result
+  target     = ["production", "preview", "development"]
+  sensitive  = true
+}
+
+resource "vercel_project_environment_variable" "admin_password" {
+  project_id = vercel_project.familyprogressweb.id
+  key        = "ADMIN_PASSWORD"
+  value      = random_password.admin_password.result
   target     = ["production", "preview", "development"]
   sensitive  = true
 }
