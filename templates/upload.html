@@ -66,8 +66,41 @@
     </div>
 
     <script>
-      document.querySelector('form').addEventListener('submit', function () {
-        const btn = document.getElementById('submit-btn');
+      const MAX_PX = 1200;
+      const QUALITY = 0.85;
+
+      function compressImage(file) {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+              let w = img.width, h = img.height;
+              if (w > MAX_PX || h > MAX_PX) {
+                if (w > h) { h = Math.round(h * MAX_PX / w); w = MAX_PX; }
+                else       { w = Math.round(w * MAX_PX / h); h = MAX_PX; }
+              }
+              const canvas = document.createElement('canvas');
+              canvas.width = w; canvas.height = h;
+              canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+              canvas.toBlob(resolve, 'image/jpeg', QUALITY);
+            };
+            img.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      document.querySelector('form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const btn      = document.getElementById('submit-btn');
+        const fileInput = document.querySelector('input[name="image"]');
+        const nombre   = document.querySelector('select[name="nombre"]').value;
+        const file     = fileInput.files[0];
+
+        if (!file || !nombre) return;
+
         btn.disabled = true;
         btn.innerHTML = `
           <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -76,6 +109,19 @@
           </svg>
           {{ t.upload_submit }}...
         `;
+
+        const compressed = await compressImage(file);
+        const formData = new FormData();
+        formData.append('nombre', nombre);
+        formData.append('image', compressed, file.name);
+
+        const res = await fetch('/upload', { method: 'POST', body: formData });
+
+        if (res.ok || res.redirected) {
+          window.location.href = res.url;
+        } else {
+          document.open(); document.write(await res.text()); document.close();
+        }
       });
     </script>
   </body>
