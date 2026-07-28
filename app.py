@@ -204,7 +204,7 @@ def generate_kids_page():
     datos = sorted(
         response.data,
         key=lambda x: datetime.strptime(x["fecha"], "%d/%m/%Y"),
-        reverse=True
+        reverse=False
     )
 
     kids = []
