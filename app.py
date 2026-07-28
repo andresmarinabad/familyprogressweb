@@ -32,6 +32,8 @@ supabase_client: Client | None = (
     else None
 )
 
+CLANES = supabase_client.table("clanes").select("*").execute()
+
 
 def _load_translations():
     base = os.path.dirname(os.path.abspath(__file__))
@@ -222,7 +224,7 @@ def generate_kids_page():
 
     env = Environment(loader=FileSystemLoader("templates"))
     template = env.get_template("index.html")
-    return template.render(kids=kids, uploaded=uploaded, t=t, lang=lang)
+    return template.render(kids=kids, uploaded=uploaded, t=t, lang=lang, clanes=CLANES)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -314,8 +316,6 @@ def upload_image():
 
     return redirect(f'/?uploaded={nombre}')
 
-
-CLANES = ["mc", "cm", "cf", "cc", "mtc"]
 
 
 @app.route("/admin/login", methods=["GET", "POST"])

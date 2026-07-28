@@ -1,82 +1,139 @@
 <!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% if kid %}Editar{% else %}Añadir{% endif %} niño · Admin</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="min-h-screen bg-gray-950 text-gray-100">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% if kid %}Editar{% else %}Añadir{% endif %} niño · Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="min-h-screen bg-gray-950 text-gray-100">
+    <header
+      class="bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between"
+    >
+      <h1 class="text-lg font-bold tracking-wide">Admin · Resaca de Cumples</h1>
+      <a
+        href="/admin/logout"
+        class="text-gray-400 hover:text-white text-sm transition"
+        >Salir</a
+      >
+    </header>
 
-  <header class="bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between">
-    <h1 class="text-lg font-bold tracking-wide">Admin · Resaca de Cumples</h1>
-    <a href="/admin/logout" class="text-gray-400 hover:text-white text-sm transition">Salir</a>
-  </header>
-
-  <main class="max-w-md mx-auto px-4 py-10">
-    <div class="flex items-center gap-3 mb-8">
-      <a href="/admin" class="text-gray-500 hover:text-white transition text-sm">← Volver</a>
-      <h2 class="text-xl font-bold">
-        {% if kid %}Editar · {{ kid.nombre }}{% else %}Añadir niño{% endif %}
-      </h2>
-    </div>
-
-    {% if error %}
-    <div class="bg-red-900/50 border border-red-700 text-red-300 px-4 py-3 rounded-xl mb-6 text-sm">
-      {{ error }}
-    </div>
-    {% endif %}
-
-    <form method="POST" action="{{ action }}" class="space-y-5">
-
-      <div>
-        <label class="block text-sm font-medium text-gray-400 mb-1">Nombre</label>
-        <input type="text" name="nombre" required
-          value="{{ kid.nombre if kid else '' }}"
-          placeholder="Nombre del niño"
-          class="w-full bg-gray-800 border border-gray-700 text-white placeholder-gray-600 rounded-xl px-4 py-3 text-base focus:outline-none focus:border-gray-500" />
+    <main class="max-w-md mx-auto px-4 py-10">
+      <div class="flex items-center gap-3 mb-8">
+        <a
+          href="/admin"
+          class="text-gray-500 hover:text-white transition text-sm"
+          >← Volver</a
+        >
+        <h2 class="text-xl font-bold">
+          {% if kid %}Editar · {{ kid.nombre }}{% else %}Añadir niño{% endif %}
+        </h2>
       </div>
 
-      <div>
-        <label class="block text-sm font-medium text-gray-400 mb-1">Fecha <span class="text-gray-600">(DD/MM/YYYY)</span></label>
-        <input type="text" name="fecha" required
-          value="{{ kid.fecha if kid else '' }}"
-          placeholder="25/09/2024"
-          pattern="\d{2}/\d{2}/\d{4}"
-          class="w-full bg-gray-800 border border-gray-700 text-white placeholder-gray-600 rounded-xl px-4 py-3 text-base font-mono focus:outline-none focus:border-gray-500" />
+      {% if error %}
+      <div
+        class="bg-red-900/50 border border-red-700 text-red-300 px-4 py-3 rounded-xl mb-6 text-sm"
+      >
+        {{ error }}
       </div>
+      {% endif %}
 
-      <div>
-        <label class="block text-sm font-medium text-gray-400 mb-1">Clan</label>
-        <select name="clan" required
-          class="w-full bg-gray-800 border border-gray-700 text-white rounded-xl px-4 py-3 text-base focus:outline-none focus:border-gray-500">
-          <option value="" disabled {% if not kid %}selected{% endif %}>Selecciona un clan</option>
-          {% for c in clanes %}
-          <option value="{{ c }}" {% if kid and kid.clan == c %}selected{% endif %}>{{ c }}</option>
-          {% endfor %}
-        </select>
-      </div>
+      <form method="POST" action="{{ action }}" class="space-y-5">
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-1"
+            >Nombre</label
+          >
+          <input
+            type="text"
+            name="nombre"
+            required
+            value="{{ kid.nombre if kid else '' }}"
+            placeholder="Nombre del niño"
+            class="w-full bg-gray-800 border border-gray-700 text-white placeholder-gray-600 rounded-xl px-4 py-3 text-base focus:outline-none focus:border-gray-500"
+          />
+        </div>
 
-      <div class="flex items-center gap-3">
-        <input type="checkbox" name="embarazo" id="embarazo"
-          {% if kid and kid.embarazo %}checked{% endif %}
-          class="w-5 h-5 rounded bg-gray-800 border-gray-700 text-white focus:ring-0" />
-        <label for="embarazo" class="text-sm text-gray-300">Es un embarazo (fecha = fecha probable de parto)</label>
-      </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-1"
+            >Fecha <span class="text-gray-600">(DD/MM/YYYY)</span></label
+          >
+          <input
+            type="text"
+            name="fecha"
+            required
+            value="{{ kid.fecha if kid else '' }}"
+            placeholder="25/09/2024"
+            pattern="\d{2}/\d{2}/\d{4}"
+            class="w-full bg-gray-800 border border-gray-700 text-white placeholder-gray-600 rounded-xl px-4 py-3 text-base font-mono focus:outline-none focus:border-gray-500"
+          />
+        </div>
 
-      <div class="flex gap-3 pt-2">
-        <button type="submit"
-          class="flex-1 bg-white text-gray-900 font-semibold py-3 rounded-xl hover:bg-gray-100 transition text-base">
-          {% if kid %}Guardar cambios{% else %}Añadir{% endif %}
-        </button>
-        <a href="/admin"
-          class="flex-1 text-center border border-gray-700 text-gray-400 font-medium py-3 rounded-xl hover:border-gray-500 hover:text-white transition text-base">
-          Cancelar
-        </a>
-      </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-1"
+            >Clan</label
+          >
+          <select
+            name="clan"
+            required
+            class="w-full bg-gray-800 border border-gray-700 text-white rounded-xl px-4 py-3 text-base focus:outline-none focus:border-gray-500"
+          >
+            <option value="" disabled {% if not kid %}selected{% endif %}>
+              Selecciona un clan
+            </option>
+            {% for c in clanes %}
+            <option
+              value="{{ c.clan }}"
+              {%
+              if
+              kid
+              and
+              kid.clan=""
+              ="c.clan"
+              %}selected{%
+              endif
+              %}
+            >
+              {{ c.clan }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
 
-    </form>
-  </main>
+        <div class="flex items-center gap-3">
+          <input
+            type="checkbox"
+            name="embarazo"
+            id="embarazo"
+            {%
+            if
+            kid
+            and
+            kid.embarazo
+            %}checked{%
+            endif
+            %}
+            class="w-5 h-5 rounded bg-gray-800 border-gray-700 text-white focus:ring-0"
+          />
+          <label for="embarazo" class="text-sm text-gray-300"
+            >Es un embarazo (fecha = fecha probable de parto)</label
+          >
+        </div>
 
-</body>
+        <div class="flex gap-3 pt-2">
+          <button
+            type="submit"
+            class="flex-1 bg-white text-gray-900 font-semibold py-3 rounded-xl hover:bg-gray-100 transition text-base"
+          >
+            {% if kid %}Guardar cambios{% else %}Añadir{% endif %}
+          </button>
+          <a
+            href="/admin"
+            class="flex-1 text-center border border-gray-700 text-gray-400 font-medium py-3 rounded-xl hover:border-gray-500 hover:text-white transition text-base"
+          >
+            Cancelar
+          </a>
+        </div>
+      </form>
+    </main>
+  </body>
 </html>

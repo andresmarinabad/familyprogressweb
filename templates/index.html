@@ -9,7 +9,9 @@
       rel="stylesheet"
     />
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,container-queries"></script>
-    <script>tailwind.config = { darkMode: 'media' }</script>
+    <script>
+      tailwind.config = { darkMode: "media" };
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -83,15 +85,15 @@
 
             <select
               id="clanes"
+              name="clanes"
               style="font-weight: bold"
               class="appearance-none bg-none block w-full bg-transparent border-0 border-b-0 border-default-medium text-sm text-body focus:outline-none focus:ring-0 focus:border-brand peer py-2.5 pl-6 pr-2"
             >
-              <option>{{ t.filter_all }}</option>
-              <option value="cm">Codina Martínez</option>
-              <option value="mc">Marín Codina</option>
-              <option value="cc">Cudina Codina</option>
-              <option value="cf">Codina Ferreres</option>
-              <option value="mtc">Martín Codina</option>
+              <option value="">{{ t.filter_all }}</option>
+
+              {% for clan in clanes %}
+              <option value="{{ clan.clan }}">{{ clan.clan_name }}</option>
+              {% endfor %}
             </select>
           </div>
         </div>
@@ -186,15 +188,28 @@
         {% endfor %}
       </div>
 
-      <div class="flex justify-between items-center mb-2" style="margin-top: 10px">
+      <div
+        class="flex justify-between items-center mb-2"
+        style="margin-top: 10px"
+      >
         <div class="flex items-center gap-1 text-xs">
-          <a href="/set_language/es"
-            class="{{ 'font-semibold text-gray-800 dark:text-gray-100' if lang == 'es' else 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300' }}">ES</a>
+          <a
+            href="/set_language/es"
+            class="{{ 'font-semibold text-gray-800 dark:text-gray-100' if lang == 'es' else 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300' }}"
+            >ES</a
+          >
           <span class="text-gray-300 dark:text-gray-600">|</span>
-          <a href="/set_language/ca"
-            class="{{ 'font-semibold text-gray-800 dark:text-gray-100' if lang == 'ca' else 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300' }}">CA</a>
+          <a
+            href="/set_language/ca"
+            class="{{ 'font-semibold text-gray-800 dark:text-gray-100' if lang == 'ca' else 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300' }}"
+            >CA</a
+          >
         </div>
-        <a href="/upload" class="text-sm text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 underline">{{ t.upload_link }}</a>
+        <a
+          href="/upload"
+          class="text-sm text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 underline"
+          >{{ t.upload_link }}</a
+        >
       </div>
     </section>
 
