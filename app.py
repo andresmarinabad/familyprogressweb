@@ -32,7 +32,7 @@ supabase_client: Client | None = (
     else None
 )
 
-CLANES = supabase_client.table("clanes").select("*").execute()
+CLANES = supabase_client.table("clanes").select("*").execute().data
 
 
 def _load_translations():
