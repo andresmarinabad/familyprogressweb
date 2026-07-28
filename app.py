@@ -199,9 +199,16 @@ class Kid:
 
 @app.route('/')
 def generate_kids_page():
-    response = supabase_client.table("kids").select("*").execute()
+    response = supabase_client.table("kids").select("*").order("fecha").execute()
+
+    datos = sorted(
+        response.data,
+        key=lambda x: datetime.strptime(x["fecha"], "%d/%m/%Y"),
+        reverse=True
+    )
+
     kids = []
-    for dorsal, obj in enumerate(response.data, start=1):
+    for dorsal, obj in enumerate(datos, start=1):
         kids.append(Kid(
             obj['nombre'], obj['fecha'], dorsal, obj['clan'],
             obj.get('embarazo', False), obj.get('image_url'),
