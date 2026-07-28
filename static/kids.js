@@ -145,7 +145,7 @@ selectorClan.addEventListener("change", function () {
     if (spanClan) {
       const valorClan = spanClan.textContent.trim();
 
-      if (filtro === "Todos" || valorClan === filtro) {
+      if (!filtro || valorClan === filtro) {
         kid.style.display = "";
       } else {
         kid.style.display = "none";
