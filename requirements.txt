@@ -5,4 +5,4 @@ time_machine
 flask
 resend
 Pillow
-supabase>=2.0.0
+supabase>=2.31.0
