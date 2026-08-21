@@ -55,15 +55,13 @@
 
         <div>
           <label class="block text-sm font-medium text-gray-400 mb-1"
-            >Fecha <span class="text-gray-600">(DD/MM/YYYY)</span></label
+            >Fecha</label
           >
           <input
-            type="text"
+            type="date"
             name="fecha"
             required
             value="{{ kid.fecha if kid else '' }}"
-            placeholder="25/09/2024"
-            pattern="\d{2}/\d{2}/\d{4}"
             class="w-full bg-gray-800 border border-gray-700 text-white placeholder-gray-600 rounded-xl px-4 py-3 text-base font-mono focus:outline-none focus:border-gray-500"
           />
         </div>
@@ -83,15 +81,7 @@
             {% for c in clanes %}
             <option
               value="{{ c.clan }}"
-              {%
-              if
-              kid
-              and
-              kid.clan=""
-              ="c.clan"
-              %}selected{%
-              endif
-              %}
+              {% if kid and kid.clan == c.clan %}selected{% endif %}
             >
               {{ c.clan }}
             </option>

@@ -32,7 +32,46 @@ supabase_client: Client | None = (
     else None
 )
 
-CLANES = supabase_client.table("clanes").select("*").execute().data
+CLANES_CACHE_TTL_SECONDS = 60 * 60
+_clanes_cache = None
+_clanes_cache_time = 0.0
+
+
+def get_clanes():
+    """Return clans from a small process-local cache, with stale fallback."""
+    global _clanes_cache, _clanes_cache_time
+
+    now = time.monotonic()
+    if _clanes_cache is not None and now - _clanes_cache_time < CLANES_CACHE_TTL_SECONDS:
+        return _clanes_cache
+
+    if supabase_client is None:
+        return _clanes_cache or []
+
+    try:
+        clanes = supabase_client.table("clanes").select("*").execute().data
+    except Exception as exc:
+        app.logger.warning("No se pudieron cargar los clanes: %s", exc)
+        return _clanes_cache or []
+
+    _clanes_cache = clanes
+    _clanes_cache_time = now
+    return clanes
+
+
+def parse_iso_date(value: str | date) -> date:
+    """Convert a PostgREST ISO date to ``date`` at the application boundary."""
+    if isinstance(value, date):
+        return value
+    return date.fromisoformat(value)
+
+
+def _birthday_in_year(birth_date: date, year: int) -> date:
+    """Return that year's birthday; Feb 29 is observed on Feb 28 if needed."""
+    try:
+        return birth_date.replace(year=year)
+    except ValueError:
+        return date(year, 2, 28)
 
 
 def _load_translations():
@@ -95,11 +134,11 @@ def return_progress_color(progreso, today=False):
 
 
 def comprobar_lista():
-    hoy = datetime.now()
+    hoy = datetime.now(ZoneInfo("Europe/Madrid")).date()
     response = supabase_client.table("kids").select("nombre, fecha").execute()
     for persona in response.data:
-        fecha_persona = datetime.strptime(persona['fecha'], '%d/%m/%Y')
-        if hoy.day == fecha_persona.day and hoy.month == fecha_persona.month:
+        fecha_persona = parse_iso_date(persona['fecha'])
+        if hoy == _birthday_in_year(fecha_persona, hoy.year):
             edad = hoy.year - fecha_persona.year
             return {"nombre": persona['nombre'], "edad": edad}
     return None
@@ -108,7 +147,7 @@ def comprobar_lista():
 class Kid:
     def __init__(self, nombre, fecha, num, clan, embarazo=False, image_url=None):
         self.nombre = nombre
-        self.fecha = fecha
+        self.fecha = parse_iso_date(fecha)
         self.embarazo = embarazo
         self.nacimiento = False
         self.edad, self.cumple_date, self.progreso, self.cumple_today = self.progress()
@@ -146,9 +185,8 @@ class Kid:
             return self._image_url
 
         if self.embarazo:
-            fpp = datetime.strptime(self.fecha, "%d/%m/%Y")
-            hoy = datetime.today()
-            semanas_restantes = (fpp - hoy).days // 7
+            hoy = datetime.now(ZoneInfo("Europe/Madrid")).date()
+            semanas_restantes = (self.fecha - hoy).days // 7
             semanas_actuales = 40 - semanas_restantes
 
             if semanas_actuales < 10:
@@ -166,31 +204,25 @@ class Kid:
         today = datetime.now(ZoneInfo("Europe/Madrid")).date()
 
         if self.embarazo:
-            fecha_parto = datetime.strptime(self.fecha, '%d/%m/%Y').date()
+            fecha_parto = self.fecha
             if fecha_parto < today:
                 dif_dates = 0
             else:
                 dif_dates = (fecha_parto - today).days
             return 0, fecha_parto, int(((270 - dif_dates)/270) * 100), False
 
-        fecha_nac = datetime.strptime(self.fecha, '%d/%m/%Y').date()
+        fecha_nac = self.fecha
         self.nacimiento = fecha_nac == today and not self.embarazo
 
-        current_year = date.today().year
-        parts = self.fecha.split('/')
-        cumple = f'{parts[0]}/{parts[1]}/{current_year}'
-        cumple_date = datetime.strptime(cumple, '%d/%m/%Y').date()
-        edad = current_year - int(parts[2])
+        current_year = today.year
+        cumple_date = _birthday_in_year(fecha_nac, current_year)
+        edad = current_year - fecha_nac.year
 
         if today == cumple_date:
-            self.fecha = f'{parts[0]}/{parts[1]}/{current_year}'
             return edad, cumple_date, 100, True
         if today > cumple_date:
             edad += 1
-            self.fecha = f'{parts[0]}/{parts[1]}/{current_year+1}'
-            cumple_date = datetime.strptime(self.fecha, '%d/%m/%Y').date()
-        else:
-            self.fecha = f'{parts[0]}/{parts[1]}/{current_year}'
+            cumple_date = _birthday_in_year(fecha_nac, current_year + 1)
 
         dif_dates = (cumple_date - today).days
         return edad, cumple_date, int(((365 - dif_dates)/365) * 100), False
@@ -203,11 +235,7 @@ class Kid:
 def generate_kids_page():
     response = supabase_client.table("kids").select("*").order("fecha").execute()
 
-    datos = sorted(
-        response.data,
-        key=lambda x: datetime.strptime(x["fecha"], "%d/%m/%Y"),
-        reverse=False
-    )
+    datos = sorted(response.data, key=lambda x: parse_iso_date(x["fecha"]))
 
     kids = []
     for dorsal, obj in enumerate(datos, start=1):
@@ -224,7 +252,7 @@ def generate_kids_page():
 
     env = Environment(loader=FileSystemLoader("templates"))
     template = env.get_template("index.html")
-    return template.render(kids=kids, uploaded=uploaded, t=t, lang=lang, clanes=CLANES)
+    return template.render(kids=kids, uploaded=uploaded, t=t, lang=lang, clanes=get_clanes())
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -352,11 +380,16 @@ def admin_kid_new():
         if not nombre or not fecha or not clan:
             error = "Todos los campos son obligatorios"
         else:
-            supabase_client.table("kids").insert(
-                {"nombre": nombre, "fecha": fecha, "clan": clan, "embarazo": embarazo}
-            ).execute()
-            return redirect("/admin")
-    return render_template("admin_form.html", kid=None, clanes=CLANES, error=error, action="/admin/kids/new")
+            try:
+                fecha = parse_iso_date(fecha).isoformat()
+            except ValueError:
+                error = "La fecha no es válida"
+            else:
+                supabase_client.table("kids").insert(
+                    {"nombre": nombre, "fecha": fecha, "clan": clan, "embarazo": embarazo}
+                ).execute()
+                return redirect("/admin")
+    return render_template("admin_form.html", kid=None, clanes=get_clanes(), error=error, action="/admin/kids/new")
 
 
 @app.route("/admin/kids/<int:kid_id>/edit", methods=["GET", "POST"])
@@ -370,12 +403,17 @@ def admin_kid_edit(kid_id):
         if not nombre or not fecha or not clan:
             error = "Todos los campos son obligatorios"
         else:
-            supabase_client.table("kids").update(
-                {"nombre": nombre, "fecha": fecha, "clan": clan, "embarazo": embarazo}
-            ).eq("id", kid_id).execute()
-            return redirect("/admin")
+            try:
+                fecha = parse_iso_date(fecha).isoformat()
+            except ValueError:
+                error = "La fecha no es válida"
+            else:
+                supabase_client.table("kids").update(
+                    {"nombre": nombre, "fecha": fecha, "clan": clan, "embarazo": embarazo}
+                ).eq("id", kid_id).execute()
+                return redirect("/admin")
     kid = supabase_client.table("kids").select("*").eq("id", kid_id).single().execute().data
-    return render_template("admin_form.html", kid=kid, clanes=CLANES, error=error,
+    return render_template("admin_form.html", kid=kid, clanes=get_clanes(), error=error,
                            action=f"/admin/kids/{kid_id}/edit")
 
 

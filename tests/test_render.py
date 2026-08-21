@@ -2,12 +2,18 @@ import json
 import pytest
 import io
 import os
+import subprocess
+import sys
 from datetime import datetime, date
 from unittest.mock import patch, MagicMock
 from PIL import Image
 import time_machine
 
-from app import app as flask_app, Kid, return_progress_color, TRANSLATIONS
+import app
+from app import (
+    app as flask_app, Kid, get_clanes, parse_iso_date,
+    return_progress_color, TRANSLATIONS,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -17,9 +23,9 @@ from app import app as flask_app, Kid, return_progress_color, TRANSLATIONS
 @pytest.fixture
 def sample_data():
     return [
-        {"nombre": "Test Baby", "fecha": "10/03/2024", "clan": "test", "embarazo": True},
-        {"nombre": "Alice", "fecha": "15/07/2018", "clan": "test"},
-        {"nombre": "Bob", "fecha": "22/11/2015", "clan": "test"},
+        {"nombre": "Test Baby", "fecha": "2027-03-10", "clan": "test", "embarazo": True},
+        {"nombre": "Alice", "fecha": "2018-07-15", "clan": "test"},
+        {"nombre": "Bob", "fecha": "2015-11-22", "clan": "test"},
     ]
 
 
@@ -29,6 +35,12 @@ def client():
     flask_app.config["TESTING"] = True
     with flask_app.test_client() as c:
         yield c
+
+
+@pytest.fixture(autouse=True)
+def reset_clanes_cache(monkeypatch):
+    monkeypatch.setattr(app, "_clanes_cache", None)
+    monkeypatch.setattr(app, "_clanes_cache_time", 0.0)
 
 
 @pytest.fixture
@@ -52,7 +64,7 @@ def ca():
 def supabase_mock(monkeypatch):
     mock = MagicMock()
     kids_data = [
-        {"nombre": "Alice", "fecha": "15/07/2018", "clan": "test", "embarazo": False, "image_url": None},
+        {"nombre": "Alice", "fecha": "2018-07-15", "clan": "test", "embarazo": False, "image_url": None},
     ]
     mock.table.return_value.select.return_value.execute.return_value.data = kids_data
     mock.table.return_value.update.return_value.eq.return_value.execute.return_value.data = kids_data
@@ -99,6 +111,12 @@ def test_kid_initialization(sample_data):
     assert kid.nombre == "Alice"
     assert isinstance(kid.cumple_date, date)
     assert 0 <= kid.progreso <= 100
+    assert kid.fecha == date(2018, 7, 15)
+
+
+def test_parse_iso_date():
+    assert parse_iso_date("2017-09-25") == date(2017, 9, 25)
+    assert parse_iso_date(date(2017, 9, 25)) == date(2017, 9, 25)
 
 
 def test_kid_pregnancy(sample_data):
@@ -139,7 +157,7 @@ def test_progress_method(sample_data):
 
 
 def test_kid_nacimiento(sample_data):
-    with time_machine.travel(datetime(2024, 3, 10)):
+    with time_machine.travel(datetime(2027, 3, 10)):
         kid = Kid(sample_data[0]["nombre"], sample_data[0]["fecha"], 1, sample_data[0]["clan"])
         kid.cumple_today = True
         kid.progress()
@@ -161,6 +179,51 @@ def test_kid_uses_image_url_when_provided(sample_data):
     url = "https://proj.supabase.co/storage/v1/object/public/images/alice.jpeg"
     kid = Kid(sample_data[1]["nombre"], sample_data[1]["fecha"], 1, sample_data[1]["clan"], image_url=url)
     assert kid.image == url
+
+
+@pytest.mark.parametrize(
+    ("today", "expected_date", "expected_age", "is_today"),
+    [
+        (datetime(2026, 7, 15), date(2026, 7, 15), 8, True),
+        (datetime(2026, 7, 14), date(2026, 7, 15), 8, False),
+        (datetime(2026, 7, 16), date(2027, 7, 15), 9, False),
+        (datetime(2026, 12, 31), date(2027, 7, 15), 9, False),
+        (datetime(2027, 1, 1), date(2027, 7, 15), 9, False),
+    ],
+)
+def test_birthday_calendar_boundaries(today, expected_date, expected_age, is_today):
+    with time_machine.travel(today):
+        kid = Kid("Alice", "2018-07-15", 1, "test")
+    assert kid.cumple_date == expected_date
+    assert kid.edad == expected_age
+    assert kid.cumple_today is is_today
+
+
+def test_february_29_birthday_in_leap_year():
+    with time_machine.travel(datetime(2028, 2, 29)):
+        kid = Kid("Leap", "2020-02-29", 1, "test")
+    assert kid.cumple_today is True
+    assert kid.edad == 8
+
+
+def test_february_29_birthday_in_non_leap_year():
+    with time_machine.travel(datetime(2027, 2, 28)):
+        kid = Kid("Leap", "2020-02-29", 1, "test")
+    assert kid.cumple_today is True
+    assert kid.cumple_date == date(2027, 2, 28)
+
+
+def test_pregnancy_future_due_date():
+    with time_machine.travel(datetime(2026, 1, 1)):
+        kid = Kid("Baby", "2026-03-12", 1, "test", embarazo=True)
+    assert kid.cumple_date == date(2026, 3, 12)
+    assert 0 < kid.progreso < 100
+
+
+def test_pregnancy_past_due_date():
+    with time_machine.travel(datetime(2026, 3, 13)):
+        kid = Kid("Baby", "2026-03-12", 1, "test", embarazo=True)
+    assert kid.progreso == 100
 
 
 # ---------------------------------------------------------------------------
@@ -449,3 +512,76 @@ def test_crop_is_centered():
     cropped = _crop(img)
     assert cropped.size == (100, 100)
     assert cropped.getpixel((50, 50)) == (255, 0, 0)
+
+
+# ---------------------------------------------------------------------------
+# Clans cache
+# ---------------------------------------------------------------------------
+
+def _clanes_client(data=None, error=None):
+    mock = MagicMock()
+    query = mock.table.return_value.select.return_value.execute
+    if error:
+        query.side_effect = error
+    else:
+        query.return_value.data = data
+    return mock
+
+
+def test_get_clanes_initial_load_and_cache(monkeypatch):
+    client = _clanes_client([{"clan": "mc", "clan_name": "Marín Codina"}])
+    monkeypatch.setattr(app, "supabase_client", client)
+    monkeypatch.setattr(app.time, "monotonic", MagicMock(side_effect=[100.0, 101.0]))
+
+    assert get_clanes()[0]["clan"] == "mc"
+    assert get_clanes()[0]["clan"] == "mc"
+    client.table.assert_called_once_with("clanes")
+
+
+def test_get_clanes_refreshes_after_ttl(monkeypatch):
+    client = _clanes_client([{"clan": "mc"}])
+    monkeypatch.setattr(app, "supabase_client", client)
+    monkeypatch.setattr(
+        app.time,
+        "monotonic",
+        MagicMock(side_effect=[100.0, 100.0 + app.CLANES_CACHE_TTL_SECONDS + 1]),
+    )
+
+    get_clanes()
+    get_clanes()
+    assert client.table.call_count == 2
+
+
+def test_get_clanes_returns_stale_cache_on_refresh_failure(monkeypatch):
+    client = _clanes_client(error=RuntimeError("offline"))
+    monkeypatch.setattr(app, "supabase_client", client)
+    monkeypatch.setattr(app, "_clanes_cache", [{"clan": "mc"}])
+    monkeypatch.setattr(app, "_clanes_cache_time", 0.0)
+    monkeypatch.setattr(app.time, "monotonic", lambda: app.CLANES_CACHE_TTL_SECONDS + 1)
+
+    assert get_clanes() == [{"clan": "mc"}]
+
+
+def test_get_clanes_returns_empty_without_cache_on_failure(monkeypatch):
+    monkeypatch.setattr(app, "supabase_client", _clanes_client(error=RuntimeError("offline")))
+    assert get_clanes() == []
+
+
+def test_get_clanes_without_configured_client(monkeypatch):
+    monkeypatch.setattr(app, "supabase_client", None)
+    assert get_clanes() == []
+
+
+def test_import_has_no_supabase_query():
+    env = os.environ.copy()
+    env.pop("SUPABASE_URL", None)
+    env.pop("SUPABASE_SERVICE_ROLE_KEY", None)
+    result = subprocess.run(
+        [sys.executable, "-c", "import app"],
+        cwd=os.path.dirname(app.__file__),
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr

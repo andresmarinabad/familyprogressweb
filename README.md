@@ -34,7 +34,9 @@ App familiar que muestra barras de progreso hasta el próximo cumpleaños de cad
 │   └── supabase/
 │       ├── main.tf                 # Terraform: proyecto Supabase + bucket
 │       ├── kids.sql                # Schema de la tabla + datos iniciales
-│       └── migrate_to_supabase.py  # (ver scripts/)
+│       ├── clanes.sql              # Schema y datos de clanes
+│       └── migrations/
+│           └── 001_kids_fecha_to_date.sql
 ├── tests/
 └── requirements.txt
 ```
@@ -79,16 +81,18 @@ Ejecutar en el **SQL Editor** de Supabase:
 
 ```sql
 INSERT INTO kids (nombre, fecha, clan)
-VALUES ('Nombre', 'DD/MM/YYYY', 'clan');
+VALUES ('Nombre', '2024-09-25', 'clan');
 ```
 
 Para embarazos:
 ```sql
 INSERT INTO kids (nombre, fecha, clan, embarazo)
-VALUES ('Nombre', 'DD/MM/YYYY', 'clan', true);
+VALUES ('Nombre', '2027-03-10', 'clan', true);
 ```
 
-Clanes disponibles: `mc`, `cm`, `cf`, `cc`, `mtc`.
+Las fechas se escriben en formato ISO `YYYY-MM-DD`, que es el formato técnico de
+PostgreSQL/Supabase para columnas `DATE`. Clanes disponibles: `mc`, `cm`, `cf`,
+`cc`, `mtc`.
 
 ## Subir una foto
 
@@ -106,20 +110,50 @@ python scripts/migrate_to_supabase.py
 
 El script lista los ficheros del bucket `images`, busca el kid con nombre normalizado equivalente y actualiza `image_url`.
 
-## Schema de la tabla `kids`
+## Schema de Supabase
+
+La aplicación utiliza dos tablas propias de PostgreSQL: `kids` y `clanes`.
+Una instalación nueva debe ejecutar `infra/supabase/kids.sql` e
+`infra/supabase/clanes.sql` en el SQL Editor de Supabase. Estos archivos crean
+directamente el schema actual y sus datos iniciales.
+
+### Tabla `kids`
 
 ```sql
 CREATE TABLE kids (
   id        SERIAL PRIMARY KEY,
   nombre    TEXT    NOT NULL,
-  fecha     TEXT    NOT NULL,  -- formato DD/MM/YYYY
+  fecha     DATE    NOT NULL,
   clan      TEXT    NOT NULL,
   embarazo  BOOLEAN NOT NULL DEFAULT FALSE,
   image_url TEXT                -- URL pública de Supabase Storage
 );
 ```
 
-El SQL completo con los datos iniciales está en `infra/supabase/kids.sql`.
+PostgREST devuelve `fecha` como texto ISO `YYYY-MM-DD`; la aplicación lo convierte
+a `datetime.date` al recibirlo. El SQL completo con los datos iniciales está en
+`infra/supabase/kids.sql`.
+
+### Tabla `clanes`
+
+```sql
+CREATE TABLE clanes (
+  clan      TEXT PRIMARY KEY,
+  clan_name TEXT NOT NULL
+);
+```
+
+El schema y los cinco clanes iniciales están en `infra/supabase/clanes.sql`.
+La aplicación los carga bajo demanda y mantiene una caché en memoria con TTL.
+
+### Actualización de instalaciones antiguas
+
+`infra/supabase/migrations/001_kids_fecha_to_date.sql` convierte en sitio una
+columna histórica `kids.fecha` de texto en formato `DD/MM/YYYY` a PostgreSQL
+`DATE`. Se ejecuta manualmente y una sola vez desde el SQL Editor de Supabase.
+
+Una instalación nueva creada con el `kids.sql` actual **no necesita ejecutar la
+migración 001**.
 
 ## Tests
 
