@@ -172,6 +172,12 @@
           <p class="text-gray-600 text-center card-subtitle">
             {{ kid.label(t) }}
           </p>
+          {% set countdown = kid.countdown(t) %}
+          {% if countdown %}
+          <p class="text-gray-500 text-center text-sm mt-1">
+            {{ countdown }}
+          </p>
+          {% endif %}
           <span hidden class="fecha">{{ kid.cumple_date }}</span>
           <span hidden class="clan">{{ kid.clan }}</span>
           <div class="text-center mt-4">

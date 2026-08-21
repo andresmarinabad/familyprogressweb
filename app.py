@@ -7,6 +7,7 @@ import os
 import json
 import io
 import time
+import calendar
 from datetime import date, datetime
 from jinja2 import Environment, FileSystemLoader
 import unicodedata
@@ -72,6 +73,27 @@ def _birthday_in_year(birth_date: date, year: int) -> date:
         return birth_date.replace(year=year)
     except ValueError:
         return date(year, 2, 28)
+
+
+def _add_calendar_months(value: date, months: int) -> date:
+    month_index = value.month - 1 + months
+    year = value.year + month_index // 12
+    month = month_index % 12 + 1
+    day = min(value.day, calendar.monthrange(year, month)[1])
+    return date(year, month, day)
+
+
+def calendar_months_and_days(start: date, end: date) -> tuple[int, int]:
+    """Return complete calendar months and remaining days from start to end."""
+    if end < start:
+        raise ValueError("end must not be before start")
+
+    months = (end.year - start.year) * 12 + end.month - start.month
+    anchor = _add_calendar_months(start, months)
+    if anchor > end:
+        months -= 1
+        anchor = _add_calendar_months(start, months)
+    return months, (end - anchor).days
 
 
 def _load_translations():
@@ -176,6 +198,26 @@ class Kid:
         if self.cumple_today:
             return t["congrats"].format(name=self.nombre)
         return self.nombre
+
+    def countdown(self, t):
+        today = datetime.now(ZoneInfo("Europe/Madrid")).date()
+        if self.cumple_today or self.cumple_date <= today:
+            return None
+
+        months, days = calendar_months_and_days(today, self.cumple_date)
+        if months == 0:
+            key = "countdown_one_day" if days == 1 else "countdown_days"
+        elif days == 0:
+            key = "countdown_one_month" if months == 1 else "countdown_months"
+        elif months == 1 and days == 1:
+            key = "countdown_one_month_one_day"
+        elif months == 1:
+            key = "countdown_one_month_days"
+        elif days == 1:
+            key = "countdown_months_one_day"
+        else:
+            key = "countdown_months_days"
+        return t[key].format(months=months, days=days)
 
     def __str__(self):
         return self.label(TRANSLATIONS["es"])

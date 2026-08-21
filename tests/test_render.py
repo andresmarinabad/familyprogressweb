@@ -11,7 +11,7 @@ import time_machine
 
 import app
 from app import (
-    app as flask_app, Kid, get_clanes, parse_iso_date,
+    app as flask_app, Kid, calendar_months_and_days, get_clanes, parse_iso_date,
     return_progress_color, TRANSLATIONS,
 )
 
@@ -67,6 +67,7 @@ def supabase_mock(monkeypatch):
         {"nombre": "Alice", "fecha": "2018-07-15", "clan": "test", "embarazo": False, "image_url": None},
     ]
     mock.table.return_value.select.return_value.execute.return_value.data = kids_data
+    mock.table.return_value.select.return_value.order.return_value.execute.return_value.data = kids_data
     mock.table.return_value.update.return_value.eq.return_value.execute.return_value.data = kids_data
     mock.storage.from_.return_value.upload.return_value = None
     mock.storage.from_.return_value.get_public_url.return_value = (
@@ -117,6 +118,34 @@ def test_kid_initialization(sample_data):
 def test_parse_iso_date():
     assert parse_iso_date("2017-09-25") == date(2017, 9, 25)
     assert parse_iso_date(date(2017, 9, 25)) == date(2017, 9, 25)
+
+
+@pytest.mark.parametrize(
+    ("start", "end", "expected"),
+    [
+        (date(2026, 5, 10), date(2026, 5, 11), (0, 1)),
+        (date(2026, 5, 10), date(2026, 5, 12), (0, 2)),
+        (date(2026, 5, 10), date(2026, 6, 10), (1, 0)),
+        (date(2026, 5, 10), date(2026, 7, 10), (2, 0)),
+        (date(2026, 5, 10), date(2026, 6, 11), (1, 1)),
+        (date(2026, 5, 10), date(2026, 6, 15), (1, 5)),
+        (date(2026, 5, 10), date(2026, 8, 11), (3, 1)),
+        (date(2026, 5, 10), date(2026, 8, 15), (3, 5)),
+        (date(2026, 12, 31), date(2027, 1, 1), (0, 1)),
+        (date(2026, 1, 31), date(2026, 2, 28), (1, 0)),
+        (date(2026, 1, 31), date(2026, 3, 1), (1, 1)),
+        (date(2024, 1, 31), date(2024, 2, 29), (1, 0)),
+        (date(2024, 2, 29), date(2025, 2, 28), (12, 0)),
+        (date(2026, 8, 31), date(2026, 9, 30), (1, 0)),
+    ],
+)
+def test_calendar_months_and_days(start, end, expected):
+    assert calendar_months_and_days(start, end) == expected
+
+
+def test_calendar_months_and_days_rejects_negative_range():
+    with pytest.raises(ValueError):
+        calendar_months_and_days(date(2026, 5, 2), date(2026, 5, 1))
 
 
 def test_kid_pregnancy(sample_data):
@@ -226,6 +255,49 @@ def test_pregnancy_past_due_date():
     assert kid.progreso == 100
 
 
+@pytest.mark.parametrize(
+    ("target", "expected"),
+    [
+        ("2026-05-11", "Falta 1 día"),
+        ("2026-05-12", "Faltan 2 días"),
+        ("2026-06-10", "Falta 1 mes"),
+        ("2026-07-10", "Faltan 2 meses"),
+        ("2026-06-11", "Falta 1 mes y 1 día"),
+        ("2026-06-15", "Falta 1 mes y 5 días"),
+        ("2026-08-11", "Faltan 3 meses y 1 día"),
+        ("2026-08-15", "Faltan 3 meses y 5 días"),
+    ],
+)
+def test_countdown_spanish_format(target, expected, es):
+    with time_machine.travel(datetime(2026, 5, 10)):
+        kid = Kid("Baby", target, 1, "test", embarazo=True)
+        assert kid.countdown(es) == expected
+
+
+def test_countdown_catalan_format(ca):
+    with time_machine.travel(datetime(2026, 5, 10)):
+        kid = Kid("Baby", "2026-08-15", 1, "test", embarazo=True)
+        assert kid.countdown(ca) == "Falten 3 mesos i 5 dies"
+
+
+def test_birthday_today_has_no_countdown(es):
+    with time_machine.travel(datetime(2026, 7, 15)):
+        kid = Kid("Alice", "2018-07-15", 1, "test")
+        assert kid.countdown(es) is None
+
+
+def test_due_date_today_has_no_countdown(es):
+    with time_machine.travel(datetime(2026, 7, 15)):
+        kid = Kid("Baby", "2026-07-15", 1, "test", embarazo=True)
+        assert kid.countdown(es) is None
+
+
+def test_past_due_date_has_no_countdown(es):
+    with time_machine.travel(datetime(2026, 7, 16)):
+        kid = Kid("Baby", "2026-07-15", 1, "test", embarazo=True)
+        assert kid.countdown(es) is None
+
+
 # ---------------------------------------------------------------------------
 # Kid.label(t) — i18n
 # ---------------------------------------------------------------------------
@@ -312,6 +384,14 @@ def test_index_renders_authenticated(auth_client, supabase_mock):
     response = auth_client.get("/")
     assert response.status_code == 200
     assert "Cumple".encode() in response.data or "Compleix".encode() in response.data
+
+
+def test_index_renders_countdown(auth_client, supabase_mock):
+    with time_machine.travel(datetime(2026, 5, 10)):
+        with auth_client.session_transaction() as sess:
+            sess["logged_in"] = True
+        response = auth_client.get("/")
+    assert "Faltan 2 meses y 5 días".encode() in response.data
 
 
 def test_index_shows_success_banner(auth_client, supabase_mock):
