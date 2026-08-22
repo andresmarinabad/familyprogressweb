@@ -54,77 +54,36 @@
   padding: 20px 0;
 }
 
-.progress-rojo-intenso {
-  background-color: rgb(255, 0, 0) !important;
-}
-.progress-rojo-anaranjado {
-  background-color: rgb(255, 64, 0) !important;
-}
-.progress-naranja-oscuro {
-  background-color: rgb(255, 128, 0) !important;
-}
-.progress-naranja-claro {
-  background-color: rgb(255, 191, 0) !important;
-}
-.progress-amarillo-dorado {
-  background-color: rgb(255, 255, 0) !important;
-}
-.progress-amarillo-verdoso {
-  background-color: rgb(191, 255, 0) !important;
-}
-.progress-verde-claro {
-  background-color: rgb(128, 255, 0) !important;
-}
-.progress-verde-lima {
-  background-color: rgb(64, 255, 0) !important;
-}
-.progress-verde-intenso {
-  background-color: rgb(0, 255, 0) !important;
-}
-.progress-verde-azulado {
-  background-color: rgb(0, 255, 64) !important;
-}
-.progress-turquesa {
-  background-color: rgb(0, 255, 128) !important;
-}
-.progress-cian {
-  background-color: rgb(0, 255, 191) !important;
-}
-.progress-azul-claro {
-  background-color: rgb(0, 255, 255) !important;
-}
-.progress-azul-cielo {
-  background-color: rgb(0, 191, 255) !important;
-}
-.progress-azul-medio {
-  background-color: rgb(0, 128, 255) !important;
-}
-.progress-azul-intenso {
-  background-color: rgb(0, 64, 255) !important;
-}
-.progress-azul-oscuro {
-  background-color: rgb(0, 0, 255) !important;
-}
-.progress-indigo {
-  background-color: rgb(64, 0, 255) !important;
-}
-.progress-violeta {
-  background-color: rgb(128, 0, 255) !important;
-}
-.progress-purpura {
-  background-color: rgb(191, 0, 255) !important;
-}
+.progress-rojo-intenso { background-color: rgb(255, 0, 0) !important; }
+.progress-rojo-anaranjado { background-color: rgb(255, 64, 0) !important; }
+.progress-naranja-oscuro { background-color: rgb(255, 128, 0) !important; }
+.progress-naranja-claro { background-color: rgb(255, 191, 0) !important; }
+.progress-amarillo-dorado { background-color: rgb(255, 255, 0) !important; }
+.progress-amarillo-verdoso { background-color: rgb(191, 255, 0) !important; }
+.progress-verde-claro { background-color: rgb(128, 255, 0) !important; }
+.progress-verde-lima { background-color: rgb(64, 255, 0) !important; }
+.progress-verde-intenso { background-color: rgb(0, 255, 0) !important; }
+.progress-verde-azulado { background-color: rgb(0, 255, 64) !important; }
+.progress-turquesa { background-color: rgb(0, 255, 128) !important; }
+.progress-cian { background-color: rgb(0, 255, 191) !important; }
+.progress-azul-claro { background-color: rgb(0, 255, 255) !important; }
+.progress-azul-cielo { background-color: rgb(0, 191, 255) !important; }
+.progress-azul-medio { background-color: rgb(0, 128, 255) !important; }
+.progress-azul-intenso { background-color: rgb(0, 64, 255) !important; }
+.progress-azul-oscuro { background-color: rgb(0, 0, 255) !important; }
+.progress-indigo { background-color: rgb(64, 0, 255) !important; }
+.progress-violeta { background-color: rgb(128, 0, 255) !important; }
+.progress-purpura { background-color: rgb(191, 0, 255) !important; }
 
 /* Clase para la barra de progreso dorada con efecto de brillo */
 .progress-gold {
-  background-color: #ffd700; /* Color dorado oscuro */
-  height: 20px; /* Altura de la barra */
-  border-radius: 10px; /* Bordes redondeados */
-  position: relative; /* Para posicionar el brillo */
-  overflow: hidden; /* Para ocultar el brillo que sale de la barra */
+  background-color: #ffd700;
+  height: 20px;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Efecto de brillo animado */
 .progress-gold::after {
   content: "";
   position: absolute;
@@ -141,23 +100,14 @@
   animation: shine 3s infinite;
 }
 
-/* Animación del brillo horizontal */
 @keyframes shine {
-  0% {
-    left: -50%;
-  }
-  100% {
-    left: 100%;
-  }
+  0% { left: -50%; }
+  100% { left: 100%; }
 }
 
 @keyframes stripesAnimation {
-  0% {
-    background-position: 100% 0;
-  }
-  100% {
-    background-position: 0 0;
-  }
+  0% { background-position: 100% 0; }
+  100% { background-position: 0 0; }
 }
 
 .striped-progress-bar {
@@ -175,9 +125,106 @@
   animation: stripesAnimation 10s linear infinite;
 }
 
-.image-container {
+/* Birthday mode: el dorado de la barra se expande hasta ocupar la tarjeta. */
+.birthday-card {
   position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition: transform 260ms ease, box-shadow 500ms ease;
 }
+
+.birthday-card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 22px;
+  opacity: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 22% 15%, rgba(255, 255, 255, 0.72), transparent 24%),
+    linear-gradient(135deg, #fff2a8 0%, #ffd700 32%, #e7a900 68%, #fff0a0 100%);
+  transform-origin: bottom center;
+}
+
+.birthday-card.birthday-celebrating::before {
+  opacity: 1;
+  animation: birthday-gold-fill 1.15s cubic-bezier(0.2, 0.75, 0.25, 1) 0.35s forwards;
+}
+
+.birthday-card.birthday-celebrating {
+  animation: birthday-settle 1.55s ease-out both;
+}
+
+.birthday-card.birthday-settled {
+  background-color: transparent !important;
+  border-color: rgba(151, 104, 0, 0.34);
+  box-shadow:
+    0 12px 28px -14px rgba(116, 77, 0, 0.62),
+    0 4px 10px -5px rgba(116, 77, 0, 0.38);
+}
+
+.birthday-card.birthday-settled::before {
+  opacity: 1;
+  height: 100%;
+}
+
+.birthday-card.birthday-settled .card-title,
+.birthday-card.birthday-settled .text-gray-600,
+.birthday-card.birthday-settled .text-gray-500 {
+  color: #3f2b00 !important;
+}
+
+.birthday-card.birthday-settled .bg-gray-200 {
+  background-color: rgba(255, 255, 255, 0.42) !important;
+}
+
+.birthday-card.birthday-settled .image-container {
+  box-shadow:
+    0 0 0 1px rgba(105, 72, 0, 0.24),
+    0 7px 20px -10px rgba(70, 45, 0, 0.65);
+}
+
+@keyframes birthday-gold-fill {
+  0% {
+    height: 22px;
+    opacity: 0.94;
+  }
+  100% {
+    height: 100%;
+    opacity: 1;
+  }
+}
+
+@keyframes birthday-settle {
+  0%, 30% { transform: scale(1); }
+  62% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .birthday-card,
+  .birthday-card::before,
+  .birthday-card.birthday-celebrating,
+  .birthday-card.birthday-celebrating::before {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .birthday-card::before {
+    height: 100%;
+    opacity: 1;
+  }
+
+  .progress-gold::after,
+  .striped-progress-bar {
+    animation: none !important;
+  }
+}
+
+.image-container { position: relative; }
 
 .video {
   display: none;
@@ -202,16 +249,16 @@
 
 .dorsal {
   position: absolute;
-  top: -20px; /* Ajusta este valor según sea necesario */
-  right: -10px; /* Ajusta este valor según sea necesario */
+  top: -20px;
+  right: -10px;
   color: white;
-  font-size: 2.5em; /* Tamaño de fuente mayor */
+  font-size: 2.5em;
   font-weight: bold;
   text-shadow:
     -2px -2px 0 #000,
     2px -2px 0 #000,
     -2px 2px 0 #000,
-    2px 2px 0 #000; /* Borde negro grueso */
+    2px 2px 0 #000;
 }
 
 .festivo {
@@ -220,45 +267,17 @@
   background-clip: text;
 }
 
-.g1 {
-  background-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00);
-} /* rojo→naranja→amarillo */
-.g2 {
-  background-image: linear-gradient(45deg, #00ff00, #00ffff, #0000ff);
-} /* verde→cyan→azul */
-.g3 {
-  background-image: linear-gradient(45deg, #8e2de2, #ff0080, #ff0040);
-} /* violeta→magenta→rosa */
-.g4 {
-  background-image: linear-gradient(45deg, #ff1744, #ff9100, #ffea00);
-} /* rojo intenso→naranja→amarillo */
-.g5 {
-  background-image: linear-gradient(45deg, #00e676, #00c853, #00bfa5);
-} /* verde brillante→verde→turquesa */
-.g6 {
-  background-image: linear-gradient(45deg, #ff6d00, #f50057, #d500f9);
-} /* naranja→rosa→violeta */
-.g7 {
-  background-image: linear-gradient(45deg, #f50057, #ff4081, #ff80ab);
-} /* rosa fuerte→rosa claro→rosado pastel */
-.g8 {
-  background-image: linear-gradient(45deg, #39ff14, #00e5ff, #ff00ff);
-} /* verde neón→cyan→magenta */
-.g9 {
-  background-image: linear-gradient(45deg, #ff3d00, #ff9100, #ffd600);
-} /* rojo brillante→naranja→amarillo */
-.g10 {
-  background-image: linear-gradient(45deg, #00ffff, #2979ff, #651fff);
-} /* cyan→azul→violeta */
-.g11 {
-  background-image: linear-gradient(45deg, #ff00ff, #ff4081, #ff80ab);
-} /* magenta→rosa fuerte→rosa pastel */
-.g12 {
-  background-image: linear-gradient(45deg, #ff6ec7, #ff3d00, #ffea00);
-} /* rosa→rojo→amarillo */
-.g13 {
-  background-image: linear-gradient(45deg, #00ffea, #00c853, #ffff00);
-} /* aqua→verde→amarillo */
-.g14 {
-  background-image: linear-gradient(45deg, #ff4081, #f50057, #d500f9);
-} /* rosa→fucsia→violeta */
+.g1 { background-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00); }
+.g2 { background-image: linear-gradient(45deg, #00ff00, #00ffff, #0000ff); }
+.g3 { background-image: linear-gradient(45deg, #8e2de2, #ff0080, #ff0040); }
+.g4 { background-image: linear-gradient(45deg, #ff1744, #ff9100, #ffea00); }
+.g5 { background-image: linear-gradient(45deg, #00e676, #00c853, #00bfa5); }
+.g6 { background-image: linear-gradient(45deg, #ff6d00, #f50057, #d500f9); }
+.g7 { background-image: linear-gradient(45deg, #f50057, #ff4081, #ff80ab); }
+.g8 { background-image: linear-gradient(45deg, #39ff14, #00e5ff, #ff00ff); }
+.g9 { background-image: linear-gradient(45deg, #ff3d00, #ff9100, #ffd600); }
+.g10 { background-image: linear-gradient(45deg, #00ffff, #2979ff, #651fff); }
+.g11 { background-image: linear-gradient(45deg, #ff00ff, #ff4081, #ff80ab); }
+.g12 { background-image: linear-gradient(45deg, #ff6ec7, #ff3d00, #ffea00); }
+.g13 { background-image: linear-gradient(45deg, #00ffea, #00c853, #ffff00); }
+.g14 { background-image: linear-gradient(45deg, #ff4081, #f50057, #d500f9); }
