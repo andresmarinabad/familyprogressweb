@@ -18,7 +18,7 @@
       href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@1,87.5,700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="{{ url_for('static', filename='kids.css', v='birthday-mode-1') }}" />
+    <link rel="stylesheet" href="/static/kids.css?v=birthday-mode-1" />
   </head>
 
   <body class="bg-gray-100 dark:bg-gray-900" style="margin-bottom: 200px">
@@ -219,6 +219,6 @@
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-    <script src="{{ url_for('static', filename='kids.js', v='birthday-mode-1') }}"></script>
+    <script src="/static/kids.js?v=birthday-mode-1"></script>
   </body>
 </html>
