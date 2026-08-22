@@ -161,15 +161,11 @@
             <h3 class="text-xl font-semibold text-center card-title">
               {{ kid.display_name(t) }}
             </h3>
-            {% if not kid.embarazo %} {% if not kid.cumple_today %}
+            {% if not kid.embarazo and not kid.cumple_today %}
             <span class="text-gray-600 text-xl" style="margin-left: 4px"
               >({{ kid.edad-1 }})</span
             >
-            {% else %}
-            <span class="text-gray-600 text-xl" style="margin-left: 4px"
-              >({{ kid.edad }})</span
-            >
-            {% endif %} {% endif %}
+            {% endif %}
           </div>
 
           <p class="text-gray-600 text-center card-subtitle">
