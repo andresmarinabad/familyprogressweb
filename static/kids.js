@@ -20,14 +20,14 @@ function initBirthdayMode() {
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (reduceMotion) { cards.forEach((card) => card.classList.add("birthday-gold", "birthday-settled")); return; }
   cards.forEach((card) => {
-    /* Primero dejamos ver claramente la barra completa y su brillo. */
-    window.setTimeout(() => card.classList.add("birthday-flipping"), 700);
+    /* Dejamos 1.4 s para apreciar la barra completa y su brillo antes de la transformación. */
+    window.setTimeout(() => card.classList.add("birthday-flipping"), 1400);
     /* El cambio de color sucede de canto, sin alterar la velocidad del giro. */
-    window.setTimeout(() => card.classList.add("birthday-gold"), 1200);
-    window.setTimeout(() => { card.classList.remove("birthday-flipping"); card.classList.add("birthday-settled"); }, 1720);
+    window.setTimeout(() => card.classList.add("birthday-gold"), 1900);
+    window.setTimeout(() => { card.classList.remove("birthday-flipping"); card.classList.add("birthday-settled"); }, 2420);
   });
   /* La celebración remata la presentación cuando la tarjeta ya ha terminado el giro. */
-  window.setTimeout(() => FireCannon(1.35), 1740);
+  window.setTimeout(() => FireCannon(1.35), 2440);
 }
 document.addEventListener("DOMContentLoaded", initBirthdayMode);
 document.getElementById("filtro").addEventListener("change", function () { if (this.checked) ordenarDivsDorsal(); else ordenarDivsFecha(); });
