@@ -1,58 +1,22 @@
 /* Tema según el sistema */
 @media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-
-  body {
-    background-color: #171717 !important;
-  }
-
-  body > section .text-gray-700 {
-    color: #d4d4d8;
-  }
-
-  /* Chevron del desplegable de clanes */
-  .relative.w-30 svg path {
-    stroke: #d4d4d8;
-  }
-
-  /* Select: texto legible sobre fondo oscuro */
-  #clanes {
-    color: #f4f4f5;
-  }
-
-  /* Tarjetas: superficie oscura, texto y track de progreso ajustados */
+  html { color-scheme: dark; }
+  body { background-color: #171717 !important; }
+  body > section .text-gray-700 { color: #d4d4d8; }
+  .relative.w-30 svg path { stroke: #d4d4d8; }
+  #clanes { color: #f4f4f5; }
   .kid {
     background-color: #262626 !important;
     border: 1px solid rgb(255 255 255 / 0.14);
-    box-shadow:
-      0 4px 6px -1px rgb(0 0 0 / 0.35),
-      0 2px 4px -2px rgb(0 0 0 / 0.3);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.35), 0 2px 4px -2px rgb(0 0 0 / 0.3);
   }
-
-  .kid .image-container {
-    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.12);
-  }
-
-  .kid .card-title {
-    color: #fafafa;
-  }
-
-  .kid .text-gray-600 {
-    color: #a3a3a3 !important;
-  }
-
-  .kid .bg-gray-200 {
-    background-color: #404040 !important;
-  }
+  .kid .image-container { box-shadow: 0 0 0 1px rgb(255 255 255 / 0.12); }
+  .kid .card-title { color: #fafafa; }
+  .kid .text-gray-600 { color: #a3a3a3 !important; }
+  .kid .bg-gray-200 { background-color: #404040 !important; }
 }
 
-.header {
-  text-align: center;
-  position: relative;
-  padding: 20px 0;
-}
+.header { text-align: center; position: relative; padding: 20px 0; }
 
 .progress-rojo-intenso { background-color: rgb(255, 0, 0) !important; }
 .progress-rojo-anaranjado { background-color: rgb(255, 64, 0) !important; }
@@ -75,7 +39,6 @@
 .progress-violeta { background-color: rgb(128, 0, 255) !important; }
 .progress-purpura { background-color: rgb(191, 0, 255) !important; }
 
-/* Clase para la barra de progreso dorada con efecto de brillo */
 .progress-gold {
   background-color: #ffd700;
   height: 20px;
@@ -91,153 +54,85 @@
   left: -50%;
   width: 50%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.4) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.4) 50%, rgba(255,255,255,0) 100%);
   animation: shine 3s infinite;
 }
 
-@keyframes shine {
-  0% { left: -50%; }
-  100% { left: 100%; }
-}
-
-@keyframes stripesAnimation {
-  0% { background-position: 100% 0; }
-  100% { background-position: 0 0; }
-}
+@keyframes shine { from { left: -50%; } to { left: 100%; } }
+@keyframes stripesAnimation { from { background-position: 100% 0; } to { background-position: 0 0; } }
 
 .striped-progress-bar {
-  background-image: linear-gradient(
-    45deg,
-    rgba(255, 255, 255, 0.15) 25%,
-    transparent 25%,
-    transparent 50%,
-    rgba(255, 255, 255, 0.15) 50%,
-    rgba(255, 255, 255, 0.15) 75%,
-    transparent 75%,
-    transparent
-  );
+  background-image: linear-gradient(45deg, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent);
   background-size: 20px 20px;
   animation: stripesAnimation 10s linear infinite;
 }
 
-/* Birthday mode: el dorado de la barra se expande hasta ocupar la tarjeta. */
+/* Birthday mode: la barra al 100% presenta la tarjeta como un cromo dorado. */
 .birthday-card {
   position: relative;
   isolation: isolate;
-  overflow: hidden;
-  transition: transform 260ms ease, box-shadow 500ms ease;
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
-.birthday-card::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 22px;
-  opacity: 0;
-  border-radius: inherit;
-  background:
-    radial-gradient(circle at 22% 15%, rgba(255, 255, 255, 0.72), transparent 24%),
-    linear-gradient(135deg, #fff2a8 0%, #ffd700 32%, #e7a900 68%, #fff0a0 100%);
-  transform-origin: bottom center;
+.birthday-card.birthday-flipping {
+  animation: birthday-card-flip 1.05s cubic-bezier(.22,.72,.25,1) both;
 }
 
-.birthday-card.birthday-celebrating::before {
-  opacity: 1;
-  animation: birthday-gold-fill 1.15s cubic-bezier(0.2, 0.75, 0.25, 1) 0.35s forwards;
-}
-
-.birthday-card.birthday-celebrating {
-  animation: birthday-settle 1.55s ease-out both;
-}
-
+.birthday-card.birthday-gold,
 .birthday-card.birthday-settled {
-  background-color: transparent !important;
-  border-color: rgba(151, 104, 0, 0.34);
-  box-shadow:
-    0 12px 28px -14px rgba(116, 77, 0, 0.62),
-    0 4px 10px -5px rgba(116, 77, 0, 0.38);
+  background-color: #ffd700 !important;
+  background-image:
+    radial-gradient(circle at 18% 12%, rgba(255,255,255,.92) 0, rgba(255,255,255,.38) 12%, transparent 26%),
+    linear-gradient(118deg,
+      #9f6a00 0%,
+      #dca900 10%,
+      #fff0a3 22%,
+      #ffd700 34%,
+      #b77900 48%,
+      #ffe56a 62%,
+      #c58c00 76%,
+      #fff1a8 90%,
+      #d5a000 100%) !important;
+  border-color: rgba(112, 74, 0, .48) !important;
+  box-shadow: 0 14px 32px -14px rgba(101,65,0,.72), 0 5px 12px -5px rgba(91,58,0,.48);
 }
 
-.birthday-card.birthday-settled::before {
-  opacity: 1;
-  height: 100%;
-}
-
+.birthday-card.birthday-gold .card-title,
+.birthday-card.birthday-gold .text-gray-600,
+.birthday-card.birthday-gold .text-gray-500,
 .birthday-card.birthday-settled .card-title,
 .birthday-card.birthday-settled .text-gray-600,
 .birthday-card.birthday-settled .text-gray-500 {
-  color: #3f2b00 !important;
+  color: #302000 !important;
 }
 
-.birthday-card.birthday-settled .bg-gray-200 {
-  background-color: rgba(255, 255, 255, 0.42) !important;
-}
-
+.birthday-card.birthday-gold .image-container,
 .birthday-card.birthday-settled .image-container {
-  box-shadow:
-    0 0 0 1px rgba(105, 72, 0, 0.24),
-    0 7px 20px -10px rgba(70, 45, 0, 0.65);
+  box-shadow: 0 0 0 1px rgba(83,55,0,.34), 0 8px 22px -10px rgba(57,36,0,.72);
 }
 
-@keyframes birthday-gold-fill {
-  0% {
-    height: 22px;
-    opacity: 0.94;
-  }
-  100% {
-    height: 100%;
-    opacity: 1;
-  }
-}
+/* Al terminar la presentación la barra ya no aporta información. */
+.birthday-card.birthday-settled > .text-center.mt-4 { display: none; }
 
-@keyframes birthday-settle {
-  0%, 30% { transform: scale(1); }
-  62% { transform: scale(1.02); }
-  100% { transform: scale(1); }
+@keyframes birthday-card-flip {
+  0% { transform: perspective(1200px) rotateY(0deg) scale(1); }
+  42% { transform: perspective(1200px) rotateY(150deg) scale(1.015); }
+  58% { transform: perspective(1200px) rotateY(210deg) scale(1.015); }
+  100% { transform: perspective(1200px) rotateY(360deg) scale(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .birthday-card,
-  .birthday-card::before,
-  .birthday-card.birthday-celebrating,
-  .birthday-card.birthday-celebrating::before {
-    animation: none !important;
-    transition: none !important;
-  }
-
-  .birthday-card::before {
-    height: 100%;
-    opacity: 1;
-  }
-
+  .birthday-card.birthday-flipping { animation: none !important; transition: none !important; transform: none !important; }
+  .birthday-card.birthday-settled > .text-center.mt-4 { display: none; }
   .progress-gold::after,
-  .striped-progress-bar {
-    animation: none !important;
-  }
+  .striped-progress-bar { animation: none !important; }
 }
 
 .image-container { position: relative; }
-
-.video {
-  display: none;
-  object-fit: cover;
-}
-
-.image-container img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: inherit;
-  object-fit: cover;
-}
+.video { display: none; object-fit: cover; }
+.image-container img { display: block; width: 100%; height: auto; border-radius: inherit; object-fit: cover; }
 
 .archivo-dorsal {
   font-family: "Archivo", sans-serif;
@@ -254,19 +149,10 @@
   color: white;
   font-size: 2.5em;
   font-weight: bold;
-  text-shadow:
-    -2px -2px 0 #000,
-    2px -2px 0 #000,
-    -2px 2px 0 #000,
-    2px 2px 0 #000;
+  text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
 }
 
-.festivo {
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
+.festivo { -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 .g1 { background-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00); }
 .g2 { background-image: linear-gradient(45deg, #00ff00, #00ffff, #0000ff); }
 .g3 { background-image: linear-gradient(45deg, #8e2de2, #ff0080, #ff0040); }
