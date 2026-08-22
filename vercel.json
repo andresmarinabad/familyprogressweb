@@ -6,6 +6,17 @@
       "use": "@vercel/python"
     }
   ],
+  "headers": [
+    {
+      "source": "/static/(kids\\.css|kids\\.js|manifest\\.webmanifest)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, must-revalidate"
+        }
+      ]
+    }
+  ],
   "routes": [
     {
       "src": "/(.*)",
