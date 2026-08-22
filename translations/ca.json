@@ -6,7 +6,7 @@
   "filter_number": "Dorsal",
   "upload_link": "Pujar foto",
   "video_unsupported": "El teu navegador no suporta aquest format de vídeo.",
-  "congrats": "Felicitats a {name}!",
+  "congrats": "Felicitats {name}!",
   "expected": "S'espera per al {day} de {month}",
   "born_today": "Avui has nascut",
   "birthday_today_1": "Avui compleix 1 any",
