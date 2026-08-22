@@ -5,20 +5,8 @@ var defaults = {
 
 const titulo = document.getElementById("Fire");
 const gradientes = [
-  "g1",
-  "g2",
-  "g3",
-  "g4",
-  "g5",
-  "g6",
-  "g7",
-  "g8",
-  "g9",
-  "g10",
-  "g11",
-  "g12",
-  "g13",
-  "g14",
+  "g1", "g2", "g3", "g4", "g5", "g6", "g7",
+  "g8", "g9", "g10", "g11", "g12", "g13", "g14",
 ];
 
 let indiceGradiente = 0;
@@ -33,28 +21,11 @@ function Fire(particleRatio, opts) {
 }
 
 function FireCannon() {
-  Fire(0.25, {
-    spread: 26,
-    startVelocity: 55,
-  });
-  Fire(0.2, {
-    spread: 60,
-  });
-  Fire(0.35, {
-    spread: 100,
-    decay: 0.91,
-    scalar: 0.4,
-  });
-  Fire(0.1, {
-    spread: 120,
-    startVelocity: 25,
-    decay: 0.92,
-    scalar: 1.2,
-  });
-  Fire(0.1, {
-    spread: 120,
-    startVelocity: 45,
-  });
+  Fire(0.25, { spread: 26, startVelocity: 55 });
+  Fire(0.2, { spread: 60 });
+  Fire(0.35, { spread: 100, decay: 0.91, scalar: 0.4 });
+  Fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+  Fire(0.1, { spread: 120, startVelocity: 45 });
 
   titulo.classList.remove(gradientes[indiceGradiente]);
   let nuevoIndice;
@@ -65,6 +36,50 @@ function FireCannon() {
   indiceGradiente = nuevoIndice;
   titulo.classList.add(gradientes[indiceGradiente]);
 }
+
+function launchBirthdayConfetti(card) {
+  if (typeof confetti !== "function") return;
+
+  const rect = card.getBoundingClientRect();
+  const x = Math.min(0.95, Math.max(0.05, (rect.left + rect.width / 2) / window.innerWidth));
+  const y = Math.min(0.9, Math.max(0.1, (rect.top + rect.height * 0.45) / window.innerHeight));
+
+  confetti({
+    particleCount: 55,
+    spread: 72,
+    startVelocity: 28,
+    gravity: 0.85,
+    scalar: 0.72,
+    ticks: 130,
+    origin: { x: x, y: y },
+  });
+}
+
+function initBirthdayMode() {
+  const cards = document.querySelectorAll('[data-birthday-card="true"]');
+  if (!cards.length) return;
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  cards.forEach((card) => {
+    if (reduceMotion) {
+      card.classList.add("birthday-settled");
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      card.classList.add("birthday-celebrating");
+    });
+
+    window.setTimeout(() => launchBirthdayConfetti(card), 900);
+    window.setTimeout(() => {
+      card.classList.remove("birthday-celebrating");
+      card.classList.add("birthday-settled");
+    }, 1750);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", initBirthdayMode);
 
 document.getElementById("filtro").addEventListener("change", function () {
   if (this.checked) {
@@ -103,12 +118,8 @@ function ordenarDivsDorsal() {
   const items = Array.from(container.querySelectorAll(".kid"));
 
   items.sort((a, b) => {
-    const numA = parseInt(
-      a.querySelector(".dorsal").textContent.replace("#", ""),
-    );
-    const numB = parseInt(
-      b.querySelector(".dorsal").textContent.replace("#", ""),
-    );
+    const numA = parseInt(a.querySelector(".dorsal").textContent.replace("#", ""));
+    const numB = parseInt(b.querySelector(".dorsal").textContent.replace("#", ""));
     return numA - numB;
   });
 
