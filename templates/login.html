@@ -2,68 +2,36 @@
 <html lang="{{ lang }}">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>{{ t.login_tab_title }}</title>
-
-    <link
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
+    <meta name="theme-color" content="#ffd700" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Cumples" />
+    <link rel="manifest" href="/static/manifest.webmanifest" />
+    <link rel="icon" href="/static/app-icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/static/app-icon.svg" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,container-queries"></script>
     <script>tailwind.config = { darkMode: 'media' }</script>
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-    <link
-      href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@1,87.5,700&display=swap"
-      rel="stylesheet"
-    />
-
-    <link rel="stylesheet" href="/static/kids.css?v=birthday-mode-1" />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@1,87.5,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/kids.css" />
   </head>
-
   <body class="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center px-4">
-
     <div class="w-full max-w-sm bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-6 sm:p-8 border border-transparent dark:border-gray-700">
-      <h1 class="text-2xl sm:text-3xl font-bold text-center mb-2 text-gray-800 dark:text-gray-100">
-        {{ t.login_title }}
-      </h1>
-
-      <p class="text-center text-gray-600 dark:text-gray-300 mb-6 text-sm sm:text-base">
-        {{ t.login_subtitle }}
-      </p>
-
-      {% if error %}
-      <div class="bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-200 p-3 rounded-xl mb-4 text-sm">
-        {{ error }}
-      </div>
-      {% endif %}
-
+      <h1 class="text-2xl sm:text-3xl font-bold text-center mb-2 text-gray-800 dark:text-gray-100">{{ t.login_title }}</h1>
+      <p class="text-center text-gray-600 dark:text-gray-300 mb-6 text-sm sm:text-base">{{ t.login_subtitle }}</p>
+      {% if error %}<div class="bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-200 p-3 rounded-xl mb-4 text-sm">{{ error }}</div>{% endif %}
       <form method="POST" class="space-y-4">
-        <input
-          type="password"
-          name="password"
-          placeholder="{{ t.login_placeholder }}"
-          required
-          class="w-full rounded-xl border border-gray-300 dark:border-gray-600 px-4 py-3 text-gray-800 dark:text-gray-100 bg-white dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-400 text-base focus:border-gray-500 dark:focus:border-gray-400 focus:ring-gray-500 dark:focus:ring-gray-400"
-        />
-
-        <button
-          type="submit"
-          class="w-full bg-black dark:bg-gray-100 text-white dark:text-gray-900 py-3 rounded-xl text-base font-medium hover:opacity-90 transition"
-        >
-          {{ t.login_button }}
-        </button>
+        <input type="password" name="password" placeholder="{{ t.login_placeholder }}" required class="w-full rounded-xl border border-gray-300 dark:border-gray-600 px-4 py-3 text-gray-800 dark:text-gray-100 bg-white dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-400 text-base focus:border-gray-500 dark:focus:border-gray-400 focus:ring-gray-500 dark:focus:ring-gray-400" />
+        <button type="submit" class="w-full bg-black dark:bg-gray-100 text-white dark:text-gray-900 py-3 rounded-xl text-base font-medium hover:opacity-90 transition">{{ t.login_button }}</button>
       </form>
-
       <div class="flex justify-center items-center gap-1 text-xs mt-5">
-        <a href="/set_language/es"
-          class="{{ 'font-semibold text-gray-700 dark:text-gray-200' if lang == 'es' else 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300' }}">ES</a>
+        <a href="/set_language/es" class="{{ 'font-semibold text-gray-700 dark:text-gray-200' if lang == 'es' else 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300' }}">ES</a>
         <span class="text-gray-300 dark:text-gray-600">|</span>
-        <a href="/set_language/ca"
-          class="{{ 'font-semibold text-gray-700 dark:text-gray-200' if lang == 'ca' else 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300' }}">CA</a>
+        <a href="/set_language/ca" class="{{ 'font-semibold text-gray-700 dark:text-gray-200' if lang == 'ca' else 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300' }}">CA</a>
       </div>
     </div>
   </body>
