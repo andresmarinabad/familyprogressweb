@@ -121,7 +121,10 @@
         id="contenedor"
       >
         {% for kid in kids %}
-        <div class="bg-white p-6 rounded-lg shadow-md kid">
+        <div
+          class="bg-white p-6 rounded-lg shadow-md kid{% if kid.cumple_today %} birthday-card{% endif %}"
+          {% if kid.cumple_today %}data-birthday-card="true"{% endif %}
+        >
           <div
             class="image-container rounded-xl"
             id="{{kid.nombre | lower}}-div"
