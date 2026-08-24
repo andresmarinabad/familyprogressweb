@@ -41,21 +41,23 @@
   animation: shine 3s infinite; pointer-events: none;
 }
 @keyframes shine { from { left: -50%; } to { left: 100%; } }
-@keyframes stripesAnimation { from { background-position: 100% 0; } to { background-position: 0 0; } }
+@keyframes stripesOverlayAnimation { from { transform: translateX(-20px); } to { transform: translateX(0); } }
 .striped-progress-bar {
-  background-image: linear-gradient(
+  position: relative;
+  overflow: hidden;
+  background-image: none !important;
+}
+.striped-progress-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0 -20px 0 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
     45deg,
-    rgba(255,255,255,.34) 0%,
-    rgba(255,255,255,.34) 25%,
-    rgba(0,0,0,.14) 25%,
-    rgba(0,0,0,.14) 50%,
-    rgba(255,255,255,.34) 50%,
-    rgba(255,255,255,.34) 75%,
-    rgba(0,0,0,.14) 75%,
-    rgba(0,0,0,.14) 100%
+    rgba(255,255,255,.55) 0 7px,
+    rgba(0,0,0,.28) 7px 14px
   );
-  background-size: 20px 20px;
-  animation: stripesAnimation 7s linear infinite;
+  animation: stripesOverlayAnimation 1.2s linear infinite;
 }
 
 /* Birthday mode: pausa breve para enseñar el 100%, giro continuo y mismo oro que la barra. */
@@ -86,7 +88,7 @@
 @media (prefers-reduced-motion: reduce) {
   .birthday-card, .birthday-card.birthday-flipping { animation: none !important; transition: none !important; transform: none !important; }
   .birthday-card.birthday-settled > .text-center.mt-4 { display: none; }
-  .progress-gold::after, .birthday-card.birthday-gold::after, .striped-progress-bar { animation: none !important; }
+  .progress-gold::after, .birthday-card.birthday-gold::after, .striped-progress-bar::after { animation: none !important; }
 }
 
 .image-container { position: relative; }
