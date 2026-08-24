@@ -57,7 +57,7 @@
 .progress-turquesa,
 .progress-cian,
 .progress-azul-claro {
-  --stripe-color: rgba(0,0,0,.16);
+  --stripe-color: rgba(0,0,0,.30);
 }
 
 /* Birthday mode: pausa breve para enseñar el 100%, giro continuo y mismo oro que la barra. */
