@@ -42,7 +42,23 @@
 }
 @keyframes shine { from { left: -50%; } to { left: 100%; } }
 @keyframes stripesAnimation { from { background-position: 100% 0; } to { background-position: 0 0; } }
-.striped-progress-bar { background-image: linear-gradient(45deg, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent); background-size: 20px 20px; animation: stripesAnimation 10s linear infinite; }
+.striped-progress-bar {
+  --stripe-color: rgba(255,255,255,.22);
+  background-image: linear-gradient(45deg, var(--stripe-color) 25%, transparent 25%, transparent 50%, var(--stripe-color) 50%, var(--stripe-color) 75%, transparent 75%, transparent);
+  background-size: 20px 20px;
+  animation: stripesAnimation 7s linear infinite;
+}
+.progress-amarillo-dorado,
+.progress-amarillo-verdoso,
+.progress-verde-claro,
+.progress-verde-lima,
+.progress-verde-intenso,
+.progress-verde-azulado,
+.progress-turquesa,
+.progress-cian,
+.progress-azul-claro {
+  --stripe-color: rgba(0,0,0,.16);
+}
 
 /* Birthday mode: pausa breve para enseñar el 100%, giro continuo y mismo oro que la barra. */
 .birthday-card { position: relative; isolation: isolate; transform-style: preserve-3d; will-change: transform; }
